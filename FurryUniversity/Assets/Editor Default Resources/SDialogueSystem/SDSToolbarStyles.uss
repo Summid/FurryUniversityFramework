@@ -1,0 +1,53 @@
+/* Visual Elements */
+
+Toolbar {
+    background-color: var(--sds-colors-window-dark-grey-1);
+    height: var(--sds-metrics-window-pixels-35);
+}
+
+TextField {
+    padding: var(--sds-metrics-window-pixels-4);
+}
+
+Button {
+    background-color: var(--sds-colors-window-dark-grey-5);
+    border-color: var(--sds-colors-window-dark-grey-1);
+    margin: var(--sds-metrics-window-pixels-4);
+    max-height: var(--sds-metrics-window-pixels-25);
+}
+
+Button:hover {
+    background-color: var(--sds-colors-window-dark-grey-2);
+}
+
+Button:active {
+    background-color: var(--sds-colors-window-dark-grey-3);
+    color: var(--sds-colors-window-yellow);
+}
+
+/* Built-In */
+
+.unity-text-field__label {
+    padding: var(--sds-metrics-window-pixels-4);
+}
+
+TextField:focus>.unity-text-field__label {
+    color: var(--sds-colors-window-yellow);
+}
+
+.unity-text-field__input {
+    background-color: var(--sds-colors-window-dark-grey-1);
+    border-color: var(--sds-colors-window-dark-grey-6);
+    border-radius: var(--sds-metrics-window-pixels-4);
+    max-height: var(--sds-metrics-window-pixels-25);
+    min-width: var(--sds-metrics-window-pixels-120);
+    padding-left: var(--sds-metrics-window-pixels-6);
+}
+
+.unity-text-field__input:focus {
+    color: var(--sds-colors-window-yellow);
+}
+
+.sds-toolbar__button__selected {
+    color: var(--sds-colors-window-yellow);
+}

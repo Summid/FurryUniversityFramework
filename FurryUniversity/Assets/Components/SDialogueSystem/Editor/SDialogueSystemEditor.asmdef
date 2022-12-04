@@ -1,0 +1,16 @@
+{
+    "name": "SDialogueSystemEditor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:2be9c19e322963d4daf6184d2f5d8555"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
