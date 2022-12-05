@@ -152,9 +152,10 @@ namespace SDS.Windows
 
             foreach (GraphElement selectedElement in this.selection)
             {
-                if (selectedElement is not SDSNode) continue;
-                SDSNode node = selectedElement as SDSNode;
-                group.AddElement(node);
+                if (selectedElement is SDSNode node)
+                {
+                    group.AddElement(node);
+                }
             }
 
             return group;
@@ -197,9 +198,9 @@ namespace SDS.Windows
 
             return node;
         }
-        #endregion
+#endregion
 
-        #region Callbacks
+#region Callbacks
         /// <summary>
         /// 删除节点时的回调
         /// </summary>
@@ -238,12 +239,10 @@ namespace SDS.Windows
                     List<SDSNode> groupNodes = new List<SDSNode>();
                     foreach (GraphElement groupElement in group.containedElements)
                     {
-                        if (groupElement is not SDSNode)
+                        if (groupElement is SDSNode groupNode)
                         {
-                            continue;
+                            groupNodes.Add(groupNode);
                         }
-                        SDSNode groupNode = groupElement as SDSNode;
-                        groupNodes.Add(groupNode);
                     }
                     group.RemoveElements(groupNodes);//触发 this.elementsRemovedFromGroup 回调，处理从分组节点放到未分组节点的逻辑
 
@@ -279,14 +278,12 @@ namespace SDS.Windows
             {
                 foreach (GraphElement element in elements)
                 {
-                    if (element is not SDSNode)
+                    if(element is SDSNode node)
                     {
-                        continue;
+                        SDSGroup nodeGroup = group as SDSGroup;
+                        this.RemoveUngroupedNode(node);
+                        this.AddGroupNode(node, nodeGroup);
                     }
-                    SDSGroup nodeGroup = group as SDSGroup;
-                    SDSNode node = element as SDSNode;
-                    this.RemoveUngroupedNode(node);//先从未分组节点中删除，向组内添加节点前，其必定是未分组节点
-                    this.AddGroupNode(node, nodeGroup);//向组内添加该节点
                 }
             };
         }
@@ -300,15 +297,11 @@ namespace SDS.Windows
             {
                 foreach (GraphElement element in elements)
                 {
-                    if (element is not SDSNode)
+                    if (element is SDSNode node)
                     {
-                        continue;
+                        this.RemoveGroupedNode(node, group);
+                        this.AddUngroupedNode(node);
                     }
-
-                    SDSNode node = element as SDSNode;
-
-                    this.RemoveGroupedNode(node, group);
-                    this.AddUngroupedNode(node);
                 }
             };
         }
@@ -364,20 +357,20 @@ namespace SDS.Windows
                 {
                     foreach (GraphElement element in changes.elementsToRemove)
                     {
-                        if (element is not Edge) continue;
-
-                        Edge edge = element as Edge;
-                        SDSChoiceSaveData choiceData = edge.output.userData as SDSChoiceSaveData;
-                        choiceData.NodeID = "";
+                        if (element is Edge edge)
+                        {
+                            SDSChoiceSaveData choiceData = edge.output.userData as SDSChoiceSaveData;
+                            choiceData.NodeID = "";
+                        }
                     }
                 }
 
                 return changes;
             };
         }
-        #endregion
+#endregion
 
-        #region Repeated Elements
+#region Repeated Elements
         /// <summary>
         /// 将未分组的，拥有相同名字的节点分为一类，它们共用errorData
         /// </summary>
@@ -571,9 +564,9 @@ namespace SDS.Windows
                 groups.Remove(oldGroupName);
             }
         }
-        #endregion
+#endregion
 
-        #region Elements Addition
+#region Elements Addition
         private void AddGridBackground()
         {
             GridBackground gridBackground = new GridBackground();
@@ -616,9 +609,9 @@ namespace SDS.Windows
             this.miniMap.style.borderLeftColor = borderColor;
         }
 
-        #endregion
+#endregion
 
-        #region Utilities
+#region Utilities
         public Vector2 GetLocalMousePosition(Vector2 mousePosition, bool isSearchWindow = false)
         {
             Vector2 worldMousePosition = mousePosition;
@@ -646,6 +639,6 @@ namespace SDS.Windows
         {
             this.miniMap.visible = !this.miniMap.visible;
         }
-        #endregion
+#endregion
     }
 }
