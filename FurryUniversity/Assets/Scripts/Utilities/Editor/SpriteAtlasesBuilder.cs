@@ -6,7 +6,7 @@ using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.U2D;
 
-namespace Utilities
+namespace SFramework.Utilities
 {
     public class SpriteAtlasesBuilder
     {

@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Utilities
+namespace SFramework.Utilities
 {
     public static class StaticVariables
     {

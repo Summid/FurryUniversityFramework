@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-namespace Utilities
+namespace SFramework.Utilities
 {
     public static class TypeExtensions
     {
@@ -13,12 +13,10 @@ namespace Utilities
         /// <param name="self"></param>
         /// <param name="assemblyNameStartWith"></param>
         /// <returns></returns>
-        public static IEnumerable<Type> GetSubTypesInAssemblies(this Type self, string assemblyNameStartWith = "Assembly")
+        public static IEnumerable<Type> GetSubTypesInAssemblies(this Type self)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()//获取所有程序集
-                .Where(assembly => assembly.FullName.StartsWith(assemblyNameStartWith))//默认只提取Assembly开头的程序集，避免卡顿
-                .SelectMany(assembly => assembly.GetTypes())//将每个程序集中所有Type对象提取出来
-                .Where(type => type.IsSubclassOf(self));//获取self类型的子类
+            return Assembly.GetAssembly(self).GetTypes()//获取该Type的程序集
+                .Where(type => type.IsSubclassOf(self));//筛选
         }
 
         /// <summary>
