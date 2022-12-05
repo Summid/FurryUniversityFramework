@@ -1,4 +1,3 @@
-
 using SFramework.Threading.Tasks.Internal;
 using System;
 using System.Linq;
@@ -6,6 +5,7 @@ using System.Threading;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.LowLevel;
+using PlayerLoopType = UnityEngine.PlayerLoop;
 
 namespace SFramework.Threading.Tasks
 {
@@ -134,12 +134,12 @@ namespace SFramework.Threading.Tasks
         public static bool IsMainThread => Thread.CurrentThread.ManagedThreadId == mainThreadId;
         public static SynchronizationContext UnitySynchronizationContext => unitySynchronizationContext;
 
-        private static PlayerLoopSystem[] InsertUnner(PlayerLoopSystem loopSystem,bool injectOnFirst,
+        private static PlayerLoopSystem[] InsertRunner(PlayerLoopSystem loopSystem,bool injectOnFirst,
             Type loopRunnerYieldType,ContinuationQueue cq,
             Type loopRunnerType,PlayerLoopRunner runner)
         {
 #if UNITY_EDITOR
-            //Play前后清除迭代对象，清除之前再跑一次
+            //进入Play模式前后清除迭代对象，清除之前再跑一次
             EditorApplication.playModeStateChanged += state =>
             {
                 if (state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.ExitingEditMode)
@@ -218,9 +218,8 @@ namespace SFramework.Threading.Tasks
             if (!domainReloadDisabled && runners != null)//没有关闭域重载，就当无事发生
                 return;
 #endif
-
             PlayerLoopSystem playerLoop = PlayerLoop.GetCurrentPlayerLoop();
-            //to do Initialze(ref playerLoop);
+            Initialize(ref playerLoop);
         }
 
 #if UNITY_EDITOR
@@ -236,8 +235,186 @@ namespace SFramework.Threading.Tasks
 
         private static void ForceEditorPlayerLoopUpdate()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode || EditorApplication.isCompiling || EditorApplication.isUpdating)
+            {
+                //没处在编辑模式，返回
+                return;
+            }
 
+            if (yielders != null)
+            {
+                foreach (ContinuationQueue item in yielders)
+                {
+                    if (item != null)
+                    {
+                        item.Run();
+                    }
+                }
+            }
+
+            if (runners != null)
+            {
+                foreach (PlayerLoopRunner item in runners)
+                {
+                    if (item != null)
+                    {
+                        item.Run();
+                    }
+                }
+            }
         }
 #endif
+
+        private static int FindLoopSystemIndex(PlayerLoopSystem[] playerLoopList,Type systemType)
+        {
+            for (int i = 0; i < playerLoopList.Length; ++i)
+            {
+                if (playerLoopList[i].type == systemType)
+                {
+                    return i;
+                }
+            }
+
+            throw new Exception("PlayerLoopSystem 未找到，type:" + systemType.FullName);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="copyList"></param>
+        /// <param name="injectTimings">为了保持<see cref="Initialize"/>方法的通用性，无论它的injectTimings参数是All还是Standard，它都会申请注入所有InjectPlayerLoopTimings类型（All、Standard、Minimum除外）
+        /// 而判断是否注入则由本方法完成</param>
+        /// <param name="loopType"></param>
+        /// <param name="targetTimings"></param>
+        /// <param name="index"></param>
+        /// <param name="injectOnFirst"></param>
+        /// <param name="loopRunnerYieldType"></param>
+        /// <param name="loopRunnerType"></param>
+        /// <param name="playerLoopTiming"></param>
+        private static void InsertLoop(PlayerLoopSystem[] copyList, InjectPlayerLoopTimings injectTimings, Type loopType, InjectPlayerLoopTimings targetTimings,
+            int index, bool injectOnFirst, Type loopRunnerYieldType, Type loopRunnerType, PlayerLoopTiming playerLoopTiming)
+        {
+            int i = FindLoopSystemIndex(copyList, loopType);
+            if ((injectTimings & targetTimings) == targetTimings)//符合条件才注入
+            {
+                copyList[i].subSystemList = InsertRunner(copyList[i], injectOnFirst,
+                    loopRunnerYieldType, yielders[index] = new ContinuationQueue(playerLoopTiming),
+                    loopRunnerType, runners[index] = new PlayerLoopRunner(playerLoopTiming));
+            }
+            else
+            {
+                //不符合则移除
+                copyList[i].subSystemList = RemoveRunner(copyList[i], loopRunnerYieldType, loopRunnerType);
+            }
+        }
+
+        public static void Initialize(ref PlayerLoopSystem playerLoop, InjectPlayerLoopTimings injectTimings = InjectPlayerLoopTimings.All)
+        {
+            yielders = new ContinuationQueue[16];
+            runners = new PlayerLoopRunner[16];
+
+            PlayerLoopSystem[] copyList = playerLoop.subSystemList.ToArray();
+
+            // Initialization
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.Initialization),
+                InjectPlayerLoopTimings.Initialization, 0, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldInitialization), typeof(STaskLoopRunners.STaskLoopRunnerInitialization), PlayerLoopTiming.Initialization);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.Initialization),
+                InjectPlayerLoopTimings.LastInitialization, 1, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldInitialization), typeof(STaskLoopRunners.STaskLoopRunnerLastInitialization), PlayerLoopTiming.LastInitialization);
+
+            // EarlyUpdate
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.EarlyUpdate),
+                InjectPlayerLoopTimings.EarlyUpdate, 2, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldEarlyUpdate), typeof(STaskLoopRunners.STaskLoopRunnerEarlyUpdate), PlayerLoopTiming.EarlyUpdate);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.EarlyUpdate),
+                InjectPlayerLoopTimings.LastEarlyUpdate, 3, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldEarlyUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastEarlyUpdate), PlayerLoopTiming.LastEarlyUpdate);
+
+            // FixedUpdate
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.FixedUpdate),
+                InjectPlayerLoopTimings.FixedUpdate, 4, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldFixedUpdate), typeof(STaskLoopRunners.STaskLoopRunnerFixedUpdate), PlayerLoopTiming.FixedUpdate);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.FixedUpdate),
+                InjectPlayerLoopTimings.LastFixedUpdate, 5, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldFixedUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastFixedUpdate), PlayerLoopTiming.LastFixedUpdate);
+
+            // PreUpdate
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.PreUpdate),
+                InjectPlayerLoopTimings.PreUpdate, 6, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldPreUpdate), typeof(STaskLoopRunners.STaskLoopRunnerPreUpdate), PlayerLoopTiming.PreUpdate);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.PreUpdate),
+                InjectPlayerLoopTimings.LastPreUpdate, 7, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldPreUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastPreUpdate), PlayerLoopTiming.LastPreUpdate);
+
+            // Update
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.Update),
+                InjectPlayerLoopTimings.Update, 8, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldUpdate), typeof(STaskLoopRunners.STaskLoopRunnerUpdate), PlayerLoopTiming.Update);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.Update),
+                InjectPlayerLoopTimings.LastUpdate, 9, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastUpdate), PlayerLoopTiming.LastUpdate);
+
+            // PreLateUpdate
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.PreLateUpdate),
+                InjectPlayerLoopTimings.PreLateUpdate, 10, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldPreLateUpdate), typeof(STaskLoopRunners.STaskLoopRunnerPreLateUpdate), PlayerLoopTiming.PreLateUpdate);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.PreLateUpdate),
+                InjectPlayerLoopTimings.LastPreLateUpdate, 11, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldPreLateUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastPreLateUpdate), PlayerLoopTiming.LastPreLateUpdate);
+
+            // PostLateUpdate
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.PostLateUpdate),
+                InjectPlayerLoopTimings.PostLateUpdate, 12, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldPostLateUpdate), typeof(STaskLoopRunners.STaskLoopRunnerPostLateUpdate), PlayerLoopTiming.PostLateUpdate);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.PostLateUpdate),
+                InjectPlayerLoopTimings.LastPostLateUpdate, 13, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldPostLateUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastPostLateUpdate), PlayerLoopTiming.LastPostLateUpdate);
+
+            //UNITY_2020_2_OR_NEWER
+            // TimeUpdate
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.TimeUpdate),
+                InjectPlayerLoopTimings.TimeUpdate, 14, true,
+                typeof(STaskLoopRunners.STaskLoopRunnerYieldTimeUpdate), typeof(STaskLoopRunners.STaskLoopRunnerTimeUpdate), PlayerLoopTiming.TimeUpdate);
+
+            InsertLoop(copyList, injectTimings, typeof(PlayerLoopType.TimeUpdate),
+                InjectPlayerLoopTimings.LastTimeUpdate, 15, false,
+                typeof(STaskLoopRunners.STaskLoopRunnerLastYieldTimeUpdate), typeof(STaskLoopRunners.STaskLoopRunnerLastTimeUpdate), PlayerLoopTiming.LastTimeUpdate);
+
+            playerLoop.subSystemList = copyList;
+            PlayerLoop.SetPlayerLoop(playerLoop);
+        }
+
+        public static void AddAction(PlayerLoopTiming timing, IPlayerLoopItem action)
+        {
+            PlayerLoopRunner runner = runners[(int)timing];
+            if (runner == null)
+            {
+                ThrowInvalidLoopTiming(timing);
+            }
+            runner.AddAction(action);
+        }
+
+        public static void AddContinuation(PlayerLoopTiming timing,Action continuation)
+        {
+            ContinuationQueue queue = yielders[(int)timing];
+            if (queue == null)
+            {
+                ThrowInvalidLoopTiming(timing);
+            }
+            queue.Enqueue(continuation);
+        }
+
+        private static void ThrowInvalidLoopTiming(PlayerLoopTiming playerLoopTiming)
+        {
+            throw new InvalidOperationException("playerLoopTiming 未注入；请检查 PlayerLoopHelper.Initialize 方法；PlayerLoopTiming:" + playerLoopTiming);
+        }
     }
 }
