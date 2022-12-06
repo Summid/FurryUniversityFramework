@@ -34,21 +34,21 @@ namespace SFramework.Threading.Tasks
 
 //Initialization
 //-- -
-//**UniTaskLoopRunnerYieldInitialization * *
-//**UniTaskLoopRunnerInitialization * *
+//**STaskLoopRunnerYieldInitialization * *
+//**STaskLoopRunnerInitialization * *
 //PlayerUpdateTime
 //DirectorSampleTime
 //AsyncUploadTimeSlicedUpdate  
 //SynchronizeInputs  
 //SynchronizeState  
 //XREarlyUpdate  
-//**UniTaskLoopRunnerLastYieldInitialization**  
-//**UniTaskLoopRunnerLastInitialization**  
+//**STaskLoopRunnerLastYieldInitialization**  
+//**STaskLoopRunnerLastInitialization**  
 
 //EarlyUpdate  
 //---  
-//**UniTaskLoopRunnerYieldEarlyUpdate**  
-//**UniTaskLoopRunnerEarlyUpdate**  
+//**STaskLoopRunnerYieldEarlyUpdate**  
+//**STaskLoopRunnerEarlyUpdate**  
 //PollPlayerConnection  
 //ProfilerStartFrame  
 //GpuTimestamp  
@@ -79,13 +79,13 @@ namespace SFramework.Threading.Tasks
 //PhysicsResetInterpolatedTransformPosition  
 //SpriteAtlasManagerUpdate  
 //PerformanceAnalyticsUpdate  
-//**UniTaskLoopRunnerLastYieldEarlyUpdate**  
-//**UniTaskLoopRunnerLastEarlyUpdate**  
+//**STaskLoopRunnerLastYieldEarlyUpdate**  
+//**STaskLoopRunnerLastEarlyUpdate**  
 
 //FixedUpdate  
 //---  
-//**UniTaskLoopRunnerYieldFixedUpdate**  
-//**UniTaskLoopRunnerFixedUpdate**  
+//**STaskLoopRunnerYieldFixedUpdate**  
+//**STaskLoopRunnerFixedUpdate**  
 //ClearLines  
 //NewInputFixedUpdate  
 //DirectorFixedSampleTime  
@@ -98,13 +98,13 @@ namespace SFramework.Threading.Tasks
 //Physics2DFixedUpdate  
 //DirectorFixedUpdatePostPhysics  
 //*ScriptRunDelayedFixedFrameRate*  
-//**UniTaskLoopRunnerLastYieldFixedUpdate**  
-//**UniTaskLoopRunnerLastFixedUpdate**  
+//**STaskLoopRunnerLastYieldFixedUpdate**  
+//**STaskLoopRunnerLastFixedUpdate**  
 
 //PreUpdate  
 //---  
-//**UniTaskLoopRunnerYieldPreUpdate**  
-//**UniTaskLoopRunnerPreUpdate**  
+//**STaskLoopRunnerYieldPreUpdate**  
+//**STaskLoopRunnerPreUpdate**  
 //PhysicsUpdate  
 //Physics2DUpdate  
 //CheckTexFieldInput  
@@ -114,24 +114,24 @@ namespace SFramework.Threading.Tasks
 //AIUpdate  
 //WindUpdate  
 //UpdateVideo  
-//**UniTaskLoopRunnerLastYieldPreUpdate**  
-//**UniTaskLoopRunnerLastPreUpdate**  
+//**STaskLoopRunnerLastYieldPreUpdate**  
+//**STaskLoopRunnerLastPreUpdate**  
 
 //Update  
 //---  
-//**UniTaskLoopRunnerYieldUpdate**  
-//**UniTaskLoopRunnerUpdate**  
+//**STaskLoopRunnerYieldUpdate**  
+//**STaskLoopRunnerUpdate**  
 //*ScriptRunBehaviourUpdate*  
 //*ScriptRunDelayedDynamicFrameRate*  
 //*ScriptRunDelayedTasks*  
 //DirectorUpdate  
-//**UniTaskLoopRunnerLastYieldUpdate**  
-//**UniTaskLoopRunnerLastUpdate**  
+//**STaskLoopRunnerLastYieldUpdate**  
+//**STaskLoopRunnerLastUpdate**  
 
 //PreLateUpdate  
 //---  
-//**UniTaskLoopRunnerYieldPreLateUpdate**  
-//**UniTaskLoopRunnerPreLateUpdate**  
+//**STaskLoopRunnerYieldPreLateUpdate**  
+//**STaskLoopRunnerPreLateUpdate**  
 //AIUpdatePostScript  
 //DirectorUpdateAnimationBegin  
 //LegacyAnimationUpdate  
@@ -141,13 +141,13 @@ namespace SFramework.Threading.Tasks
 //ParticleSystemBeginUpdateAll  
 //ConstraintManagerUpdate  
 //*ScriptRunBehaviourLateUpdate*  
-//**UniTaskLoopRunnerLastYieldPreLateUpdate**  
-//**UniTaskLoopRunnerLastPreLateUpdate**  
+//**STaskLoopRunnerLastYieldPreLateUpdate**  
+//**STaskLoopRunnerLastPreLateUpdate**  
 
 //PostLateUpdate  
 //---  
-//**UniTaskLoopRunnerYieldPostLateUpdate**  
-//**UniTaskLoopRunnerPostLateUpdate**  
+//**STaskLoopRunnerYieldPostLateUpdate**  
+//**STaskLoopRunnerPostLateUpdate**  
 //PlayerSendFrameStarted  
 //DirectorLateUpdate  
 //*ScriptRunDelayedDynamicFrameRate*  
@@ -188,5 +188,5 @@ namespace SFramework.Threading.Tasks
 //MemoryFrameMaintenance  
 //ExecuteGameCenterCallbacks  
 //ProfilerEndFrame  
-//**UniTaskLoopRunnerLastYieldPostLateUpdate**  
-//**UniTaskLoopRunnerLastPostLateUpdate**  
+//**STaskLoopRunnerLastYieldPostLateUpdate**  
+//**STaskLoopRunnerLastPostLateUpdate**  

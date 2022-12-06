@@ -16,7 +16,7 @@ namespace SFramework.Threading.Tasks
     }
 
     /// <summary>
-    /// 在STask中干活的对象
+    /// 在STask中干活的对象，类似 IValueTaskSource
     /// 实现该接口可修改STask的行为（任务何时结束，任务结果是多少），以此来扩展STask
     /// </summary>
     public interface ISTaskSource
