@@ -48,12 +48,12 @@ namespace SFramework.Threading.Tasks
 
             public void GetResult(short token)
             {
-                if (!calledGet)
+                if (!this.calledGet)
                 {
-                    calledGet = true;
+                    this.calledGet = true;
                     GC.SuppressFinalize(this);//不要调用析构函数，防止在Finalize线程调用析构函数之后，GC再重复调用
                 }
-                exception.Throw();
+                this.exception.Throw();
             }
 
             public STaskStatus GetStatus(short token)
@@ -73,9 +73,9 @@ namespace SFramework.Threading.Tasks
 
             ~ExceptionResultSource()
             {
-                if (!calledGet)
+                if (!this.calledGet)//未处理异常，抛出来
                 {
-                    STaskScheduler.PublishUnobservedTaskException(exception.SourceException);
+                    STaskScheduler.PublishUnobservedTaskException(this.exception.SourceException);
                 }
             }
         }
@@ -94,7 +94,7 @@ namespace SFramework.Threading.Tasks
 
             public void GetResult(short token)
             {
-                throw new OperationCanceledException(cancellationToken);
+                throw new OperationCanceledException(this.cancellationToken);
             }
 
             public STaskStatus GetStatus(short token)

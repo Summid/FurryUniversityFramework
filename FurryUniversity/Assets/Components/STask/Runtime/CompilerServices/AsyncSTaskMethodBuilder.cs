@@ -28,13 +28,13 @@ namespace SFramework.Threading.Tasks.CompilerServices
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                if (runnerPromise != null)
+                if (this.runnerPromise != null)
                 {
-                    return runnerPromise.Task;
+                    return this.runnerPromise.Task;
                 }
-                else if (ex != null)
+                else if (this.ex != null)
                 {
-                    return STask.FromException(ex);
+                    return STask.FromException(this.ex);
                 }
                 else
                 {
@@ -50,13 +50,13 @@ namespace SFramework.Threading.Tasks.CompilerServices
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetException(Exception exception)
         {
-            if (runnerPromise == null)
+            if (this.runnerPromise == null)
             {
-                ex = exception;
+                this.ex = exception;
             }
             else
             {
-                runnerPromise.SetException(exception);
+                this.runnerPromise.SetException(exception);
             }
         }
 
@@ -66,9 +66,9 @@ namespace SFramework.Threading.Tasks.CompilerServices
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public void SetResult()
         {
-            if (runnerPromise != null)
+            if (this.runnerPromise != null)
             {
-                runnerPromise.SetResult();
+                this.runnerPromise.SetResult();
             }
         }
 
@@ -84,12 +84,12 @@ namespace SFramework.Threading.Tasks.CompilerServices
             where TAwaiter:INotifyCompletion
             where TStateMachine : IAsyncStateMachine
         {
-            if (runnerPromise == null)
+            if (this.runnerPromise == null)
             {
                 //work around runnerPromise is null, to do
             }
 
-            awaiter.OnCompleted(runnerPromise.MoveNext);//awaiter任务执行完毕，推动状态机运行
+            awaiter.OnCompleted(this.runnerPromise.MoveNext);//awaiter任务执行完毕，推动状态机运行
         }
 
         /// <summary>
@@ -106,12 +106,12 @@ namespace SFramework.Threading.Tasks.CompilerServices
             where TAwaiter:ICriticalNotifyCompletion
             where TStateMachine : IAsyncStateMachine
         {
-            if (runnerPromise == null)
+            if (this.runnerPromise == null)
             {
                 //work around runnerPromise is null, to do
             }
 
-            awaiter.UnsafeOnCompleted(runnerPromise.MoveNext);
+            awaiter.UnsafeOnCompleted(this.runnerPromise.MoveNext);
         }
 
         /// <summary>
