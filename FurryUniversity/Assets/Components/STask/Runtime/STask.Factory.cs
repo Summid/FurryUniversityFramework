@@ -8,16 +8,16 @@ namespace SFramework.Threading.Tasks
     {
         public static readonly STask CompletedTask = new STask();
 
-        //public static readonly STask FromException(Exception exception)
-        //{
-        //    if (exception is OperationCanceledException oce)
-        //    {
-        //        return FromCanceled(oce.CancellationToken);
-        //    }
-        //    return new STask(new Exc)
-        //}
+        public static STask FromException(Exception exception)
+        {
+            if (exception is OperationCanceledException oce)
+            {
+                return FromCanceled(oce.CancellationToken);
+            }
+            return new STask(new ExceptionResultSource(exception), 0);
+        }
 
-        /// <summary> 默认的被取消 STask 对象 （CancellationToken 为 None）</summary>
+        /// <summary> 默认的 Canceled STask 对象 （CancellationToken 为 None）</summary>
         private static readonly STask CanceledSTask = new Func<STask>(() =>//用委托包装下
         {
             return new STask(new CanceledResultSource(CancellationToken.None), 0);
@@ -35,6 +35,7 @@ namespace SFramework.Threading.Tasks
             }
         }
 
+        #region ISTaskSource
         private sealed class ExceptionResultSource : ISTaskSource
         {
             private readonly ExceptionDispatchInfo exception;
@@ -74,7 +75,7 @@ namespace SFramework.Threading.Tasks
             {
                 if (!calledGet)
                 {
-                    //to do 抛出 unhandled exception
+                    STaskScheduler.PublishUnobservedTaskException(exception.SourceException);
                 }
             }
         }
@@ -111,5 +112,6 @@ namespace SFramework.Threading.Tasks
                 continuation(state);
             }
         }
+        #endregion
     }
 }

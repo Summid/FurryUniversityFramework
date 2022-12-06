@@ -4,7 +4,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
 {
 
     /// <summary>
-    /// （自定义）状态机执行逻辑的对象，实现 task-like object 的最基本功能
+    /// （自定义）状态机执行逻辑的对象，实现 task-like object （STask） 的最基本功能
     /// </summary>
     internal interface IStateMachineRunnerPromise : ISTaskSource
     {
