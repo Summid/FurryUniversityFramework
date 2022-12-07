@@ -86,7 +86,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
         {
             if (this.runnerPromise == null)
             {
-                //work around runnerPromise is null, to do
+                AsyncSTask<TStateMachine>.SetStateMachine(ref stateMachine, ref this.runnerPromise);
             }
 
             awaiter.OnCompleted(this.runnerPromise.MoveNext);//awaiter任务执行完毕，推动状态机运行
@@ -108,7 +108,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
         {
             if (this.runnerPromise == null)
             {
-                //work around runnerPromise is null, to do
+                AsyncSTask<TStateMachine>.SetStateMachine(ref stateMachine, ref this.runnerPromise);
             }
 
             awaiter.UnsafeOnCompleted(this.runnerPromise.MoveNext);
