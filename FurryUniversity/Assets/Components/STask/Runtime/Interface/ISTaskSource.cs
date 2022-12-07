@@ -1,5 +1,6 @@
 
 using System;
+using System.Runtime.CompilerServices;
 
 namespace SFramework.Threading.Tasks
 {
@@ -26,5 +27,32 @@ namespace SFramework.Threading.Tasks
         void GetResult(short token);
 
         STaskStatus UnsafeGetStatus();//仅供 debug 使用
+    }
+
+    public static class STaskStatusExtensions
+    {
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsCompleted(this STaskStatus status)
+        {
+            return status != STaskStatus.Pending;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsCompletedSuccessfully(this STaskStatus status)
+        {
+            return status == STaskStatus.Succeeded;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsCanceled(this STaskStatus status)
+        {
+            return status == STaskStatus.Canceled;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static bool IsFaulted(this STaskStatus status)
+        {
+            return status == STaskStatus.Faulted;
+        }
     }
 }

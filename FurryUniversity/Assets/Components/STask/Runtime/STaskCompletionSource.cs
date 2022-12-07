@@ -253,7 +253,7 @@ namespace SFramework.Threading.Tasks
         /// 调度 continuation
         /// </summary>
         /// <param name="continuation">当执行完毕后，被调用的回调</param>
-        /// <param name="state">回调的参数</param>
+        /// <param name="state">回调的参数，真正的 STask 的 continuation，具体查看 STask.Awaiter.OnCopleted()</param>
         /// <param name="token"> 执行<see cref="STask"/>构造方法时传递的值 </param>
         public void OnCompleted(Action<object> continuation,object state,short token /*, ValueTaskSourceOnCompletedFlags flags */)
         {

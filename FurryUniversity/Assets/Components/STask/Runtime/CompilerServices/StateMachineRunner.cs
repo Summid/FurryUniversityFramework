@@ -105,7 +105,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
         {
             try
             {
-                this.core.GetResult(token);
+                _ = this.core.GetResult(token);
             }
             finally
             {

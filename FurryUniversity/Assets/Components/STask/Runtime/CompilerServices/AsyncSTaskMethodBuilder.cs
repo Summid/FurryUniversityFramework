@@ -80,7 +80,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
         /// <param name="awaiter"></param>
         /// <param name="stateMachine"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public void AwaitOnCpmpleted<TAwaiter,TStateMachine>(ref TAwaiter awaiter,ref TStateMachine stateMachine)
+        public void AwaitOnCompleted<TAwaiter,TStateMachine>(ref TAwaiter awaiter,ref TStateMachine stateMachine)
             where TAwaiter:INotifyCompletion
             where TStateMachine : IAsyncStateMachine
         {
