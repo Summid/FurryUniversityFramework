@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 using System.Runtime.ExceptionServices;
 using System.Runtime.InteropServices;
@@ -6,6 +7,30 @@ using System.Threading;
 
 namespace SFramework.Threading.Tasks
 {
+    public interface IResolvePromise
+    {
+        bool TrySetResult();
+    }
+
+    public interface IResolvePromise<T>
+    {
+        bool TrySetResult(T value);
+    }
+
+    public interface IRejectPromise
+    {
+        bool TrySetException(Exception exception);
+    }
+
+    public interface ICancelPromise
+    {
+        bool TrySetCanceled(CancellationToken cancellationToken = default);
+    }
+
+    public interface IPromise : IResolvePromise, IRejectPromise, ICancelPromise
+    {
+    }
+
     internal class ExceptionHolder
     {
         private ExceptionDispatchInfo exception;
@@ -305,6 +330,130 @@ namespace SFramework.Threading.Tasks
             {
                 throw new InvalidOperationException("Token version is not matched, can not await twice or get Status after await.");
             }
+        }
+    }
+
+    /// <summary>
+    /// 用于构造<see cref="STask"/>，内部由<see cref="STaskCompletionSourceCore{TResult}"/>实现，获取结果(await)后自动设置其<see cref="STaskCompletionSourceCore{TResult}.Version"/>
+    /// </summary>
+    public class AutoResetSTaskCompletionSource : ISTaskSource, ITaskPoolNode<AutoResetSTaskCompletionSource>, IPromise
+    {
+        static TaskPool<AutoResetSTaskCompletionSource> pool;
+        AutoResetSTaskCompletionSource nextNode;
+        public ref AutoResetSTaskCompletionSource NextNode => ref this.nextNode;
+
+        static AutoResetSTaskCompletionSource()
+        {
+            TaskPool.RegisterSizeGetter(typeof(AutoResetSTaskCompletionSource), () => pool.Size);
+        }
+
+        STaskCompletionSourceCore<AsyncUnit> core;
+
+        AutoResetSTaskCompletionSource()
+        {
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource Create()
+        {
+            if (!pool.TryPop(out var result))
+            {
+                result = new AutoResetSTaskCompletionSource();
+            }
+            return result;
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource CreateFromCanceled(CancellationToken cancellationToken, out short token)
+        {
+            var source = Create();
+            source.TrySetCanceled(cancellationToken);
+            token = source.core.Version;
+            return source;
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource CreateFromException(Exception exception, out short token)
+        {
+            var source = Create();
+            source.TrySetException(exception);
+            token = source.core.Version;
+            return source;
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource CreateCompleted(out short token)
+        {
+            var source = Create();
+            source.TrySetResult();
+            token = source.core.Version;
+            return source;
+        }
+
+        public STask Task
+        {
+            [DebuggerHidden]
+            get
+            {
+                return new STask(this, this.core.Version);
+            }
+        }
+
+        [DebuggerHidden]
+        public bool TrySetResult()
+        {
+            return this.core.TrySetResult(AsyncUnit.Default);
+        }
+
+        [DebuggerHidden]
+        public bool TrySetCanceled(CancellationToken cancellationToken = default)
+        {
+            return this.core.TrySetCanceled(cancellationToken);
+        }
+
+        [DebuggerHidden]
+        public bool TrySetException(Exception exception)
+        {
+            return this.core.TrySetException(exception);
+        }
+
+        [DebuggerHidden]
+        public void GetResult(short token)
+        {
+            try
+            {
+                this.core.GetResult(token);
+            }
+            finally
+            {
+                this.TryReturn();
+            }
+
+        }
+
+        [DebuggerHidden]
+        public STaskStatus GetStatus(short token)
+        {
+            return this.core.GetStatus(token);
+        }
+
+        [DebuggerHidden]
+        public STaskStatus UnsafeGetStatus()
+        {
+            return this.core.UnsafeGetStatus();
+        }
+
+        [DebuggerHidden]
+        public void OnCompleted(Action<object> continuation, object state, short token)
+        {
+            this.core.OnCompleted(continuation, state, token);
+        }
+
+        [DebuggerHidden]
+        bool TryReturn()
+        {
+            this.core.Reset();
+            return pool.TryPush(this);
         }
     }
 }
