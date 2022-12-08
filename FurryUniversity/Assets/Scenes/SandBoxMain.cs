@@ -33,6 +33,7 @@ public class SandBoxMain : MonoBehaviour, IPlayerLoopItem
 
         if(Input.GetKeyDown(KeyCode.S))
         {
+            Time.timeScale = 0.5f;
             this.WaitSTask();
         }
     }
@@ -47,6 +48,6 @@ public class SandBoxMain : MonoBehaviour, IPlayerLoopItem
 
     public async STask WaitTaskDelaySeconds()
     {
-        await Task.Delay(3000);
+        await STask.Delay(2000,DelayType.RealTime);
     }
 }
