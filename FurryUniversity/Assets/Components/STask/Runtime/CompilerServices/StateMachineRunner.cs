@@ -15,6 +15,17 @@ namespace SFramework.Threading.Tasks.CompilerServices
         void SetException(Exception exception);
     }
 
+    /// <summary>
+    /// （自定义）状态机执行逻辑的对象，实现 task-like object （STask） 的最基本功能，因此都是 Set 方法，带返回值
+    /// </summary>
+    internal interface IStateMachineRunnerPromise<T> : ISTaskSource<T>
+    {
+        Action MoveNext { get; }
+        STask<T> Task { get; }
+        void SetResult();
+        void SetException(Exception exception);
+    }
+
     internal sealed class AsyncSTask<TStateMachine> : IStateMachineRunnerPromise, ISTaskSource, ITaskPoolNode<AsyncSTask<TStateMachine>>
         where TStateMachine : IAsyncStateMachine
     {
@@ -68,7 +79,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
             return pool.TryPush(this);
         }
 
-        #region IStateMahineRunnerPromise
+        #region IStateMachineRunnerPromise
         public Action MoveNext { get; }
 
         public STask Task
@@ -118,9 +129,99 @@ namespace SFramework.Threading.Tasks.CompilerServices
             return this.core.UnsafeGetStatus();
         }
         #endregion
+    }
+
+    internal sealed class AsyncSTask<TStateMachine, T> : IStateMachineRunnerPromise<T>, ISTaskSource<T>, ITaskPoolNode<AsyncSTask<TStateMachine, T>>
+        where TStateMachine : IAsyncStateMachine
+    {
+        private TStateMachine stateMachine;
+        private STaskCompletionSourceCore<T> core;
+
+        private AsyncSTask()
+        {
+            this.MoveNext = this.Run;
+        }
+
+        [MethodImpl(MethodImplOptions.InternalCall)]
+        private void Run()
+        {
+            this.stateMachine.MoveNext();
+        }
 
 
+        #region Pool
+        private static TaskPool<AsyncSTask<TStateMachine, T>> pool;
 
+        public static void SetStateMachine(ref TStateMachine stateMachine, ref IStateMachineRunnerPromise<T> runnerPromiseFieldRef)
+        {
+            if (!pool.TryPop(out AsyncSTask<TStateMachine, T> result))
+            {
+                result = new AsyncSTask<TStateMachine, T>();
+            }
 
+            runnerPromiseFieldRef = result;// set runner before copied
+            result.stateMachine = stateMachine;// copy struct StateMachine (in release build)
+        }
+
+        private AsyncSTask<TStateMachine, T> nextNode;
+        public ref AsyncSTask<TStateMachine, T> NextNode => ref this.nextNode;
+        #endregion
+
+        private void Return()
+        {
+            this.core.Reset();
+            this.stateMachine = default;
+            pool.TryPush(this);
+        }
+
+        private bool TryRetuen()
+        {
+            this.core.Reset();
+            this.stateMachine = default;
+            return pool.TryPush(this);
+        }
+
+        #region IStateMachineRunnerPromise<T>
+        public Action MoveNext { get; }
+
+        public STask<T> Task => throw new NotImplementedException();
+
+        public void SetException(Exception exception)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void SetResult()
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
+
+        #region ISTaskSource<T>
+        public T GetResult(short token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public STaskStatus GetStatus(short token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnCompleted(Action<object> continuation, object state, short token)
+        {
+            throw new NotImplementedException();
+        }
+
+        public STaskStatus UnsafeGetStatus()
+        {
+            throw new NotImplementedException();
+        }
+
+        void ISTaskSource.GetResult(short token)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

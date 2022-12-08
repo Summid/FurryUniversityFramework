@@ -18,7 +18,7 @@ namespace SFramework.Threading.Tasks
 
     /// <summary>
     /// 轻量级 task-like 对象
-    /// <see cref="https://github.com/dotnet/roslyn/blob/main/docs/features/task-types.md"/>
+    /// <see href="https://github.com/dotnet/roslyn/blob/main/docs/features/task-types.md"/>
     /// </summary>
     [AsyncMethodBuilder(typeof(AsyncSTaskMethodBuilder))]
     [StructLayout(LayoutKind.Auto)]
@@ -118,6 +118,108 @@ namespace SFramework.Threading.Tasks
             }
 
 
+        }
+    }
+
+    [AsyncMethodBuilder(typeof(AsyncSTaskMethodBuilder))]
+    [StructLayout(LayoutKind.Auto)]
+    public readonly struct STask<T>
+    {
+        private readonly ISTaskSource<T> source;
+        private readonly T result;
+        private readonly short token;
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public STask(T result)
+        {
+            this.source = default;
+            this.token = default;
+            this.result = result;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public STask(ISTaskSource<T> source, short token)
+        {
+            this.source = source;
+            this.token = token;
+            this.result = default;
+        }
+
+        public STaskStatus Status
+        {
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            get
+            {
+                return (this.source == null) ? STaskStatus.Succeeded : this.source.GetStatus(token);
+            }
+        }
+
+        public override string ToString()
+        {
+            return (this.source == null) ? this.result?.ToString()
+                : "(" + this.source.UnsafeGetStatus() + ")";
+        }
+
+        public readonly struct Awaiter : ICriticalNotifyCompletion
+        {
+            private readonly STask<T> task;
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public Awaiter(in STask<T> task)
+            {
+                this.task = task;
+            }
+
+            public bool IsCompleted
+            {
+                [MethodImpl(MethodImplOptions.AggressiveInlining)]
+                get
+                {
+                    return this.task.Status.IsCompleted();
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public T GetResult()
+            {
+                ISTaskSource<T> source = this.task.source;
+                if (source == null)
+                {
+                    return this.task.result;
+                }
+                else
+                {
+                    return source.GetResult(this.task.token);
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void OnCompleted(Action continuation)
+            {
+                ISTaskSource<T> source = this.task.source;
+                if (source == null)
+                {
+                    continuation();
+                }
+                else
+                {
+                    source.OnCompleted(AwaiterActions.InvokeContinuationDelegate, continuation, this.task.token);
+                }
+            }
+
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void UnsafeOnCompleted(Action continuation)
+            {
+                ISTaskSource<T> source = this.task.source;
+                if (source == null)
+                {
+                    continuation();
+                }
+                else
+                {
+                    source.OnCompleted(AwaiterActions.InvokeContinuationDelegate, continuation, this.task.token);
+                }
+            }
         }
     }
 }

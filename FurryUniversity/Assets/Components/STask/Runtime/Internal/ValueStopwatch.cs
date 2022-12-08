@@ -5,7 +5,7 @@ namespace SFramework.Threading.Tasks.Internal
 {
     /// <summary>
     /// 值类型版本的 Stopwatch，在 ASP.NET Core 中已有实现
-    /// <see cref="https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ValueStopwatch/ValueStopwatch.cs"/>
+    /// <see href="https://github.com/dotnet/aspnetcore/blob/main/src/Shared/ValueStopwatch/ValueStopwatch.cs"/>
     /// </summary>
     public readonly struct ValueStopwatch
     {
