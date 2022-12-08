@@ -22,7 +22,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
     {
         Action MoveNext { get; }
         STask<T> Task { get; }
-        void SetResult();
+        void SetResult(T result);
         void SetException(Exception exception);
     }
 
@@ -86,7 +86,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
         {
             get
             {
-                return new STask(this, core.Version);
+                return new STask(this, this.core.Version);
             }
         }
 
@@ -142,7 +142,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
             this.MoveNext = this.Run;
         }
 
-        [MethodImpl(MethodImplOptions.InternalCall)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Run()
         {
             this.stateMachine.MoveNext();
@@ -154,17 +154,22 @@ namespace SFramework.Threading.Tasks.CompilerServices
 
         public static void SetStateMachine(ref TStateMachine stateMachine, ref IStateMachineRunnerPromise<T> runnerPromiseFieldRef)
         {
-            if (!pool.TryPop(out AsyncSTask<TStateMachine, T> result))
+            if (!pool.TryPop(out var result))
             {
                 result = new AsyncSTask<TStateMachine, T>();
             }
 
-            runnerPromiseFieldRef = result;// set runner before copied
-            result.stateMachine = stateMachine;// copy struct StateMachine (in release build)
+            runnerPromiseFieldRef = result; // set runner before copied.
+            result.stateMachine = stateMachine; // copy struct StateMachine(in release build).
         }
 
         private AsyncSTask<TStateMachine, T> nextNode;
         public ref AsyncSTask<TStateMachine, T> NextNode => ref this.nextNode;
+
+        static AsyncSTask()//静态构造函数，只执行一次（实例化前或引用其他静态成员前调用一次）
+        {
+            TaskPool.RegisterSizeGetter(typeof(AsyncSTask<TStateMachine, T>), () => pool.Size);
+        }
         #endregion
 
         private void Return()
@@ -184,43 +189,56 @@ namespace SFramework.Threading.Tasks.CompilerServices
         #region IStateMachineRunnerPromise<T>
         public Action MoveNext { get; }
 
-        public STask<T> Task => throw new NotImplementedException();
+        public STask<T> Task
+        {
+            get
+            {
+                return new STask<T>(this, this.core.Version);
+            }
+        }
 
         public void SetException(Exception exception)
         {
-            throw new NotImplementedException();
+            this.core.TrySetException(exception);
         }
 
-        public void SetResult()
+        public void SetResult(T result)
         {
-            throw new NotImplementedException();
+            this.core.TrySetResult(result);
         }
         #endregion
 
         #region ISTaskSource<T>
         public T GetResult(short token)
         {
-            throw new NotImplementedException();
-        }
-
-        public STaskStatus GetStatus(short token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnCompleted(Action<object> continuation, object state, short token)
-        {
-            throw new NotImplementedException();
-        }
-
-        public STaskStatus UnsafeGetStatus()
-        {
-            throw new NotImplementedException();
+            try
+            {
+                return this.core.GetResult(token);
+            }
+            finally
+            {
+                this.TryRetuen();
+            }
         }
 
         void ISTaskSource.GetResult(short token)
         {
-            throw new NotImplementedException();
+            this.GetResult(token);
+        }
+
+        public STaskStatus GetStatus(short token)
+        {
+            return this.core.GetStatus(token);
+        }
+
+        public STaskStatus UnsafeGetStatus()
+        {
+            return this.core.UnsafeGetStatus();
+        }
+
+        public void OnCompleted(Action<object> continuation, object state, short token)
+        {
+            this.core.OnCompleted(continuation, state, token);
         }
         #endregion
     }

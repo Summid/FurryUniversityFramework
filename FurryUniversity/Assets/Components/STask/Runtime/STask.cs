@@ -121,7 +121,7 @@ namespace SFramework.Threading.Tasks
         }
     }
 
-    [AsyncMethodBuilder(typeof(AsyncSTaskMethodBuilder))]
+    [AsyncMethodBuilder(typeof(AsyncSTaskMethodBuilder<>))]
     [StructLayout(LayoutKind.Auto)]
     public readonly struct STask<T>
     {
@@ -150,8 +150,14 @@ namespace SFramework.Threading.Tasks
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
             get
             {
-                return (this.source == null) ? STaskStatus.Succeeded : this.source.GetStatus(token);
+                return (this.source == null) ? STaskStatus.Succeeded : this.source.GetStatus(this.token);
             }
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public Awaiter GetAwaiter()
+        {
+            return new Awaiter(this);
         }
 
         public override string ToString()

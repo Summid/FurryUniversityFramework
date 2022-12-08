@@ -81,7 +81,7 @@ namespace SFramework.Threading.Tasks
     /// token 与这里的 <see cref="version"/> 是同一个意思
     /// </remarks>
     /// <typeparam name="TResult"></typeparam>
-    /// <seealso cref="https://github.com/dotnet/coreclr/blob/master/src/System.Private.CoreLib/shared/System/Threading/Tasks/Sources/ManualResetValueTaskSourceCore.cs"/>参考
+    /// <seealso href="https://github.com/dotnet/coreclr/blob/master/src/System.Private.CoreLib/shared/System/Threading/Tasks/Sources/ManualResetValueTaskSourceCore.cs"/>参考
     [StructLayout(LayoutKind.Auto)]
     public struct STaskCompletionSourceCore<TResult>
     {
@@ -347,7 +347,7 @@ namespace SFramework.Threading.Tasks
             TaskPool.RegisterSizeGetter(typeof(AutoResetSTaskCompletionSource), () => pool.Size);
         }
 
-        STaskCompletionSourceCore<AsyncUnit> core;
+        private STaskCompletionSourceCore<AsyncUnit> core;
 
         AutoResetSTaskCompletionSource()
         {
