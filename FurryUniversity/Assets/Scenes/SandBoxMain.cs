@@ -29,7 +29,8 @@ public class SandBoxMain : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.S))
         {
-            this.WaitSTask();
+            //this.WaitSTask();
+            this.TestSTaskVoid();
         }
     }
 
@@ -46,5 +47,19 @@ public class SandBoxMain : MonoBehaviour
     {
         await STask.Delay(1000);
         return 233;
+    }
+
+    public void TestSTaskVoid()
+    {
+        Debug.Log("before invoke");
+        _=this.STaskVoid();
+        Debug.Log("after invoke");
+    }
+
+    public async STaskVoid STaskVoid()
+    {
+        Debug.Log("before await");
+        await STask.Delay(1000);
+        Debug.Log("after await");
     }
 }

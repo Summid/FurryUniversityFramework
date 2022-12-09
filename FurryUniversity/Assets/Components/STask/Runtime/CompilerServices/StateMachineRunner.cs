@@ -3,6 +3,14 @@ using System.Runtime.CompilerServices;
 
 namespace SFramework.Threading.Tasks.CompilerServices
 {
+    /// <summary>
+    /// STaskVoid 状态机执行逻辑的对象
+    /// </summary>
+    internal interface IStateMachineRunner
+    {
+        Action MoveNext { get; }
+        void Return();//结束就直接 return
+    }
 
     /// <summary>
     /// （自定义）状态机执行逻辑的对象，实现 task-like object （STask） 的最基本功能，因此都是 Set 方法
@@ -24,6 +32,71 @@ namespace SFramework.Threading.Tasks.CompilerServices
         STask<T> Task { get; }
         void SetResult(T result);
         void SetException(Exception exception);
+    }
+
+    internal sealed class AsyncSTaskVoid<TStateMachine> : IStateMachineRunner, ITaskPoolNode<AsyncSTaskVoid<TStateMachine>>, ISTaskSource
+        where TStateMachine : IAsyncStateMachine
+    {
+        private TStateMachine stateMachine;
+
+        public AsyncSTaskVoid()
+        {
+            this.MoveNext = this.Run;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Run()
+        {
+            this.stateMachine.MoveNext();
+        }
+
+        #region Pool
+        private static TaskPool<AsyncSTaskVoid<TStateMachine>> pool;
+
+        public static void SetStateMachine(ref TStateMachine stateMachine, ref IStateMachineRunner runnerFieldRef)
+        {
+            if (!pool.TryPop(out AsyncSTaskVoid<TStateMachine> result))
+            {
+                result = new AsyncSTaskVoid<TStateMachine>();
+            }
+
+            runnerFieldRef = result;// set runner before copied
+            result.stateMachine = stateMachine;// copy struct StateMachine(in release build)
+        }
+
+        static AsyncSTaskVoid()
+        {
+            TaskPool.RegisterSizeGetter(typeof(AsyncSTaskVoid<TStateMachine>), () => pool.Size);
+        }
+
+        private AsyncSTaskVoid<TStateMachine> nextNode;
+        public ref AsyncSTaskVoid<TStateMachine> NextNode => ref this.nextNode;
+        #endregion
+
+        #region IStateMachineRunner
+        public Action MoveNext { get; }
+
+        public void Return()
+        {
+            this.stateMachine = default;
+            pool.TryPush(this);
+        }
+        #endregion
+
+        #region ISTaskSource
+        public STaskStatus GetStatus(short token)
+        {
+            return STaskStatus.Pending;
+        }
+        public STaskStatus UnsafeGetStatus()
+        {
+            return STaskStatus.Pending;
+        }
+
+        public void OnCompleted(Action<object> continuation, object state, short token) { }
+
+        public void GetResult(short token) { }
+        #endregion
     }
 
     internal sealed class AsyncSTask<TStateMachine> : IStateMachineRunnerPromise, ISTaskSource, ITaskPoolNode<AsyncSTask<TStateMachine>>
