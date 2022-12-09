@@ -31,6 +31,10 @@ namespace SFramework.Threading.Tasks
     {
     }
 
+    public interface IPromise<T> : IResolvePromise<T>, IRejectPromise, ICancelPromise
+    {
+    }
+
     internal class ExceptionHolder
     {
         private ExceptionDispatchInfo exception;
@@ -429,6 +433,135 @@ namespace SFramework.Threading.Tasks
                 this.TryReturn();
             }
 
+        }
+
+        [DebuggerHidden]
+        public STaskStatus GetStatus(short token)
+        {
+            return this.core.GetStatus(token);
+        }
+
+        [DebuggerHidden]
+        public STaskStatus UnsafeGetStatus()
+        {
+            return this.core.UnsafeGetStatus();
+        }
+
+        [DebuggerHidden]
+        public void OnCompleted(Action<object> continuation, object state, short token)
+        {
+            this.core.OnCompleted(continuation, state, token);
+        }
+
+        [DebuggerHidden]
+        bool TryReturn()
+        {
+            this.core.Reset();
+            return pool.TryPush(this);
+        }
+    }
+
+    /// <summary>
+    /// 用于构造<see cref="STask{T}"/>，内部由<see cref="STaskCompletionSourceCore{TResult}"/>实现，获取结果(await)后自动设置其<see cref="STaskCompletionSourceCore{TResult}.Version"/>
+    /// </summary>
+    public class AutoResetSTaskCompletionSource<T> : ISTaskSource<T>, ITaskPoolNode<AutoResetSTaskCompletionSource<T>>, IPromise<T>
+    {
+        static TaskPool<AutoResetSTaskCompletionSource<T>> pool;
+        AutoResetSTaskCompletionSource<T> nextNode;
+        public ref AutoResetSTaskCompletionSource<T> NextNode => ref this.nextNode;
+
+        static AutoResetSTaskCompletionSource()
+        {
+            TaskPool.RegisterSizeGetter(typeof(AutoResetSTaskCompletionSource<T>), () => pool.Size);
+        }
+
+        STaskCompletionSourceCore<T> core;
+
+        AutoResetSTaskCompletionSource()
+        {
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource<T> Create()
+        {
+            if (!pool.TryPop(out var result))
+            {
+                result = new AutoResetSTaskCompletionSource<T>();
+            }
+            return result;
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource<T> CreateFromCanceled(CancellationToken cancellationToken, out short token)
+        {
+            var source = Create();
+            source.TrySetCanceled(cancellationToken);
+            token = source.core.Version;
+            return source;
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource<T> CreateFromException(Exception exception, out short token)
+        {
+            var source = Create();
+            source.TrySetException(exception);
+            token = source.core.Version;
+            return source;
+        }
+
+        [DebuggerHidden]
+        public static AutoResetSTaskCompletionSource<T> CreateFromResult(T result, out short token)
+        {
+            var source = Create();
+            source.TrySetResult(result);
+            token = source.core.Version;
+            return source;
+        }
+
+        public STask<T> Task
+        {
+            [DebuggerHidden]
+            get
+            {
+                return new STask<T>(this, this.core.Version);
+            }
+        }
+
+        [DebuggerHidden]
+        public bool TrySetResult(T result)
+        {
+            return this.core.TrySetResult(result);
+        }
+
+        [DebuggerHidden]
+        public bool TrySetCanceled(CancellationToken cancellationToken = default)
+        {
+            return this.core.TrySetCanceled(cancellationToken);
+        }
+
+        [DebuggerHidden]
+        public bool TrySetException(Exception exception)
+        {
+            return this.core.TrySetException(exception);
+        }
+
+        [DebuggerHidden]
+        public T GetResult(short token)
+        {
+            try
+            {
+                return this.core.GetResult(token);
+            }
+            finally
+            {
+                this.TryReturn();
+            }
+        }
+
+        [DebuggerHidden]
+        void ISTaskSource.GetResult(short token)
+        {
+            this.GetResult(token);
         }
 
         [DebuggerHidden]
