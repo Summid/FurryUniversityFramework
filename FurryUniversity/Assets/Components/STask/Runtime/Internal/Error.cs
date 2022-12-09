@@ -54,6 +54,11 @@ namespace SFramework.Threading.Tasks.Internal
             throw new InvalidOperationException("Not yet Completed.");
         }
 
+        /// <summary>
+        /// 若continuation已被注册，抛出异常
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="continuationField"></param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static void ThrowWhenContinuationIsAlreadyRegistered<T>(T continuationField) where T : class
         {
