@@ -9,9 +9,11 @@ namespace SFramework.Core.GameManager
             if (this.isInitialized)
                 return false;
             this.OnInitialized();
+
+            this.isInitialized = true;
             return true;
         }
 
-        protected virtual void OnInitialized() { }
+        protected abstract void OnInitialized();
     }
 }

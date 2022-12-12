@@ -1,9 +1,10 @@
-using SFramework.Threading.Tasks;
+using SFramework.Utilities;
 using System;
+using System.Collections.Generic;
 
 namespace SFramework.Core.GameManager
 {
-    public class GameManager
+    public partial class GameManager
     {
         public static GameManager Instance { get; private set; }
         private GameManager() { }
@@ -20,9 +21,30 @@ namespace SFramework.Core.GameManager
             }
         }
 
+        private Dictionary<Type, GameManagerBase> gameManagers = new Dictionary<Type, GameManagerBase>();
         private void InitializeGameManagers()
         {
+            var managerTypes = typeof(GameManagerBase).GetSubTypesInAssemblies();
+            foreach (var managerType in managerTypes)
+            {
+                if (!this.gameManagers.ContainsKey(managerType))
+                {
+                    this.gameManagers.Add(managerType, Activator.CreateInstance(managerType) as GameManagerBase);
+                }
+                this.gameManagers[managerType].Initialize();
+            }
+        }
 
+        public T GetManager<T>(Type type) where T : GameManagerBase
+        {
+            if (this.gameManagers.TryGetValue(type, out GameManagerBase manager))
+            {
+                return manager as T;
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 }

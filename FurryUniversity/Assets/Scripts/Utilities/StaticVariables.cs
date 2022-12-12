@@ -16,6 +16,13 @@ namespace SFramework.Utilities
         public static readonly string UISpritesPath = $"{SpritesPath}/UI";
         public static readonly string UISpriteAtalasesPath = $"{BundlesPath}/SpriteAtlases";
 
+        public static readonly string Scripts = "Scripts";
+        public static readonly string GameManagers = "GameManagers";
+        public static readonly string Gen = "Gen";
+        public static readonly string ScriptsPath = $"{Assets}/{Scripts}";
+        public static readonly string GameManagersPath = $"{ScriptsPath}/{GameManagers}";
+        public static readonly string GameManagersGenPath = $"{GameManagersPath}/{Gen}";
+
         public static void CreateFolder(string path,string folderName)
         {
             if (AssetDatabase.IsValidFolder($"{path}/{folderName}"))
@@ -23,6 +30,7 @@ namespace SFramework.Utilities
                 return;
             }
             AssetDatabase.CreateFolder(path, folderName);
+            AssetDatabase.Refresh();
         }
 
         public static void CreateUISpriteAtlasesPath()

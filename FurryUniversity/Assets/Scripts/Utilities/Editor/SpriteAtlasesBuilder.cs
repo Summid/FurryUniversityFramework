@@ -6,17 +6,19 @@ using UnityEditor.U2D;
 using UnityEngine;
 using UnityEngine.U2D;
 
-namespace SFramework.Utilities
+namespace SFramework.Utilities.Editor
 {
     public class SpriteAtlasesBuilder
     {
         private static Dictionary<string, SpriteAtlas> atlasInfos = new Dictionary<string, SpriteAtlas>();
+#if UNITY_EDITOR
 
         [InitializeOnEnterPlayMode]
         private static void Initialize()
         {
             BuildAtlas();
         }
+#endif
 
         [MenuItem("AssetBundle/BuildAtlases For Sprites")]
         public static void BuildAtlas()
@@ -58,7 +60,7 @@ namespace SFramework.Utilities
             //以该目录下的直接子目录创建图集
             foreach (FileSystemInfo file in files)
             {
-                if(Path.GetExtension(file.Name) == ".meta")
+                if (Path.GetExtension(file.Name) == ".meta")
                 {
                     continue;
                 }
