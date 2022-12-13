@@ -29,12 +29,21 @@ public class SandBoxMain : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.S))
         {
-            //this.WaitSTask();
-            this.TestSTaskVoid();
+            Debug.Log("before forget");
+            this.WaitSeconds().Forget();
+            //this.WaitSTask().Forget();
+            Debug.Log("after forget");
         }
     }
 
-    public async void WaitSTask()
+    public async STask WaitSeconds()
+    {
+        Debug.Log("before wait");
+        await Task.Delay(1000);
+        Debug.Log("after wait");
+    }
+
+    public async STask WaitSTask()
     {
         Debug.Log("before wait");
         var result = await this.WaitTaskDelaySeconds();
