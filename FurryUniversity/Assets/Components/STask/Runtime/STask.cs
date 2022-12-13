@@ -117,7 +117,23 @@ namespace SFramework.Threading.Tasks
                 }
             }
 
-
+            /// <summary>
+            /// 手动注册 continuation 的话，用该方法来替代 OnCompleted
+            /// </summary>
+            /// <param name="continuation"></param>
+            /// <param name="state"></param>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SourceOnCompleted(Action<object> continuation, object state)
+            {
+                if (this.task.source == null)
+                {
+                    continuation(state);
+                }
+                else
+                {
+                    this.task.source.OnCompleted(continuation, state, this.task.token);
+                }
+            }
         }
     }
 
@@ -224,6 +240,25 @@ namespace SFramework.Threading.Tasks
                 else
                 {
                     source.OnCompleted(AwaiterActions.InvokeContinuationDelegate, continuation, this.task.token);
+                }
+            }
+
+            /// <summary>
+            /// 手动注册 continuation 的话，使用该方法替代 OnCompleted
+            /// </summary>
+            /// <param name="continuation"></param>
+            /// <param name="state"></param>
+            [MethodImpl(MethodImplOptions.AggressiveInlining)]
+            public void SourceOnCompleted(Action<object> continuation, object state)
+            {
+                ISTaskSource<T> source = this.task.source;
+                if (source == null)
+                {
+                    continuation(state);
+                }
+                else
+                {
+                    source.OnCompleted(continuation, state, this.task.token);
                 }
             }
         }
