@@ -20,7 +20,7 @@ namespace SFramework.Utilities.Editor
         }
 #endif
 
-        [MenuItem("AssetBundle/BuildAtlases For Sprites")]
+        [MenuItem("AssetOperation/BuildAtlases For Sprites")]
         public static void BuildAtlas()
         {
             atlasInfos.Clear();

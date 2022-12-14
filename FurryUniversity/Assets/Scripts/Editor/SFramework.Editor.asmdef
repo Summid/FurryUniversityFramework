@@ -1,8 +1,8 @@
 {
-    "name": "SDialogueSystemEditor",
+    "name": "SFramework.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:2be9c19e322963d4daf6184d2f5d8555"
+        "GUID:cb67438797981924ca1d613c04d1c51d"
     ],
     "includePlatforms": [
         "Editor"
