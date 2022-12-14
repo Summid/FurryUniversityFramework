@@ -29,11 +29,15 @@ public class SandBoxMain : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.S))
         {
-            Debug.Log("before forget");
-            this.WaitSeconds().Forget();
-            //this.WaitSTask().Forget();
-            Debug.Log("after forget");
+            this.WaitNextFrame().Forget();
         }
+    }
+
+    public async STaskVoid WaitNextFrame()
+    {
+        Debug.Log("Time.frameCount "+Time.frameCount);
+        await STask.NextFrame();
+        Debug.Log("Time.frameCount "+Time.frameCount);
     }
 
     public async STask WaitSeconds()
