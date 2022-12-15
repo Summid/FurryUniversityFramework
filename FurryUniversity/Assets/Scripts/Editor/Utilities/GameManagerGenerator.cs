@@ -13,9 +13,9 @@ namespace SFramework.Utilities.Editor
         [InitializeOnLoadMethod]
         private static void GenerateGameMangerCode()
         {
-            StaticVariables.CreateFolder(StaticVariables.Assets, StaticVariables.Scripts);
-            StaticVariables.CreateFolder(StaticVariables.ScriptsPath, StaticVariables.GameManagers);
-            StaticVariables.CreateFolder(StaticVariables.GameManagersPath, StaticVariables.Gen);
+            EditorHelper.CreateFolder(StaticVariables.Assets, StaticVariables.Scripts);
+            EditorHelper.CreateFolder(StaticVariables.ScriptsPath, StaticVariables.GameManagers);
+            EditorHelper.CreateFolder(StaticVariables.GameManagersPath, StaticVariables.Gen);
 
             Generate();
         }

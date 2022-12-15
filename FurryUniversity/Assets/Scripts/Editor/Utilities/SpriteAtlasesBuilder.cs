@@ -25,7 +25,7 @@ namespace SFramework.Utilities.Editor
         {
             atlasInfos.Clear();
 
-            StaticVariables.CreateUISpriteAtlasesPath();
+            EditorHelper.CreateUISpriteAtlasesPath();
             InitializeAtlases();
             FindFiles();
             AssetDatabase.Refresh();
@@ -33,7 +33,7 @@ namespace SFramework.Utilities.Editor
 
         private static void InitializeAtlases()
         {
-            DirectoryInfo atlasDirectoryInfo = new DirectoryInfo(StaticVariables.GetFullPath(StaticVariables.UISpriteAtalasesPath));
+            DirectoryInfo atlasDirectoryInfo = new DirectoryInfo(EditorHelper.GetFullPath(StaticVariables.UISpriteAtalasesPath));
             FileSystemInfo[] atlases = atlasDirectoryInfo.GetFileSystemInfos();
             foreach (FileSystemInfo atlas in atlases)
             {
@@ -53,7 +53,7 @@ namespace SFramework.Utilities.Editor
         /// </summary>
         private static void FindFiles()
         {
-            DirectoryInfo directoryInfo = new DirectoryInfo($"{StaticVariables.GetFullPath(StaticVariables.UISpritesPath)}");
+            DirectoryInfo directoryInfo = new DirectoryInfo($"{EditorHelper.GetFullPath(StaticVariables.UISpritesPath)}");
             //FileSystemInfo提供FileInfo和DirectoryInfo的共有方法，用于不确定操作对象为File还是Direcory时很有用
             FileSystemInfo[] files = directoryInfo.GetFileSystemInfos();//获取目录下所有文件和文件夹
 

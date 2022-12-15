@@ -1,77 +1,26 @@
 using System.Text;
 using UnityEditor;
 using UnityEngine;
+using static SFramework.Utilities.StaticVariables;
 
-namespace SFramework.Utilities
+namespace SFramework.Utilities.Editor
 {
-    public static class StaticVariables
+    public static class EditorHelper
     {
-        public static readonly string Assets = "Assets";
-        public static readonly string Res = "Res";
-        public static readonly string Bundles = "Bundles";
-
-        public static readonly string ResPath = $"{Assets}/{Res}";
-        public static readonly string BundlesPath = $"{Assets}/{Bundles}";
-
-        public static readonly string SpritesPath = $"{ResPath}/Sprites";
-        public static readonly string UISpritesPath = $"{SpritesPath}/UI";
-        public static readonly string UISpriteAtalasesPath = $"{BundlesPath}/SpriteAtlases";
-
-        public static readonly string Scripts = "Scripts";
-        public static readonly string GameManagers = "GameManagers";
-        public static readonly string Gen = "Gen";
-        public static readonly string ScriptsPath = $"{Assets}/{Scripts}";
-        public static readonly string GameManagersPath = $"{ScriptsPath}/{GameManagers}";
-        public static readonly string GameManagersGenPath = $"{GameManagersPath}/{Gen}";
-
-        public static readonly string AssetBundlesFolderName = "AssetBundles";
-        public static readonly string AssetBundlesFileExtension = ".bundle";
-        public static readonly string AssetBundlesFileExtensionWithoutDot = "bundle";
-        public static readonly string AssetBundleEditorTemp = "AssetBundleEditorTemp";
-
-        public static RuntimePlatform Platform
-        {
-            get
-            {
-#if UNITY_STANDALONE_WIN
-                return RuntimePlatform.WindowsPlayer;
-#elif UNITY_STANDALONE_OSX
-                return RuntimePlatform.OSXPlayer;
-#elif UNITY_ANDROID
-                return RuntimePlatform.Android;
-#elif UNITY_IOS
-                return RuntimePlatform.IPhonePlayer;
-#endif
-            }
-        }
-
-        public static string StreamingAssetsPath
-        {
-            get
-            {
-#if UNITY_EDITOR || UNITY_STANDALONE_WIN
-                var t = Application.streamingAssetsPath;
-#elif UNITY_ANDROID
-                var t = $"{Application.dataPath}!assets";
-#elif UNITY_IOS
-                var t = $"{Application.dataPath}/Raw";
-#endif
-                return t;
-            }
-        }
-
         #region Utility Methods
-        public static void CreateFolder(string path, string folderName)
+        public static void CreateFolder(string path, string folderName, bool autoRefresh = false)
         {
             if (AssetDatabase.IsValidFolder($"{path}/{folderName}"))
             {
                 return;
             }
             AssetDatabase.CreateFolder(path, folderName);
-            AssetDatabase.Refresh();
+
+            if (autoRefresh)
+                AssetDatabase.Refresh();
         }
 
-        public static void CreateFolder(string path)
+        public static void CreateFolder(string path, bool autoRefresh = false)
         {
             string[] folders = path.Split("/");
 
@@ -83,18 +32,21 @@ namespace SFramework.Utilities
                 CreateFolder(currentPath.ToString(), folder);
                 currentPath.Append($"/{folder}");
             }
-            AssetDatabase.Refresh();
+
+            if (autoRefresh)
+                AssetDatabase.Refresh();
         }
 
-        public static void DeleteFolder(string path)
+        public static void DeleteFolder(string path, bool autoRefresh = false)
         {
             if (!AssetDatabase.IsValidFolder(path))
                 return;
             AssetDatabase.DeleteAsset(path);
-            AssetDatabase.Refresh();
+            if (autoRefresh)
+                AssetDatabase.Refresh();
         }
 
-        public static void ResetFolder(string path)
+        public static void ResetFolder(string path, bool autoRefresh = false)
         {
             if (!path.StartsWith(Assets))
             {
@@ -105,7 +57,8 @@ namespace SFramework.Utilities
                 DeleteFolder(path);
             }
             CreateFolder(path);
-            AssetDatabase.Refresh();
+            if (autoRefresh)
+                AssetDatabase.Refresh();
         }
 
         public static void CreateUISpriteAtlasesPath()
@@ -152,6 +105,5 @@ namespace SFramework.Utilities
             return path.Replace(@"\\", "/").Replace(@"\", "/");
         }
         #endregion
-
     }
 }

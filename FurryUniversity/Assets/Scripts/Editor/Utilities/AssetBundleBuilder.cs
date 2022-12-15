@@ -10,8 +10,9 @@ namespace SFramework.Utilities.Editor
 {
     public static class AssetBundleBuilder
     {
-        private static string tempFolder => Path.Combine(StaticVariables.Assets, StaticVariables.AssetBundleEditorTemp,
-            StaticVariables.Platform.ToString(), StaticVariables.AssetBundlesFolderName);
+        //打包前需将temp目录下的资源删除
+        private static string tempFolder => Path.Combine(StaticVariables.StreamingAssetsPath, StaticVariables.AssetBundleEditorTemp,
+            StaticVariables.Platform.ToString(), StaticVariables.AssetBundlesFolderName).ConvertWindowsSeparatorToUnity().GetRelativePath();
         private static string spriteAtlasExtension = ".spriteatlas";
 
         [MenuItem("AssetOperation/增量更新AssetBundles")]
@@ -64,15 +65,16 @@ namespace SFramework.Utilities.Editor
                     BuildAssetBundleOptions.DeterministicAssetBundle;
                 if (isFully)
                 {
-                    StaticVariables.ResetFolder(tempFolder.ConvertWindowsSeparatorToUnity());
+                    EditorHelper.ResetFolder(tempFolder.ConvertWindowsSeparatorToUnity());
                     options |= BuildAssetBundleOptions.ForceRebuildAssetBundle;
                 }
                 else
                 {
-                    StaticVariables.CreateFolder(tempFolder.ConvertWindowsSeparatorToUnity());
+                    EditorHelper.CreateFolder(tempFolder.ConvertWindowsSeparatorToUnity());
                 }
 
                 Debug.Log(options);
+                Debug.Log(EditorUserBuildSettings.activeBuildTarget);
                 var info = BuildPipeline.BuildAssetBundles(tempFolder, options, EditorUserBuildSettings.activeBuildTarget);
                 if (info != null)
                 {
@@ -102,19 +104,19 @@ namespace SFramework.Utilities.Editor
             string sourceFolder = tempFolder;
             string targetFolder = $"{StaticVariables.StreamingAssetsPath}/{StaticVariables.AssetBundlesFolderName}";
 
-            StaticVariables.ResetFolder(targetFolder);
-            
+            EditorHelper.ResetFolder(targetFolder,true);
+
             DirectoryInfo directoryInfo = new DirectoryInfo(sourceFolder);
-            FileSystemInfo[] fileSystemInfos = directoryInfo.GetFileSystemInfos();
+            FileInfo[] fileInfos = directoryInfo.GetFiles();
             int index = 1;
-            foreach(FileSystemInfo file in fileSystemInfos)
+            foreach(FileInfo file in fileInfos)
             {
                 if (file.Extension == ".manifest" && file.Name != "AssetBundles.manifest")
                 {
                     continue;
                 }
 
-                EditorUtility.DisplayProgressBar("Copy Asset Bundles...", targetFolder, index / fileSystemInfos.Length);
+                EditorUtility.DisplayProgressBar("Copy Asset Bundles...", targetFolder, index / fileInfos.Length);
 
                 string sourceFilePath = Path.Combine(sourceFolder, file.Name).ConvertWindowsSeparatorToUnity();
                 string targetFilePath = Path.Combine(targetFolder, file.Name).ConvertWindowsSeparatorToUnity().GetRelativePath();
