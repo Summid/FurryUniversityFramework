@@ -1,92 +1,33 @@
+using SFramework.Core.GameManager;
 using SFramework.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.U2D;
+using UnityEngine.UI;
 
 public class SandBoxMain : MonoBehaviour
 {
+    public Image showImage;
 
-    // Start is called before the first frame update
-    void Start()
+    private async void Start()
     {
-        
+        var atlas = await AssetBundleManager.LoadAssetInAssetBundleAsync<SpriteAtlas>("Discipleship", "discipleship.spriteatlas");
+        var sprite = atlas.GetSprite("Discipleship0");
+        this.showImage.sprite = sprite;
+        this.showImage.SetNativeSize();
     }
 
-    // Update is called once per frame
-    void Update()
+    private async void Update()
     {
-        //if (Input.GetKeyDown(KeyCode.P))
-        //{
-        //    PlayerLoopHelper.AddAction(PlayerLoopTiming.Update, this);
-        //}
-
-        //if (Input.GetKeyDown(KeyCode.C))
-        //{
-        //    PlayerLoopHelper.AddContinuation(PlayerLoopTiming.Update, () => { Debug.Log("Yield Update"); });
-        //}
-
-        if(Input.GetKeyDown(KeyCode.S))
+        if (Input.GetKeyDown(KeyCode.U))
         {
-            this.WaitUntil().Forget();
+            await AssetBundleManager.UnloadAssetBundle("discipleship.spriteatlas");
+            this.showImage.sprite = null;
+            GC.Collect();
         }
-
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            pressKey = !pressKey;
-        }
-    }
-
-    static bool pressKey = false;
-
-    public async STaskVoid WaitUntil()
-    {
-        Debug.Log("before wait");
-        await STask.WaitUntil(() => pressKey);
-        Debug.Log("after wait");
-    }
-
-    public async STaskVoid WaitNextFrame()
-    {
-        Debug.Log("Time.frameCount "+Time.frameCount);
-        await STask.NextFrame();
-        Debug.Log("Time.frameCount "+Time.frameCount);
-    }
-
-    public async STask WaitSeconds()
-    {
-        Debug.Log("before wait");
-        await Task.Delay(1000);
-        Debug.Log("after wait");
-    }
-
-    public async STask WaitSTask()
-    {
-        Debug.Log("before wait");
-        var result = await this.WaitTaskDelaySeconds();
-
-        Debug.Log("after wait");
-        Debug.Log(result);
-    }
-
-    public async STask<int> WaitTaskDelaySeconds()
-    {
-        await STask.Delay(1000);
-        return 233;
-    }
-
-    public void TestSTaskVoid()
-    {
-        Debug.Log("before invoke");
-        _=this.STaskVoid();
-        Debug.Log("after invoke");
-    }
-
-    public async STaskVoid STaskVoid()
-    {
-        Debug.Log("before await");
-        await STask.Delay(1000);
-        Debug.Log("after await");
     }
 }

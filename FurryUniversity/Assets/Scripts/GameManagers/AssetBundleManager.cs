@@ -34,7 +34,7 @@ namespace SFramework.Core.GameManager
 
         public virtual string GetLoadingPath(string bundleName)
         {
-            return $"{StaticVariables.StreamingAssetsPath}/{StaticVariables.AssetBundlesFolderName}/{bundleName}/{StaticVariables.AssetBundlesFileExtension}";
+            return $"{StaticVariables.StreamingAssetsPath}/{StaticVariables.AssetBundlesFolderName}/{bundleName}{StaticVariables.AssetBundlesFileExtension}";
         }
 
         [Conditional("LOAD_BUNDLE_LOG")]
@@ -109,7 +109,7 @@ namespace SFramework.Core.GameManager
             }
             else
             {
-                throw new Exception($"AssetBundleVO::Unload failed, {this.BundleName}, {this.BundleName}");
+                throw new Exception($"AssetBundleVO::Unload failed, {this.BundleName}, {this.BundleState}");
             }
 
             //处理依赖资源
@@ -143,7 +143,7 @@ namespace SFramework.Core.GameManager
             }
             else
             {
-                throw new Exception($"AssetBundleVO::Load failed, {this.BundleName}, {this.BundleName}");
+                throw new Exception($"AssetBundleVO::Load failed, {this.BundleName}, {this.BundleState}");
             }
         }
 
@@ -196,6 +196,23 @@ namespace SFramework.Core.GameManager
             }
         }
 
+        public AssetBundleManifest LoadManifest()
+        {
+            if (this.BundleState == State.Loaded)
+            {
+                throw new InvalidOperationException("Manifest is not null, but still trying to load.");
+            }
+            else if (this.BundleState == State.Unloaded)
+            {
+                this.Content = AssetBundle.LoadFromFile($"{StaticVariables.StreamingAssetsPath}/{StaticVariables.AssetBundlesFolderName}/{this.BundleName}");
+                return this.Content.LoadAsset<AssetBundleManifest>("AssetBundleManifest");
+            }
+            else
+            {
+                throw new Exception($"AssetBundleVO::Load failed, {this.BundleName}, {this.BundleName}");
+            }
+        }
+
         public override string ToString()
         {
             return this.BundleName;
@@ -217,7 +234,33 @@ namespace SFramework.Core.GameManager
 
         public static void LoadManifest()
         {
-            //load manifest
+            if (manifest != null)
+            {
+                throw new InvalidOperationException("Manifest is not null, but still trying to load.");
+            }
+            AssetBundleVO vo = GetAssetBundleVO(StaticVariables.AssetBundlesFolderName);
+            if (vo.BundleState == AssetBundleVO.State.Unloaded)
+            {
+                manifest = vo.LoadManifest();
+            }
+        }
+
+        public static async STask<T> LoadAssetInAssetBundleAsync<T>(string assetPath, string bundleName) where T : UnityEngine.Object
+        {
+            AssetBundleVO vo = GetAssetBundleVO(bundleName);
+            if (vo.BundleState == AssetBundleVO.State.Unloaded)
+            {
+                await vo.LoadAsync();
+            }
+
+            T asset = await vo.Content.LoadAssetAsync(assetPath) as T;
+            return asset;
+        }
+
+        public static async STask UnloadAssetBundle(string bundleName)
+        {
+            AssetBundleVO vo = GetAssetBundleVO(bundleName);
+            await vo.UnLoadAsync();
         }
 
         /// <summary>
