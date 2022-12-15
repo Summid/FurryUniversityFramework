@@ -29,8 +29,22 @@ public class SandBoxMain : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.S))
         {
-            this.WaitNextFrame().Forget();
+            this.WaitUntil().Forget();
         }
+
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            pressKey = !pressKey;
+        }
+    }
+
+    static bool pressKey = false;
+
+    public async STaskVoid WaitUntil()
+    {
+        Debug.Log("before wait");
+        await STask.WaitUntil(() => pressKey);
+        Debug.Log("after wait");
     }
 
     public async STaskVoid WaitNextFrame()
