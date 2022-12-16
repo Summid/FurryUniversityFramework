@@ -9,7 +9,6 @@ namespace SFramework.Utilities.Editor
     {
         private static string tempFolder => Path.Combine(StaticVariables.AssetBundleEditorTemp,
             StaticVariables.Platform.ToString(), StaticVariables.AssetBundlesFolderName);
-        private static string spriteAtlasExtension = ".spriteatlas";
 
         [MenuItem("AssetOperation/增量更新AssetBundles")]
         public static void UpdateAssetBundles()
@@ -35,7 +34,7 @@ namespace SFramework.Utilities.Editor
                 foreach (var file in fileSystemInfos)
                 {
                     EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{file.Name}", index++ / fileSystemInfos.Length);
-                    if (Path.GetExtension(file.Name) != spriteAtlasExtension)
+                    if (Path.GetExtension(file.Name) != StaticVariables.SpriteAtlasBundleExtension)
                         continue;
                     var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
                     if (importer != null)
