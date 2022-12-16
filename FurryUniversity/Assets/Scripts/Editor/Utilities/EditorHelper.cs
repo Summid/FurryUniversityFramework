@@ -1,3 +1,4 @@
+using System.IO;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -7,7 +8,7 @@ namespace SFramework.Utilities.Editor
 {
     public static class EditorHelper
     {
-        #region Utility Methods
+        #region Utility Unity Methods
         public static void CreateFolder(string path, string folderName, bool autoRefresh = false)
         {
             if (AssetDatabase.IsValidFolder($"{path}/{folderName}"))
@@ -22,7 +23,7 @@ namespace SFramework.Utilities.Editor
 
         public static void CreateFolder(string path, bool autoRefresh = false)
         {
-            string[] folders = path.Split("/");
+            string[] folders = path.Split('/');
 
             StringBuilder currentPath = new StringBuilder($"{Assets}");
             foreach (string folder in folders)
@@ -103,6 +104,37 @@ namespace SFramework.Utilities.Editor
         public static string ConvertWindowsSeparatorToUnity(this string path)
         {
             return path.Replace(@"\\", "/").Replace(@"\", "/");
+        }
+        #endregion
+
+        #region Utility C# Method
+        public static bool ValidateFolder(string path)
+        {
+            return !string.IsNullOrEmpty(path) && Directory.Exists(path);
+        }
+
+        public static void PreparePathCSharp(string path, bool isFolder = false)
+        {
+            string p = isFolder ? path : Path.GetDirectoryName(path);
+
+            if (!Directory.Exists(p))
+            {
+                Directory.CreateDirectory(p);
+            }
+        }
+
+        public static void ResetFolderCSharp(string path, bool create = true)
+        {
+            if (ValidateFolder(path))
+            {
+                Directory.Delete(path, true);
+            }
+
+            if (create)
+            {
+                AssetDatabase.Refresh();
+                Directory.CreateDirectory(path);
+            }
         }
         #endregion
     }
