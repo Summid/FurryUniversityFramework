@@ -66,7 +66,7 @@ namespace SFramework.Utilities.Editor
                 {
                     if (Path.GetExtension(file.Name) == ".meta")
                         continue;
-                    string atlasBundleName = spriteDirectory.Name + StaticVariables.SpriteAtlasBundleExtension;
+                    string atlasBundleName = spriteDirectory.Name;
                     string spriteName = Path.GetFileNameWithoutExtension(file.Name);
 
                     //atlasSprite Dictionary

@@ -6,14 +6,14 @@ namespace SFramework.Core.GameManager
       static UISpriteManager()
       {
           atlasSprite = new Dictionary<string, string>();
-        atlasSprite.Add("Discipleship0","Discipleship.spriteatlas");
-        atlasSprite.Add("Discipleship1","Discipleship.spriteatlas");
-        atlasSprite.Add("Discipleship2","Discipleship.spriteatlas");
-        atlasSprite.Add("Duality0","Duality.spriteatlas");
-        atlasSprite.Add("Duality1","Duality.spriteatlas");
-        atlasSprite.Add("Duality2","Duality.spriteatlas");
-        atlasSprite.Add("KingsFall1","KingsFall.spriteatlas");
-        atlasSprite.Add("KingsFall2","KingsFall.spriteatlas");
+        atlasSprite.Add("Discipleship0","Discipleship");
+        atlasSprite.Add("Discipleship1","Discipleship");
+        atlasSprite.Add("Discipleship2","Discipleship");
+        atlasSprite.Add("Duality0","Duality");
+        atlasSprite.Add("Duality1","Duality");
+        atlasSprite.Add("Duality2","Duality");
+        atlasSprite.Add("KingsFall1","KingsFall");
+        atlasSprite.Add("KingsFall2","KingsFall");
 
       }
 
