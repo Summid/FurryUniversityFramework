@@ -1,16 +1,17 @@
-
-
 using System.Collections.Generic;
 
-public static class CollectionUtility
+namespace SDS.Utility
 {
-    public static void AddItem<K, V>(this SerializableDictionary<K, List<V>> serializableDictionary, K key, V value)
+    public static class CollectionUtility
     {
-        if (serializableDictionary.ContainsKey(key))
+        public static void AddItem<K, V>(this SerializableDictionary<K, List<V>> serializableDictionary, K key, V value)
         {
-            serializableDictionary[key].Add(value);
-            return;
+            if (serializableDictionary.ContainsKey(key))
+            {
+                serializableDictionary[key].Add(value);
+                return;
+            }
+            serializableDictionary.Add(key, new List<V>() { value });
         }
-        serializableDictionary.Add(key, new List<V>() { value });
     }
 }
