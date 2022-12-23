@@ -26,20 +26,28 @@ namespace SFramework.Utilities.Editor
 
         public static void UpdateAssetBundleTags()
         {
-            if (AssetDatabase.IsValidFolder(StaticVariables.UISpriteAtalasesPath))
+
+            UpdateAssetBundleTagsHandler(StaticVariables.UISpriteAtalasesPath, StaticVariables.SpriteAtlasExtension, StaticVariables.SpriteAtlasBundleExtension);
+            UpdateAssetBundleTagsHandler(StaticVariables.UIViewPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIViewBundleExtension);
+        }
+
+        private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension)
+        {
+            if (AssetDatabase.IsValidFolder(path))
             {
-                DirectoryInfo directoryInfo = new DirectoryInfo(StaticVariables.UISpriteAtalasesPath.GetFullPath());
+                DirectoryInfo directoryInfo = new DirectoryInfo(path.GetFullPath());
                 FileSystemInfo[] fileSystemInfos = directoryInfo.GetFileSystemInfos();
                 int index = 1;
                 foreach (var file in fileSystemInfos)
                 {
                     EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{file.Name}", index++ / fileSystemInfos.Length);
-                    if (Path.GetExtension(file.Name) != StaticVariables.SpriteAtlasBundleExtension)
+                    if (Path.GetExtension(file.Name) != assetExtension)
                         continue;
                     var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
                     if (importer != null)
                     {
                         importer.assetBundleName = file.Name.ToLower();
+                        importer.assetBundleName = Path.GetFileNameWithoutExtension(file.Name) + bundleExtension;
                         importer.assetBundleVariant = StaticVariables.AssetBundlesFileExtensionWithoutDot;
                     }
                 }

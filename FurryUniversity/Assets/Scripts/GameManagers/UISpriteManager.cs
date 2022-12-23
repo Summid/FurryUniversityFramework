@@ -1,6 +1,5 @@
 using SFramework.Threading.Tasks;
 using SFramework.Utilities;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.U2D;
@@ -8,6 +7,7 @@ using UnityEngine.UI;
 
 namespace SFramework.Core.GameManager
 {
+    //TODO: Object.name GC, string.Replace() method GC, 后期考虑用monobehavior给每个Image Object做一个缓存，记录其 bundleName和spriteName
     public static partial class UISpriteManager
     {
         public abstract class UIAtlasSpritesObject { }

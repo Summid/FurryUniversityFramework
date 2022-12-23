@@ -29,9 +29,13 @@ namespace SFramework.Utilities
         public static readonly string AssetBundlesFileExtensionWithoutDot = "bundle";
         public static readonly string AssetBundleEditorTemp = "AssetBundleEditorTemp";
 
+        public static readonly string SpriteAtlasExtension = ".spriteatlas";
         public static readonly string SpriteAtlasBundleExtension = ".spriteatlas";
-
         public static readonly string SpriteAtlasInfoPath = $"{Assets}/{Scripts}/{GameManagers}/{Gen}";
+
+        public static readonly string PrefabExtension = ".prefab";
+        public static readonly string UIViewBundleExtension = ".uiview";
+        public static readonly string UIViewPrefabsPath = $"{BundlesPath}/Prefabs/UIView";
 
         public static RuntimePlatform Platform
         {
