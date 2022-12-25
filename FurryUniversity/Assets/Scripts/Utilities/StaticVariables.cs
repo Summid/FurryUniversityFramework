@@ -37,6 +37,11 @@ namespace SFramework.Utilities
         public static readonly string UIViewBundleExtension = ".uiview";
         public static readonly string UIViewPrefabsPath = $"{BundlesPath}/Prefabs/UIView";
 
+        /// <summary> UIList清单文件名称 </summary>
+        public static readonly string UIListName = "uiinfolist.asset";
+        /// <summary> UIList清单Bundle名称 </summary>
+        public static readonly string UIListBundleName = "uiinfolist.asset";
+
         public static RuntimePlatform Platform
         {
             get

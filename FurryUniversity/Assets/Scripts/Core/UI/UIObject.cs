@@ -11,6 +11,17 @@ namespace SFramework.Core.UI
     }
 
     [AttributeUsage(AttributeTargets.Field)]
+    public class UIFieldInitAttribute : Attribute
+    {
+        public string RCKey { get; private set; }
+
+        public UIFieldInitAttribute(string rcKey)
+        {
+            this.RCKey = rcKey;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Field)]
     public class UISerializableAttribute : Attribute
     {
 
