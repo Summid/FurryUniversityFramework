@@ -21,7 +21,7 @@ MonoBehaviour:
   - ViewAssetBundleName: testuiprefab2.uiview
     ViewAssetName: TestUIPrefab2
     ViewType: 0
-    ViewClassName: 
+    ViewClassName: SFramework.Core.UI.TestUIPrefab2
     IsDisableNavigatePage: 0
   UIItemInfo:
   - UIItemAssetBundleName: testuiitem.uiitem

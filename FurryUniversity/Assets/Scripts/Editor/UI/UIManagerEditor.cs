@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace SFramework.Core.UI.Editor
         public static void UpdateUIList()
         {
             GenerateUIList(out UIInfoList list, out string uiListInfoPath);
+            GenerateCode(list.UIList);
         }
 
         private static void GenerateUIList(out UIInfoList list, out string uiListInfoPath)
@@ -61,7 +63,7 @@ namespace SFramework.Core.UI.Editor
             foreach (string prefab in viewPrefabPaths)
             {
                 string assetName = Path.GetFileNameWithoutExtension(prefab);
-                if(!list.UIList.Exists(ui=>ui.ViewAssetName == assetName))
+                if (!list.UIList.Exists(ui => ui.ViewAssetName == assetName))
                 {
                     UIViewInfo info = new UIViewInfo()
                     {
@@ -73,7 +75,7 @@ namespace SFramework.Core.UI.Editor
             }
 
             string[] itemPrefabPaths = Directory.GetFiles(StaticVariables.UIItemPrefabsPath, "*.prefab", SearchOption.AllDirectories);
-            foreach(string prefab in itemPrefabPaths)
+            foreach (string prefab in itemPrefabPaths)
             {
                 string assetName = Path.GetFileNameWithoutExtension(prefab);
                 if (!list.UIItemInfo.Exists(ui => ui.UIItemAssetName == assetName))
@@ -112,5 +114,143 @@ namespace SFramework.Core.UI.Editor
             uiListImporter.assetBundleName = StaticVariables.UIListBundleName;
             uiListImporter.SaveAndReimport();
         }
+
+        private static void GenerateCode(List<UIViewInfo> uiInfoList)
+        {
+            DirectoryInfo directory = Directory.CreateDirectory(StaticVariables.UIViewGenerateCodePath);
+            List<string> changedCodeFiles = new List<string>();
+
+            //UI代码生成
+            foreach (var info in uiInfoList)
+            {
+                if (string.IsNullOrEmpty(info.ViewClassName))
+                    continue;
+
+                string[] temp = info.ViewClassName.Split('.');
+                string className = temp[temp.Length - 1];
+                if (!string.IsNullOrEmpty(info.ViewAssetName) && !string.IsNullOrEmpty(info.ViewClassName))
+                {
+                    GameObject viewPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(StaticVariables.UIViewPrefabsPath + $"/{info.ViewAssetName}" + StaticVariables.PrefabExtension);
+
+                    ReferenceCollector rc = viewPrefab.GetComponent<ReferenceCollector>();
+                    if (rc != null)
+                    {
+                        StringBuilder uiFieldBuilder = new StringBuilder();
+
+                        foreach (var rcData in rc.data)
+                        {
+                            if ((rcData.IsList && rcData.gameObjectList.Count == 0) && rcData.gameObject == null)
+                            {
+                                Debug.LogError($"[{info.ViewAssetName}].{rcData.key}所指向的GameObject为空，跳过");
+                                continue;
+                            }
+
+                            string name = rcData.key;
+                            GameObject go = (rcData.IsList ? rcData.gameObjectList[0] : rcData.gameObject) as GameObject;
+                            if (go == null)
+                            {
+                                Debug.LogError($"[{className}].{rcData.key} 指定的GameObject为空，跳过");
+                                continue;
+                            }
+
+                            List<Behaviour> scripts = go.GetComponents<Behaviour>().Where(s => !(s is IIgnoreUIGenCode)).ToList();
+                            if (scripts.Count == 0)
+                            {
+                                uiFieldBuilder.AppendLine(CreateUIField(typeof(GameObject), name, name, rcData.IsList));
+                            }
+                            else if (scripts.Count == 1)
+                            {
+                                Type fieldType = null;
+                                if (scripts[0] is UIItemSelector selector)
+                                {
+                                    if (string.IsNullOrEmpty(selector.SelectClass))
+                                    {
+                                        continue;
+                                    }
+                                    var assembly = Assembly.GetAssembly(typeof(UIItemBase));
+                                    fieldType = assembly.GetType(selector.SelectClass);
+                                }
+                                else
+                                {
+                                    fieldType = scripts[0].GetType();
+                                }
+
+                                if (fieldType != null)
+                                {
+                                    uiFieldBuilder.AppendLine(CreateUIField(fieldType, name, name, rcData.IsList));
+                                }
+                                else
+                                {
+                                    Debug.LogError($"[{info.ViewAssetName}].[{rcData.key}]有错误");
+                                }
+                            }
+                            else
+                            {
+                                foreach (var script in scripts)
+                                {
+                                    Type fieldType = null;
+                                    if (script is UIItemSelector selector)
+                                    {
+                                        if (string.IsNullOrEmpty(selector.SelectClass))
+                                        {
+                                            continue;
+                                        }
+                                        var assembly = Assembly.GetAssembly(typeof(UIItemBase));
+                                        fieldType = assembly.GetType(selector.SelectClass);
+                                    }
+                                    else
+                                    {
+                                        fieldType = script.GetType();
+                                    }
+
+                                    string typeSuffix = fieldType.Name;
+                                    uiFieldBuilder.AppendLine(CreateUIField(fieldType, $"{name}_{typeSuffix}", name, rcData.IsList));
+                                }
+                            }
+                        }
+
+                        string codeText = ViewCodeTemplate.Replace("{0}", className).Replace("{1}", uiFieldBuilder.ToString());
+                        string filePath = $"{directory.FullName}/{className}.g.cs";
+                        using (var fileStream = File.Open(filePath, FileMode.Create))
+                        {
+                            changedCodeFiles.Add(fileStream.Name);
+                            var bytes = Encoding.UTF8.GetBytes(codeText);
+                            fileStream.Write(bytes, 0, bytes.Length);
+                        };
+                    }
+                }
+            }
+
+            //多余的清理掉
+            foreach (var file in directory.GetFiles("cs"))
+            {
+                if (!changedCodeFiles.Contains(file.FullName))
+                {
+                    File.Delete(file.FullName);
+                }
+            }
+        }
+
+        private static string CreateUIField(Type type, string fieldName, string keyName, bool isList)
+        {
+            string result = $"        [UIFieldInit(\"{keyName}\")]\r\n";
+            if (isList)
+                return result + $"        public List<{type.FullName}> {fieldName};";
+            else
+                return result + $"        public {type.FullName} {fieldName};";
+        }
+
+        private const string ViewCodeTemplate =
+@"//自动生成的代码,根据UIView对应的Prefab脚本ReferenceCollector指定的节点清单自动生成
+using System.Collections.Generic;
+
+namespace SFramework.Core.UI
+{
+    public partial class {0}
+    {
+{1}
+    }
+}
+    ";
     }
 }

@@ -36,6 +36,8 @@ namespace SFramework.Utilities
         public static readonly string PrefabExtension = ".prefab";
         public static readonly string UIViewBundleExtension = ".uiview";
         public static readonly string UIViewPrefabsPath = $"{BundlesPath}/Prefabs/UIView";
+        /// <summary> UI Prefab脚本自动生成引用代码文件放置路径 </summary>
+        public static readonly string UIViewGenerateCodePath = $"{ScriptsPath}/UIObjects/Gen";
 
         public static readonly string UIItemBundleExtension = ".uiitem";
         public static readonly string UIItemPrefabsPath = $"{BundlesPath}/Prefabs/UIItemTemplate";
