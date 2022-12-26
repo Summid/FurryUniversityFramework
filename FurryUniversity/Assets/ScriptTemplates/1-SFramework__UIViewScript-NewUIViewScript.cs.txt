@@ -1,0 +1,14 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+    #ROOTNAMESPACEBEGIN#
+namespace SFramework.Core.UI
+{
+    [UIView("#SCRIPTNAME#", EnumUIType.Page)]
+    public class #SCRIPTNAME# : UIViewBase
+    {
+        
+    }
+}
+#ROOTNAMESPACEEND#

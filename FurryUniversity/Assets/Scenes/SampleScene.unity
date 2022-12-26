@@ -1447,6 +1447,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5333609428298473875, guid: 5b3b9130b6819d64f8a797829c0294cb, type: 3}
+      propertyPath: SelectClass
+      value: SFramework.Core.UI.TestUIItem
+      objectReference: {fileID: 0}
     - target: {fileID: 7813716288278992255, guid: 5b3b9130b6819d64f8a797829c0294cb, type: 3}
       propertyPath: m_Name
       value: TestUIItem
