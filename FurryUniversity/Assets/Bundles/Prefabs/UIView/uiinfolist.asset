@@ -12,5 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa4be0ec858502e4e8174a69a429b78d, type: 3}
   m_Name: uiinfolist
   m_EditorClassIdentifier: 
-  UIList: []
-  UIItemInfo: []
+  UIList:
+  - ViewAssetBundleName: testuiprefab.uiview
+    ViewAssetName: TestUIPrefab
+    ViewType: 0
+    ViewClassName: 
+    IsDisableNavigatePage: 0
+  - ViewAssetBundleName: testuiprefab2.uiview
+    ViewAssetName: TestUIPrefab2
+    ViewType: 0
+    ViewClassName: 
+    IsDisableNavigatePage: 0
+  UIItemInfo:
+  - UIItemAssetBundleName: testuiitem.uiitem
+    UIItemAssetName: TestUIItem
+    UIItemClassName: TestUIItem

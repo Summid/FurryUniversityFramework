@@ -29,6 +29,7 @@ namespace SFramework.Utilities.Editor
 
             UpdateAssetBundleTagsHandler(StaticVariables.UISpriteAtalasesPath, StaticVariables.SpriteAtlasExtension, StaticVariables.SpriteAtlasBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIViewPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIViewBundleExtension);
+            UpdateAssetBundleTagsHandler(StaticVariables.UIItemPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIItemBundleExtension);
         }
 
         private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension)
@@ -46,8 +47,7 @@ namespace SFramework.Utilities.Editor
                     var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
                     if (importer != null)
                     {
-                        importer.assetBundleName = file.Name.ToLower();
-                        importer.assetBundleName = Path.GetFileNameWithoutExtension(file.Name) + bundleExtension;
+                        importer.assetBundleName = Path.GetFileNameWithoutExtension(file.Name).ToLower() + bundleExtension;
                         importer.assetBundleVariant = StaticVariables.AssetBundlesFileExtensionWithoutDot;
                     }
                 }

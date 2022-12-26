@@ -5,8 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEditor;
-using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEditor.SceneManagement;
+#if !UNITY_2021_3_OR_NEWER
+using UnityEditor.Experimental.SceneManagement;
+#endif
 
 namespace SFramework.Core.UI.Editor
 {
