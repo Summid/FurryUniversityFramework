@@ -115,7 +115,7 @@ namespace SFramework.Core.UI.Editor
             uiListImporter.SaveAndReimport();
         }
 
-        private static void GenerateCode(List<UIViewInfo> uiInfoList)
+        public static void GenerateCode(List<UIViewInfo> uiInfoList)
         {
             DirectoryInfo directory = Directory.CreateDirectory(StaticVariables.UIViewGenerateCodePath);
             List<string> changedCodeFiles = new List<string>();
@@ -229,6 +229,51 @@ namespace SFramework.Core.UI.Editor
                     File.Delete(file.FullName);
                 }
             }
+        }
+
+        /// <summary>
+        /// 通过预制名字获得UIViewInfo
+        /// </summary>
+        /// <param name="prefabName"></param>
+        /// <returns></returns>
+        public static (UIViewInfo, int) GetViewInfoByPrefabName(string prefabName)
+        {
+            Type[] types = Assembly.GetAssembly(typeof(UIViewBase)).GetTypes();
+            int i = 0;
+            foreach (var type in types)
+            {
+                var uiViewAtt = type.GetCustomAttribute<UIViewAttribute>();
+                if (uiViewAtt != null)
+                {
+                    if (uiViewAtt.UIViewAssetName.ToLower() == prefabName.ToLower())
+                    {
+                        string[] viewPrefabPaths = Directory.GetFiles(StaticVariables.UIViewPrefabsPath, "*.prefab");//所有UIView Prefab路径
+                        string targetView = viewPrefabPaths.FirstOrDefault(file => Path.GetFileNameWithoutExtension(file).ToLower() == uiViewAtt.UIViewAssetName.ToLower());
+                        if (targetView != null)
+                        {
+                            var importer = AssetImporter.GetAtPath(targetView);
+                            if (string.IsNullOrEmpty(importer.assetBundleName))
+                            {
+                                importer.assetBundleName = Path.GetFileNameWithoutExtension(targetView).ToLower() + StaticVariables.UIViewBundleExtension;
+                                importer.SaveAndReimport();
+                                Debug.LogWarningFormat("UIView[{0}]对应的 View Prefab[{1}]资源没有添加Bundle标签，已自动添加", type.Name, Path.GetFileName(targetView));
+                            }
+                            UIViewInfo info = new UIViewInfo()
+                            {
+                                ViewClassName = type.FullName,
+                                ViewType = uiViewAtt.UIType,
+                                IsDisableNavigatePage = uiViewAtt.IsDisnavigatePage,
+                                ViewAssetName = Path.GetFileNameWithoutExtension(targetView),
+                                ViewAssetBundleName = importer.assetBundleName.ToLower()
+                            };
+                            return (info, i);
+                        }
+                        break;
+                    }
+                    i++;
+                }
+            }
+            return default;
         }
 
         private static string CreateUIField(Type type, string fieldName, string keyName, bool isList)

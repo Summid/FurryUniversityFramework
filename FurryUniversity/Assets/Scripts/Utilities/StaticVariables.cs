@@ -35,6 +35,7 @@ namespace SFramework.Utilities
 
         public static readonly string PrefabExtension = ".prefab";
         public static readonly string UIViewBundleExtension = ".uiview";
+        /// <summary> UIView Prefab文件放置路径 </summary>
         public static readonly string UIViewPrefabsPath = $"{BundlesPath}/Prefabs/UIView";
         /// <summary> UI Prefab脚本自动生成引用代码文件放置路径 </summary>
         public static readonly string UIViewGenerateCodePath = $"{ScriptsPath}/UIObjects/Gen";
@@ -45,7 +46,7 @@ namespace SFramework.Utilities
         /// <summary> UIList清单文件名称 </summary>
         public static readonly string UIListName = "uiinfolist.asset";
         /// <summary> UIList清单Bundle名称 </summary>
-        public static readonly string UIListBundleName = "uiinfolist.asset";
+        public static readonly string UIListBundleName = "uiinfolist_asset";
 
         public static RuntimePlatform Platform
         {
