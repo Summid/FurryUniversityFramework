@@ -26,4 +26,4 @@ MonoBehaviour:
   UIItemInfo:
   - UIItemAssetBundleName: testuiitem.uiitem
     UIItemAssetName: TestUIItem
-    UIItemClassName: TestUIItem
+    UIItemClassName: SFramework.Core.UI.TestUIItem

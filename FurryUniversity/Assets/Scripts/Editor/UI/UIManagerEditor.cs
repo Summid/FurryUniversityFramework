@@ -1,4 +1,5 @@
 using SFramework.Utilities;
+using SFramework.Utilities.Editor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ namespace SFramework.Core.UI.Editor
         {
             GenerateUIList(out UIInfoList list, out string uiListInfoPath);
             GenerateCode(list.UIList);
+            GenerateUIItemPrefabListCode(list.UIItemInfo);
+            AssetsInformationGenerator.GenerateSpriteAtlasInfo();
+
+            Debug.Log("更新UI资源清单成功", AssetDatabase.LoadAssetAtPath<UIInfoList>(uiListInfoPath));
         }
 
         private static void GenerateUIList(out UIInfoList list, out string uiListInfoPath)
@@ -229,6 +234,48 @@ namespace SFramework.Core.UI.Editor
                     File.Delete(file.FullName);
                 }
             }
+        }
+
+        /// <summary>
+        /// 生成UIItem Prefab清单代码
+        /// </summary>
+        /// <param name="uiItemInfoList"></param>
+        public static void GenerateUIItemPrefabListCode(List<UIItemInfo> uiItemInfoList)
+        {
+            string codeFilePath = StaticVariables.UIViewGenerateCodePath + "/" + StaticVariables.UIItemGenerateCodeFileName;
+            EditorHelper.PreparePathCSharp(codeFilePath);
+
+            string codeTemplate = @"namespace SFramework.Core.UI
+{
+        public partial class UIItemBase
+        {
+            /// <summary>
+            /// auto-gen UIItemBase资源字符串
+            /// </summary>
+            public static class AssetList
+            {
+{PrefabStringField}
+            }
+        }
+}
+";
+
+            StringBuilder sb = new StringBuilder();
+            foreach (var info in uiItemInfoList)
+            {
+                sb.AppendLine($"                /// <summary> ab:[{info.UIItemAssetBundleName}]<para>class:[{info.UIItemClassName}]</para> </summary>");
+                sb.AppendLine($"                public static string {info.UIItemAssetName} = \"{info.UIItemAssetName}\";");
+            }
+
+            codeTemplate = codeTemplate.Replace("{PrefabStringField}", sb.ToString());
+
+            using (FileStream file = File.Open(codeFilePath, FileMode.Create))
+            {
+                var bytes = Encoding.UTF8.GetBytes(codeTemplate);
+                file.Write(bytes, 0, bytes.Length);
+            }
+
+            AssetDatabase.Refresh();
         }
 
         /// <summary>

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace SFramework.Core.UI
 {
-    public abstract class UIItemBase : UIObject
+    public abstract partial class UIItemBase : UIObject
     {
 
     }

@@ -13,7 +13,7 @@ namespace SFramework.Utilities.Editor
     {
 #if UNITY_EDITOR
         [MenuItem("Tools/生成图集清单")]
-        private static void GenerateSpriteAtlasInfo()
+        public static void GenerateSpriteAtlasInfo()
         {
             EditorHelper.CreateFolder(StaticVariables.SpriteAtlasInfoPath);
 
