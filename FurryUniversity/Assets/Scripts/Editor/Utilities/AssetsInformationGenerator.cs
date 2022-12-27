@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ namespace SFramework.Utilities.Editor
 {
     public class AssetsInformationGenerator
     {
+        private static readonly Regex chineseRX = new Regex("^[\u4e00-\u9fa5]$");
+        private static readonly HashSet<string> repeatedCheckSet = new HashSet<string>();
+
 #if UNITY_EDITOR
         [MenuItem("Tools/生成图集清单")]
         public static void GenerateSpriteAtlasInfo()
@@ -38,6 +42,8 @@ namespace SFramework.Utilities.Editor
 
         private static void Generate()
         {
+            repeatedCheckSet.Clear();
+
             var spriteDirectories = Directory.GetDirectories(StaticVariables.UISpritesPath).Select(path => new DirectoryInfo(path));
             StringBuilder constructorWorkSB = new StringBuilder();
             StringBuilder constructorSB = new StringBuilder();
@@ -68,6 +74,33 @@ namespace SFramework.Utilities.Editor
                         continue;
                     string atlasBundleName = spriteDirectory.Name;
                     string spriteName = Path.GetFileNameWithoutExtension(file.Name);
+
+                    //检查是否命名是否重复
+                    if (repeatedCheckSet.Contains(spriteName))
+                    {
+                        EditorUtility.DisplayDialog("ん?", $"发现重复命名图片：{spriteName}，图集信息生成打断", "我知错了");
+                        return;
+                    }
+                    repeatedCheckSet.Add(spriteName);
+
+                    //检查命名
+                    int charIndex = 0;
+                    foreach (var nameChar in spriteName)
+                    {
+                        if (!char.IsLetterOrDigit(nameChar) && nameChar != '_')
+                        {
+                            EditorUtility.DisplayDialog("ん?", $"发现非法命名图片：{spriteName}，图集信息生成打断", "我知错了");
+                            return;
+                        }
+
+                        if (chineseRX.IsMatch(spriteName.Substring(charIndex, 1)))
+                        {
+                            EditorUtility.DisplayDialog("ん?", $"发现中文命名图片：{spriteName}，图集信息生成打断", "我知错了");
+                            return;
+                        }
+
+                        charIndex++;
+                    }
 
                     //atlasSprite Dictionary
                     constructorWorkSB.AppendLine($"        atlasSprite.Add(\"{spriteName}\",\"{atlasBundleName}\");");
