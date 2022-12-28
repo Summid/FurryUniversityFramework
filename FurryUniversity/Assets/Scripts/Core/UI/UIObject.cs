@@ -1,12 +1,15 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 namespace SFramework.Core.UI
 {
     public abstract class UIObject
     {
+        public static readonly Type ListType = typeof(List<>);
+
         /// <summary> UI所属的GameObject对象实例 </summary>
         public GameObject gameObject { get; private set; }
         public Type ClassType { get; private set; }
@@ -22,8 +25,241 @@ namespace SFramework.Core.UI
 
             //TODO update logic
             this.InitItemSelector(this.gameObject.transform);
+            this.InitCustomAttribute();
 
             this.OnAwake();
+        }
+
+        /// <summary>
+        /// 设置UIFieldInitAttribute和UISerializableAttribute字段
+        /// </summary>
+        private void InitCustomAttribute()
+        {
+            var selector = this.gameObject.GetComponent<UIItemSelector>();
+
+            var fields = this.ClassType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            for (int i = 0, fieldsCount = fields.Length; i < fieldsCount; i++)
+            {
+                var field = fields[i];
+                var atts = field.GetCustomAttributes(true);
+                for (int j = 0, attCount = atts.Length; j < attCount; j++)
+                {
+                    var att = atts[j];
+                    if (att is UIFieldInitAttribute uiFieldAtt)
+                    {
+                        this.SetUIInitField(uiFieldAtt, field);
+                    }
+                    else if (att is UISerializableAttribute uiSerAtt)
+                    {
+                        this.SetUISerialzation(selector, field);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置序列化信息，将selector脚本中的值放到UIObject脚本中
+        /// </summary>
+        /// <param name="selector"></param>
+        /// <param name="field"></param>
+        private void SetUISerialzation(UIItemSelector selector, FieldInfo field)
+        {
+            var paramList = selector.UIConfigParam;
+            int count = paramList.Count;
+            for (int i = 0; i < count; i++)
+            {
+                var param = paramList[i];
+                if (param.Name == field.Name)
+                {
+                    if (field.FieldType == UIItemSelector.INI_TYPE)
+                        field.SetValue(this, param.IntValue);
+                    else if (field.FieldType == UIItemSelector.LONG_TYPE)
+                        field.SetValue(this, param.LongValue);
+                    else if (field.FieldType == UIItemSelector.FLOAT_TYPE)
+                        field.SetValue(this, param.FloatValue);
+                    else if (field.FieldType == UIItemSelector.DOUBLE_TYPE)
+                        field.SetValue(this, param.DoubleValue);
+                    else if (field.FieldType == UIItemSelector.STR_TYPE)
+                        field.SetValue(this, param.StrValue);
+                    else if (field.FieldType == UIItemSelector.BOOL_TYPE)
+                        field.SetValue(this, param.BoolValue);
+                    else if (field.FieldType.IsSubclassOf(UIItemSelector.ENUM_TYPE))
+                        field.SetValue(this, param.IntValue);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置引用节点
+        /// </summary>
+        /// <param name="uiAtt"></param>
+        /// <param name="field"></param>
+        private void SetUIInitField(UIFieldInitAttribute uiAtt, FieldInfo field)
+        {
+            if (field.FieldType.Name == ListType.Name)//数组
+            {
+                Type type = field.FieldType.GetGenericArguments()[0];//泛型类型
+                List<object> values = this.GetUIElements(type, uiAtt.RCKey);
+                if (values == null)
+                {
+                    Debug.LogWarning($"未找到名为{uiAtt.RCKey}对应的List<GameObject>");
+                    return;
+                }
+
+                object listInstance = Activator.CreateInstance(field.FieldType);
+                MethodInfo addMethod = field.FieldType.GetMethod("Add");//List.Add() Method
+                for (int i = 0, count = values.Count; i < count; ++i)
+                {
+                    object value = values[i];
+                    addMethod.Invoke(listInstance, new object[] { value });
+                }
+                field.SetValue(this, listInstance);
+            }
+            else
+            {
+                object value = this.GetUIElement(field.FieldType, uiAtt.RCKey);
+                field.SetValue(this, value);
+            }
+        }
+
+        /// <summary>
+        /// 获取ReferenceCollector中的引用
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private object GetUIElement(Type type, string key)
+        {
+            if (this.rc == null)
+            {
+                Debug.LogError($"[{this}] 没有挂在ReferenceCollector脚本，无法找到引用");
+                return null;
+            }
+
+            GameObject go = this.rc.Get<GameObject>(key);
+            if (go != null)
+            {
+                if (type.IsSubclassOf(typeof(UIItemBase)))//UIItem类型
+                {
+                    var selector = go.GetComponent<UIItemSelector>();
+                    if (selector == null || string.IsNullOrEmpty(selector.SelectClass))
+                    {
+                        return null;
+                    }
+                    else
+                    {
+                        Type itemType = Type.GetType(selector.SelectClass);
+                        if (itemType != null)
+                        {
+                            var itemObj = this.AddMissingItem(selector, itemType);
+                            if (itemObj != null)
+                            {
+                                return itemObj;
+                            }
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"[{this}] 在初始化InitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}");
+                        }
+                        return null;
+                    }
+                }
+                else
+                {
+                    if (type == typeof(GameObject))
+                        return go;
+                    else
+                    {
+                        Component target = go.GetComponent(type);
+                        return target;
+                    }
+                }
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// 获取ReferenceCollector中的引用
+        /// </summary>
+        /// <param name="type">List<T> 中T的类型</param>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        private List<object> GetUIElements(Type type, string key)
+        {
+            if (this.rc == null)
+            {
+                Debug.LogError($"[{this}] 没有挂在ReferenceCollector脚本，无法找到引用");
+                return null;
+            }
+
+            List<object> uiObjectList = new List<object>();
+            List<GameObject> goList = this.rc.GetList<GameObject>(key);
+            if (goList == null)
+            {
+                return null;
+            }
+
+            if (goList.Count > 0)
+            {
+                if (type.IsSubclassOf(typeof(UIItemBase)))//UIItem类型
+                {
+                    for (int i = 0, count = goList.Count; i < count; i++)
+                    {
+                        GameObject go = goList[i];
+                        var selector = go.GetComponent<UIItemSelector>();
+                        if (selector == null || string.IsNullOrEmpty(selector.SelectClass))
+                        {
+                            continue;
+                        }
+                        else
+                        {
+                            Type itemType = Type.GetType(selector.SelectClass);
+                            if (itemType != null)
+                            {
+                                var itemObj = this.AddMissingItem(selector, itemType);
+                                if (itemObj != null)
+                                {
+                                    uiObjectList.Add(itemObj);
+                                }
+                            }
+                            else
+                            {
+                                Debug.LogWarning($"[{this}] 在初始化InitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}");
+                            }
+                            continue;
+                        }
+                    }
+                }
+                else
+                {
+                    if (type == typeof(GameObject))
+                    {
+                        return new List<object>(goList);
+                    }
+                    else
+                    {
+                        for (int i = 0, count = goList.Count; i < count; ++i)
+                        {
+                            GameObject go = goList[i];
+                            if (go == null)
+                            {
+                                continue;
+                            }
+                            Component target = go.GetComponent(type);
+                            uiObjectList.Add(target);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                return null;
+            }
+
+            return uiObjectList;
         }
 
         /// <summary>
