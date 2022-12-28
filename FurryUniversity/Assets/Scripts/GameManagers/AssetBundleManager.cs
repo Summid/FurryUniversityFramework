@@ -6,7 +6,7 @@ using UnityEngine;
 using System;
 using System.Linq;
 
-namespace SFramework.Core.GameManager
+namespace SFramework.Core.GameManagers
 {
     public interface IAssetBundleLoader
     {

@@ -1,4 +1,4 @@
-using SFramework.Core.GameManager;
+using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
 using System;
 using System.Collections;

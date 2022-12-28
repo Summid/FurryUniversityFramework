@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-namespace SFramework.Core.GameManager
+namespace SFramework.Core.GameManagers
 {
    public static partial class UISpriteManager
    {

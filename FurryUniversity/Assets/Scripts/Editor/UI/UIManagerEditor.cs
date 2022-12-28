@@ -117,6 +117,7 @@ namespace SFramework.Core.UI.Editor
 
             var uiListImporter = AssetImporter.GetAtPath(uiListInfoPath);
             uiListImporter.assetBundleName = StaticVariables.UIListBundleName;
+            uiListImporter.assetBundleVariant = StaticVariables.AssetBundlesFileExtensionWithoutDot;
             uiListImporter.SaveAndReimport();
         }
 

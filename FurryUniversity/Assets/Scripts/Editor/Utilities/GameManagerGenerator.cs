@@ -1,4 +1,4 @@
-using SFramework.Core.GameManager;
+using SFramework.Core.GameManagers;
 using System;
 using System.IO;
 using System.Text;
@@ -23,7 +23,7 @@ namespace SFramework.Utilities.Editor
         private static readonly string FileName = "GameManager.g.cs";
         private static readonly string Placeholder = "{Placeholder}";
         private static readonly string MainBody =
-            $"namespace SFramework.Core.GameManager{Environment.NewLine}" +
+            $"namespace SFramework.Core.GameManagers{Environment.NewLine}" +
             "{" +
             $"{Environment.NewLine}" +
             $"   public partial class GameManager{Environment.NewLine}" +

@@ -1,4 +1,4 @@
-﻿namespace SFramework.Core.GameManager
+﻿namespace SFramework.Core.GameManagers
 {
    public partial class GameManager
    {

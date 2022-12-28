@@ -1,3 +1,5 @@
+using SFramework.Core.GameManagers;
+using SFramework.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,10 +14,14 @@ namespace SFramework.Core.UI
 
         /// <summary> UI所属的GameObject对象实例 </summary>
         public GameObject gameObject { get; private set; }
+        public virtual EnumViewState UIState { get; protected set; }
+
+        protected virtual RectTransform VisualRoot => this.gameObject.transform as RectTransform;
         public Type ClassType { get; private set; }
 
         private ReferenceCollector rc;
         private Dictionary<UIObject, GameObject> childrenUIList = new Dictionary<UIObject, GameObject>();
+        private UIManager UIManager { get { return GameManager.Instance.UIManager; } }
 
         public virtual void Awake(GameObject gameObjectHost)
         {
@@ -30,6 +36,7 @@ namespace SFramework.Core.UI
             this.OnAwake();
         }
 
+        #region 内部方法
         /// <summary>
         /// 设置UIFieldInitAttribute和UISerializableAttribute字段
         /// </summary>
@@ -327,9 +334,99 @@ namespace SFramework.Core.UI
 
             return itemObj;
         }
+        #endregion
+
+        #region 外部接口
+        protected async STask<UIItemBase> CreateChildItemAsync(string itemAssetName, Transform parent = null)
+        {
+            UIItemInfo info = this.UIManager.GetUIItemInfo(itemAssetName);
+            if (info != null)
+            {
+                if (parent == null)
+                    parent = this.VisualRoot;
+                string assetName = itemAssetName;
+                string assetBundleName = info.UIItemAssetBundleName;
+                string className = info.UIItemClassName;
+
+                if (this.gameObject == null)
+                {
+                    return default;
+                }
+
+                GameObject prefabObj = await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(assetName, assetBundleName);
+                prefabObj = UnityEngine.Object.Instantiate(prefabObj, parent);
+                prefabObj.transform.localScale = Vector3.one;
+                prefabObj.transform.localPosition = Vector3.zero;
+                var selector = prefabObj.GetComponent<UIItemSelector>();
+                if (selector == null)
+                    selector = prefabObj.AddComponent<UIItemSelector>();
+
+                selector.SelectClass = className;
+                var itemType = Type.GetType(selector.SelectClass);
+                if (itemType != null)
+                {
+                    var itemObj = Activator.CreateInstance(itemType) as UIItemBase;
+                    this.childrenUIList.Add(itemObj, prefabObj);
+                    itemObj.Awake(prefabObj);
+                    itemObj.BundleName = assetBundleName;
+                    return itemObj;
+                }
+            }
+            return default;
+        }
+        #endregion
+
+        #region 生命周期方法
+        public virtual void Dispose()
+        {
+            if (this.UIState == EnumViewState.Disposed)
+                return;
+            this.UIState = EnumViewState.Disposed;
+
+            if (this.gameObject != null && !this.gameObject.Equals(null))
+                GameObject.Destroy(this.gameObject);
+
+            //TODO unload AB
+
+            //handle children
+            foreach (var uiObj in this.childrenUIList.Keys)
+            {
+                if (uiObj == this)
+                    continue;
+                uiObj.Dispose();
+            }
+
+            this.OnDispose();
+        }
+
+        public virtual void Show() { }
+        public virtual void Hide() { }
+
 
         /// <summary> 首次创建时触发 </summary>
         protected virtual void OnAwake() { }
+        /// <summary> 调用<see cref="Show"/>后触发 </summary>
+        protected virtual void OnShow() { }
+        /// <summary> 调用<see cref="Hide"/>后触发，用户使用 </summary>
+        protected virtual void OnHide() { }
+        /// <summary> 调用<see cref="Dispose"/>后触发 </summary>
+        protected virtual void OnDispose() { }
+        /// <summary> 调用<see cref="Hide"/>后触发，底层使用，不暴露给用户 </summary>
+        protected virtual void OnDisable()
+        {
+            this.OnHide();
+            //Remove something here
+        }
+        #endregion
+
+        public enum EnumViewState
+        {
+            NULL,
+            Shown,
+            Hidden,
+            Disposed,
+            Hidding
+        }
     }
 
     [AttributeUsage(AttributeTargets.Field)]

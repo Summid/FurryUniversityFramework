@@ -6,6 +6,6 @@ namespace SFramework.Core.UI
 {
     public abstract partial class UIItemBase : UIObject
     {
-
+        public string BundleName { get; set; }
     }
 }
