@@ -1,3 +1,5 @@
+using SFramework.Threading.Tasks;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,14 +13,16 @@ namespace SFramework.Core.UI
         private RectTransform visualRoot;
         private CanvasGroup rootCanvas;
 
+        protected ViewMask Mask { get; private set; }
 
         protected override RectTransform VisualRoot => this.visualRoot;
 
-        public sealed override void Awake(GameObject gameObjectHost)
+        public sealed override async void Awake(GameObject gameObjectHost)
         {
             this.CreateVisualRoot(gameObjectHost);
-
+            await this.CreateMask(gameObjectHost);
             base.Awake(gameObjectHost);
+            this.rootCanvas = this.gameObject.AddComponent<CanvasGroup>();
         }
 
         #region 内部方法
@@ -47,9 +51,33 @@ namespace SFramework.Core.UI
             }
         }
 
-        private void CreateMask(GameObject gameObjectHost)
+        private async STask CreateMask(GameObject gameObjectHost)
         {
+            this.Mask = await this.CreateChildItemAsync<ViewMask>(UIItemBase.AssetList.ViewMask, gameObjectHost.transform);
+            RectTransform maskRect = this.Mask.gameObject.transform as RectTransform;
+            //伸展运动
+            maskRect.anchorMin = Vector2.zero;
+            maskRect.anchorMax = Vector2.one;
+            maskRect.anchoredPosition3D = Vector2.zero;
+            maskRect.offsetMin = Vector2.zero;
+            maskRect.offsetMax = Vector2.one;
 
+            maskRect.localScale = Vector3.one;
+            this.Mask.gameObject.transform.SetAsFirstSibling();
+            this.Mask.OnMaskClicked += this.OnMaskClicked;
+        }
+
+        private void OnMaskClicked()
+        {
+            this.OnClickMask();
+        }
+        #endregion
+
+        #region 外部接口
+        protected virtual void OnClickMask()
+        {
+            if (this.UIType == EnumUIType.Window)
+                this.Hide();
         }
         #endregion
     }

@@ -337,7 +337,8 @@ namespace SFramework.Core.UI
         #endregion
 
         #region 外部接口
-        protected async STask<UIItemBase> CreateChildItemAsync(string itemAssetName, Transform parent = null)
+        protected async STask<UIItem> CreateChildItemAsync<UIItem>(string itemAssetName, Transform parent = null)
+            where UIItem : UIItemBase, new()
         {
             UIItemInfo info = this.UIManager.GetUIItemInfo(itemAssetName);
             if (info != null)
@@ -365,7 +366,7 @@ namespace SFramework.Core.UI
                 var itemType = Type.GetType(selector.SelectClass);
                 if (itemType != null)
                 {
-                    var itemObj = Activator.CreateInstance(itemType) as UIItemBase;
+                    var itemObj = Activator.CreateInstance<UIItem>();
                     this.childrenUIList.Add(itemObj, prefabObj);
                     itemObj.Awake(prefabObj);
                     itemObj.BundleName = assetBundleName;
@@ -375,7 +376,7 @@ namespace SFramework.Core.UI
             return default;
         }
 
-        protected void DisposeChildItem<Item>(Item item) where Item : UIItemBase, new()
+        protected void DisposeChildItem<UIItem>(UIItem item) where UIItem : UIItemBase, new()
         {
             this.RemoveChild(item);
             item.Dispose();
