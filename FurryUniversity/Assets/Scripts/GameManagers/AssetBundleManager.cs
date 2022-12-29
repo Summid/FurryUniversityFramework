@@ -257,7 +257,7 @@ namespace SFramework.Core.GameManagers
             return asset;
         }
 
-        public static async STask UnloadAssetBundle(string bundleName)
+        public static async STask UnloadAssetBundleAsync(string bundleName)
         {
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
             await vo.UnLoadAsync();

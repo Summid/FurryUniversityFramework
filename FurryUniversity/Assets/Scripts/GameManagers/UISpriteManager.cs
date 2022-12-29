@@ -31,7 +31,7 @@ namespace SFramework.Core.GameManagers
                     if(atlasSprite.TryGetValue(originSprite.name.Replace("(Clone)",""), out var originAtlasName))
                     {
                         string originBundleName = originAtlasName.ToLower() + StaticVariables.SpriteAtlasBundleExtension;
-                        AssetBundleManager.UnloadAssetBundle(originBundleName).Forget();
+                        AssetBundleManager.UnloadAssetBundleAsync(originBundleName).Forget();
                         UnityEngine.Object.Destroy(originSprite);
                         image.sprite = null;
                     }
@@ -67,7 +67,7 @@ namespace SFramework.Core.GameManagers
                     if (atlasSprite.TryGetValue(originSprite.name.Replace("(Clone)", ""), out var originAtlasName))
                     {
                         string originBundleName = originAtlasName.ToLower() + StaticVariables.SpriteAtlasBundleExtension;
-                        AssetBundleManager.UnloadAssetBundle(originBundleName).Forget();
+                        AssetBundleManager.UnloadAssetBundleAsync(originBundleName).Forget();
                         UnityEngine.Object.Destroy(originSprite);
                         image.sprite = null;
                     }

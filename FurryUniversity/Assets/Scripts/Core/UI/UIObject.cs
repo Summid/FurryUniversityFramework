@@ -397,7 +397,7 @@ namespace SFramework.Core.UI
             if (this.gameObject != null && !this.gameObject.Equals(null))
                 GameObject.Destroy(this.gameObject);
 
-            //TODO unload AB
+            this.UIManager.DisposeUIBundle(this);
 
             //handle children
             foreach (var uiObj in this.childrenUIList.Keys)
