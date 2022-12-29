@@ -14,6 +14,8 @@ namespace SFramework.Core.UI
         private CanvasGroup rootCanvas;
 
         protected ViewMask Mask { get; private set; }
+        /// <summary> 是否是顶部windows </summary>
+        public virtual bool Topmost => false;
 
         protected override RectTransform VisualRoot => this.visualRoot;
 

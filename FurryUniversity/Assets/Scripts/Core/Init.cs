@@ -8,6 +8,8 @@ namespace SFramework.Core.GameManagers
         {
             AssetBundleManager.LoadManifest();//load manifest before GameManagers' Initialization
             GameManager.InitializeGameManager();
+
+            DontDestroyOnLoad(this.gameObject);
         }
     }
 }
