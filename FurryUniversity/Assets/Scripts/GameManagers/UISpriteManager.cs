@@ -37,7 +37,7 @@ namespace SFramework.Core.GameManagers
                     }
                 }
 
-                string bundleName = atlasName.ToLower() + StaticVariables.SpriteAtlasBundleExtension;//有gc，但无所谓了.jpg
+                string bundleName = atlasName.ToLower() + StaticVariables.SpriteAtlasBundleExtension;//有gc，但无所谓了.jpg；不加后缀也能正常加载，不确定，有空试试看
                 SpriteAtlas atlas = await AssetBundleManager.LoadAssetInAssetBundleAsync<SpriteAtlas>(atlasName, bundleName);
                 Sprite targetSprite = atlas.GetSprite(spriteName);
                 image.sprite = targetSprite;

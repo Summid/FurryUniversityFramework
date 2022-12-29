@@ -9,6 +9,8 @@ namespace SFramework.Core.UI
             {
                 /// <summary> ab:[testuiitem.uiitem]<para>class:[SFramework.Core.UI.TestUIItem]</para> </summary>
                 public static string TestUIItem = "TestUIItem";
+                /// <summary> ab:[viewmask.uiitem]<para>class:[SFramework.Core.UI.ViewMask]</para> </summary>
+                public static string ViewMask = "ViewMask";
 
             }
         }

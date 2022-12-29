@@ -29,7 +29,7 @@ namespace SFramework.Utilities.Editor
         private static readonly string Placeholder = "{Placeholder}";
         private static readonly string MainBody =
             $"using System.Collections.Generic;{Environment.NewLine}"+
-            $"namespace SFramework.Core.GameManager{Environment.NewLine}" +
+            $"namespace SFramework.Core.GameManagers{Environment.NewLine}" +
              "{" +
             $"{Environment.NewLine}" +
             $"   public static partial class UISpriteManager{Environment.NewLine}" +
