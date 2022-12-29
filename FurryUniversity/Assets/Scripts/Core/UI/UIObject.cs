@@ -374,6 +374,17 @@ namespace SFramework.Core.UI
             }
             return default;
         }
+
+        protected void DisposeChildItem<Item>(Item item) where Item : UIItemBase, new()
+        {
+            this.RemoveChild(item);
+            item.Dispose();
+        }
+
+        public bool RemoveChild(UIItemBase item)
+        {
+            return this.childrenUIList.Remove(item);
+        }
         #endregion
 
         #region 生命周期方法
@@ -415,7 +426,7 @@ namespace SFramework.Core.UI
         protected virtual void OnDisable()
         {
             this.OnHide();
-            //Remove something here
+            //Remove something here，协程、计时器等
         }
         #endregion
 
