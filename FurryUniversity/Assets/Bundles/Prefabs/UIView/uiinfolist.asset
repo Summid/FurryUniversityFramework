@@ -18,6 +18,11 @@ MonoBehaviour:
     ViewType: 1
     ViewClassName: SFramework.Core.UI.TestUIPrefab
     IsDisableNavigatePage: 0
+  - ViewAssetBundleName: mainview.uiview
+    ViewAssetName: MainView
+    ViewType: 0
+    ViewClassName: SFramework.Core.UI.MainView
+    IsDisableNavigatePage: 0
   - ViewAssetBundleName: testuiprefab2.uiview
     ViewAssetName: TestUIPrefab2
     ViewType: 0

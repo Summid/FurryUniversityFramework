@@ -36,6 +36,15 @@ namespace SFramework.Core.UI
             this.OnAwake();
         }
 
+#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+        /// <summary>
+        /// 因UIViewBase中Awake需要异步等待创建MaskView，这里提供异步版的Awake方法
+        /// </summary>
+        /// <param name="gameObjectHost"></param>
+        /// <returns></returns>
+        public virtual async STask AwakeAsync(GameObject gameObjectHost) { }
+#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+
         #region 内部方法
         /// <summary>
         /// 设置UIFieldInitAttribute和UISerializableAttribute字段

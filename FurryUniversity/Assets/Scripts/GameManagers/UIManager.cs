@@ -71,6 +71,9 @@ namespace SFramework.Core.GameManagers
             Debug.Log("UIManager Initialized");
 
             //TODO 刘海屏设备清单加载
+
+            //默认显示主界面
+            this.ShowUIAsync<MainView>().Forget();
         }
 
         #region 外部接口
@@ -239,7 +242,7 @@ namespace SFramework.Core.GameManagers
             this.SetViewUtilityFunc(view);
 
             gameObject.SetActive(false);
-            view.Awake(gameObject);
+            await view.AwakeAsync(gameObject);
 
             return view;
         }

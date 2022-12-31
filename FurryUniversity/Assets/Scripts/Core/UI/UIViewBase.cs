@@ -44,11 +44,11 @@ namespace SFramework.Core.UI
             }
         }
 
-        public sealed override async void Awake(GameObject gameObjectHost)
+        public sealed override async STask AwakeAsync(GameObject gameObjectHost)
         {
+            base.Awake(gameObjectHost);
             this.CreateVisualRoot(gameObjectHost);
             await this.CreateMask(gameObjectHost);
-            base.Awake(gameObjectHost);
             this.rootCanvas = this.gameObject.AddComponent<CanvasGroup>();
         }
 
