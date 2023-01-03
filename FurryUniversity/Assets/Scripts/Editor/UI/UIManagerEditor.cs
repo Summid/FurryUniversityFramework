@@ -21,6 +21,7 @@ namespace SFramework.Core.UI.Editor
             GenerateCode(list.UIList);
             GenerateUIItemPrefabListCode(list.UIItemInfo);
             AssetsInformationGenerator.GenerateSpriteAtlasInfo();
+            AssetsInformationGenerator.GenerateAudioAssetListCode();
 
             Debug.Log("更新UI资源清单成功", AssetDatabase.LoadAssetAtPath<UIInfoList>(uiListInfoPath));
         }

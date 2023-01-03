@@ -13,25 +13,25 @@ MonoBehaviour:
   m_Name: uiinfolist
   m_EditorClassIdentifier: 
   UIList:
-  - ViewAssetBundleName: testuiprefab.uiview
-    ViewAssetName: TestUIPrefab
-    ViewType: 1
-    ViewClassName: SFramework.Core.UI.TestUIPrefab
-    IsDisableNavigatePage: 0
-  - ViewAssetBundleName: mainview.uiview
+  - ViewAssetBundleName: mainview_uiview
     ViewAssetName: MainView
     ViewType: 0
     ViewClassName: SFramework.Core.UI.MainView
     IsDisableNavigatePage: 0
-  - ViewAssetBundleName: testuiprefab2.uiview
+  - ViewAssetBundleName: testuiprefab_uiview
+    ViewAssetName: TestUIPrefab
+    ViewType: 1
+    ViewClassName: SFramework.Core.UI.TestUIPrefab
+    IsDisableNavigatePage: 0
+  - ViewAssetBundleName: testuiprefab2_uiview
     ViewAssetName: TestUIPrefab2
     ViewType: 0
     ViewClassName: SFramework.Core.UI.TestUIPrefab2
     IsDisableNavigatePage: 0
   UIItemInfo:
-  - UIItemAssetBundleName: testuiitem.uiitem
+  - UIItemAssetBundleName: testuiitem_uiitem
     UIItemAssetName: TestUIItem
     UIItemClassName: SFramework.Core.UI.TestUIItem
-  - UIItemAssetBundleName: viewmask.uiitem
+  - UIItemAssetBundleName: viewmask_uiitem
     UIItemAssetName: ViewMask
     UIItemClassName: SFramework.Core.UI.ViewMask

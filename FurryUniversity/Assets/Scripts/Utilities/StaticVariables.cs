@@ -30,17 +30,17 @@ namespace SFramework.Utilities
         public static readonly string AssetBundleEditorTemp = "AssetBundleEditorTemp";
 
         public static readonly string SpriteAtlasExtension = ".spriteatlas";
-        public static readonly string SpriteAtlasBundleExtension = ".spriteatlas";
+        public static readonly string SpriteAtlasBundleExtension = "_spriteatlas";
         public static readonly string SpriteAtlasInfoPath = $"{Assets}/{Scripts}/{GameManagers}/{Gen}";
 
         public static readonly string PrefabExtension = ".prefab";
-        public static readonly string UIViewBundleExtension = ".uiview";
+        public static readonly string UIViewBundleExtension = "_uiview";
         /// <summary> UIView Prefab文件放置路径 </summary>
         public static readonly string UIViewPrefabsPath = $"{BundlesPath}/Prefabs/UIView";
         /// <summary> UI Prefab脚本自动生成引用代码文件放置路径 </summary>
         public static readonly string UIViewGenerateCodePath = $"{ScriptsPath}/UIObjects/Gen";
 
-        public static readonly string UIItemBundleExtension = ".uiitem";
+        public static readonly string UIItemBundleExtension = "_uiitem";
         public static readonly string UIItemPrefabsPath = $"{BundlesPath}/Prefabs/UIItemTemplate";
         public static readonly string UIItemGenerateCodeFileName = "UIItemBase.g.cs";
 
@@ -48,6 +48,22 @@ namespace SFramework.Utilities
         public static readonly string UIListName = "uiinfolist.asset";
         /// <summary> UIList清单Bundle名称 </summary>
         public static readonly string UIListBundleName = "uiinfolist_asset";
+
+        /// <summary> 游戏BGM存放目录 </summary>
+        public static readonly string AudioBGMPath = "Assets/Bundles/AudioAssets/BGM/";
+        /// <summary> 常驻内存音效存放目录 </summary>
+        public static readonly string AudioCommonSFXPath = "Assets/Bundles/AudioAssets/CommonSFX/";
+        /// <summary> 音效组存放目录 </summary>
+        public static readonly string AudioSFXGroupPath = "Assets/Bundles/AudioAssets/SFXGroup/";
+
+        /// <summary> 游戏BGM Bundle 名后缀；一个文件一个Bundle </summary>
+        public static readonly string AudioBGMBundleExtension = "_bgm";
+        /// <summary> 常驻内存音效Bundle名；所有音效打包成一个Bundle </summary>
+        public static readonly string AudioCommonSFXBundleName = "commonsfx_audio";
+        /// <summary> 音效组Bundle名后缀；按照组来生成Bundle </summary>
+        public static readonly string AudioSFXGroupBundleExtension = "_sfxgroup";
+        /// <summary> AudioAssetList.g保存目录 </summary>
+        public static readonly string AudioGenerateCodeFileFullName = "Assets/Scripts/GameManagers/Gen/AudioAssetList.g.cs";
 
         public static RuntimePlatform Platform
         {
