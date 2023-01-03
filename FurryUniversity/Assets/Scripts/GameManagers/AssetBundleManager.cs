@@ -245,6 +245,29 @@ namespace SFramework.Core.GameManagers
             }
         }
 
+        /// <summary>
+        /// 只加载AB
+        /// </summary>
+        /// <param name="bundleName"></param>
+        /// <returns></returns>
+        public static async STask<AssetBundleVO> LoadAssetBundleAsync(string bundleName)
+        {
+            AssetBundleVO vo = GetAssetBundleVO(bundleName);
+            if (vo.BundleState == AssetBundleVO.State.Unloaded)
+            {
+                await vo.LoadAsync();
+            }
+
+            return vo;
+        }
+
+        /// <summary>
+        /// 从AB中加载资源，若AB未被加载，则先加载AB
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="assetPath"></param>
+        /// <param name="bundleName"></param>
+        /// <returns></returns>
         public static async STask<T> LoadAssetInAssetBundleAsync<T>(string assetPath, string bundleName) where T : UnityEngine.Object
         {
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
@@ -257,6 +280,11 @@ namespace SFramework.Core.GameManagers
             return asset;
         }
 
+        /// <summary>
+        /// 卸载AB，从中实例化的GameObject也会被清理
+        /// </summary>
+        /// <param name="bundleName"></param>
+        /// <returns></returns>
         public static async STask UnloadAssetBundleAsync(string bundleName)
         {
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
