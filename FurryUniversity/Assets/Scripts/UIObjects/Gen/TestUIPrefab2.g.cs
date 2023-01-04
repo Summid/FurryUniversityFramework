@@ -9,6 +9,10 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.Image HideButton_Image;
         [UIFieldInit("HideButton")]
         public UnityEngine.UI.Button HideButton_Button;
+        [UIFieldInit("PlayBGMButton")]
+        public UnityEngine.UI.Image PlayBGMButton_Image;
+        [UIFieldInit("PlayBGMButton")]
+        public UnityEngine.UI.Button PlayBGMButton_Button;
 
     }
 }

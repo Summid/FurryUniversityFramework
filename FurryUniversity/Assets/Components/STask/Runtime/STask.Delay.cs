@@ -107,7 +107,7 @@ namespace SFramework.Threading.Tasks
             {
                 if (this.cancellationToken.IsCancellationRequested)
                 {
-                    this.core.TrySetCanceled(cancellationToken);
+                    this.core.TrySetCanceled(this.cancellationToken);
                     return false;
                 }
 

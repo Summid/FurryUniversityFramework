@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
     #ROOTNAMESPACEBEGIN#
-namespace SFramework.Core.GameManager
+namespace SFramework.Core.GameManagers
 {
     public class #SCRIPTNAME# : GameManagerBase
     {

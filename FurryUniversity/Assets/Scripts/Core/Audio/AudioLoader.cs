@@ -6,6 +6,9 @@ using UnityEngine;
 
 namespace SFramework.Core.Audio
 {
+    /// <summary>
+    /// 主要用于处理音效资源加载与卸载逻辑，具体的音效播放等逻辑在<see cref="AudioManagerCore"/>中
+    /// </summary>
     public class AudioLoader : IAudioLoaderAsync
     {
         public enum AudioAssetType

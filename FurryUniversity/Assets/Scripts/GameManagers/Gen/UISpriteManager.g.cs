@@ -6,6 +6,8 @@ namespace SFramework.Core.GameManagers
       static UISpriteManager()
       {
           atlasSprite = new Dictionary<string, string>();
+        atlasSprite.Add("dora","Cute");
+        atlasSprite.Add("doraLay","Cute");
         atlasSprite.Add("shark_1","Cute");
         atlasSprite.Add("Discipleship0","Discipleship");
         atlasSprite.Add("Discipleship1","Discipleship");
@@ -20,6 +22,8 @@ namespace SFramework.Core.GameManagers
 
        public class Cute : UIAtlasSpritesObject
         {
+            public static readonly string dora = "dora";
+            public static readonly string doraLay = "doraLay";
             public static readonly string shark_1 = "shark_1";
 
         }

@@ -1,3 +1,5 @@
+using SFramework.Core.GameManagers;
+using SFramework.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -10,6 +12,10 @@ namespace SFramework.Core.UI
         protected override void OnAwake()
         {
             this.HideButton_Button.onClick.AddListener(this.Hide);
+            this.PlayBGMButton_Button.onClick.AddListener(() =>
+            {
+                GameManager.Instance.AudioManager.PlaySoundAsync("Whenlovegoeswithflow").Forget();
+            });
         }
     }
 }

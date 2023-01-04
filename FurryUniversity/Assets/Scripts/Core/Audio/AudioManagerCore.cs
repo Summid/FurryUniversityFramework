@@ -114,6 +114,9 @@ namespace SFramework.Core.Audio
         }
     }
 
+    /// <summary>
+    /// 管理音效的核心逻辑，可根据业务需求包装；使用前需调用<see cref="Init(IAudioLoaderAsync)"/>方法进行初始化
+    /// </summary>
     public static class AudioManagerCore
     {
         private static GameObject instance;
