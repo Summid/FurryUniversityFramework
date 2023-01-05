@@ -2,7 +2,8 @@
     "name": "SFramework",
     "rootNamespace": "",
     "references": [
-        "GUID:545c05b61d3e3064c83ad45b22076e4d"
+        "GUID:545c05b61d3e3064c83ad45b22076e4d",
+        "GUID:2be9c19e322963d4daf6184d2f5d8555"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
