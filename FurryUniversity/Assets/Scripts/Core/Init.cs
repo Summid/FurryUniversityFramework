@@ -63,15 +63,25 @@ namespace SFramework.Core.GameManagers
                     switch (this.dialogue.CurrentDialogue.DialogueType)
                     {
                         case SDS.Enumerations.SDSDialogueType.SingleChoice:
-                            if (GUILayout.Button("切换到下一句"))
+                            if (this.dialogue.CheckCurrentDialogueHasNextNode())
                             {
-
+                                if (GUILayout.Button("切换到下一句"))
+                                {
+                                    this.dialogue.SwitchToNextDialogue();
+                                }
                             }
                             break;
                         case SDS.Enumerations.SDSDialogueType.MultipleChoice:
-                            foreach (var choice in this.dialogue.CurrentDialogue.Choices)
+                            if (this.dialogue.CheckCurrentDialogueHasNextNode())
                             {
-
+                                for (int i = 0; i < this.dialogue.CurrentDialogue.Choices.Count; ++i)
+                                {
+                                    var curChoice = this.dialogue.CurrentDialogue.Choices[i];
+                                    if (GUILayout.Button($"选择分支 {curChoice.Text}"))
+                                    {
+                                        this.dialogue.ChooseDialogueBranch(i);
+                                    }
+                                }
                             }
                             break;
                     }

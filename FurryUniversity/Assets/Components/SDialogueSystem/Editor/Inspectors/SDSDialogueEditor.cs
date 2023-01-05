@@ -38,6 +38,13 @@ namespace SDS.Inspectors
 
         public override void OnInspectorGUI()
         {
+            if (EditorApplication.isPlayingOrWillChangePlaymode)
+            {
+                SDSInspectorUtility.DrawHelpBox("运行模式下不支持编辑此组件");
+                SDSInspectorUtility.DrawDisabledFields(this.DrawDialogueContainerArea);
+                return;
+            }
+
             this.serializedObject.Update();
 
             this.DrawDialogueContainerArea();
