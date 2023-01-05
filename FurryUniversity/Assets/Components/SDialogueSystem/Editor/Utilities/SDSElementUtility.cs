@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -97,6 +98,26 @@ namespace SDS.Utilities
             port.name = portName;
 
             return port;
+        }
+
+        /// <summary>
+        /// ObjectField，用于扩展功能，播放音效、动效等
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="label"></param>
+        /// <param name="onValueChanged"></param>
+        /// <returns></returns>
+        public static ObjectField CreateObjectField<T>(string label = "", EventCallback<ChangeEvent<UnityEngine.Object>> onValueChanged = null) where T : UnityEngine.Object
+        {
+            ObjectField objectField = new ObjectField()
+            {
+                objectType = typeof(T),
+            };
+            if (onValueChanged != null)
+            {
+                objectField.RegisterValueChangedCallback(onValueChanged);
+            }
+            return objectField;
         }
     }
 }

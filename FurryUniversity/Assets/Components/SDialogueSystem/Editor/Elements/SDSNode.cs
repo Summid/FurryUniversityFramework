@@ -52,14 +52,14 @@ namespace SDS.Elements
                 {
                     if (!string.IsNullOrEmpty(this.DialogueName))//当dialogue name 从非空字符串改为空字符串，禁用保存按钮
                     {
-                        ++graphView.NameErrorsAmount;
+                        ++this.graphView.NameErrorsAmount;
                     }
                 }
                 else
                 {
                     if (string.IsNullOrEmpty(this.DialogueName))//dialogue name 从空字符串改为非空字符串，错误减一
                     {
-                        --graphView.NameErrorsAmount;
+                        --this.graphView.NameErrorsAmount;
                     }
                 }
 
@@ -97,7 +97,7 @@ namespace SDS.Elements
             Foldout textFoldout = SDSElementUtility.CreateFoldout("Dialogue Text");
             TextField textTextField = SDSElementUtility.CreateTextArea(this.Text, null, callback =>
             {
-                Text = callback.newValue;
+                this.Text = callback.newValue;
             });
             textTextField.AddClasses("sds-node__text-field", "sds-node__quote-text-field");
 
