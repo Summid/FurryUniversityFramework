@@ -100,6 +100,24 @@ namespace SDS.Utilities
             return port;
         }
 
+        public static PopupField<T> CreatePopupField<T>(List<T> choices, T defaultValue, Func<T, string> onListItems, Func<T, string> onSelectedItem, string label = "")
+        {
+            if (choices == null || choices.Count == 0)
+            {
+                Debug.LogWarning($"PopupField's choices is empty");
+                return null;
+            }
+
+            if (!choices.Contains(defaultValue))
+            {
+                Debug.LogWarning($"PopupField's default value is not in choices");
+                return null;
+            }
+
+            PopupField<T> popupField = new PopupField<T>(label, choices, defaultValue, onSelectedItem, onListItems);
+            return popupField;
+        }
+
         /// <summary>
         /// ObjectField，用于扩展功能，播放音效、动效等
         /// </summary>
@@ -112,6 +130,7 @@ namespace SDS.Utilities
             ObjectField objectField = new ObjectField()
             {
                 objectType = typeof(T),
+                label = label,
             };
             if (onValueChanged != null)
             {

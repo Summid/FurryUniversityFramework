@@ -128,6 +128,7 @@ namespace SDS.Utilities
                 node.ID = nodeData.ID;
                 node.Choices = CloneNodeChoices(nodeData.Choices);
                 node.Text = nodeData.Text;
+                node.Events = CloneEventSaveDatas(nodeData.Events);
                 node.Draw();
 
                 graphView.AddElement(node);
@@ -276,6 +277,7 @@ namespace SDS.Utilities
         private static void SaveNodeToGraph(SDSNode node, SDSGraphSaveDataSO graphData)
         {
             List<SDSChoiceSaveData> choices = CloneNodeChoices(node.Choices);
+            List<SDSEventSaveData> events = CloneEventSaveDatas(node.Events);
 
             SDSNodeSaveData nodeData = new SDSNodeSaveData()
             {
@@ -285,7 +287,8 @@ namespace SDS.Utilities
                 Text = node.Text,
                 GroupID = node.Group?.ID,
                 DialogueType = node.DialogueType,
-                Position = node.GetPosition().position
+                Position = node.GetPosition().position,
+                Events = events,
             };
 
             graphData.Nodes.Add(nodeData);
@@ -513,6 +516,28 @@ namespace SDS.Utilities
             }
 
             return choices;
+        }
+
+        /// <summary>
+        /// 深拷贝一下，避免在graphView中修改时，把SO中的数据也一起修改了
+        /// </summary>
+        /// <param name="eventSaveDatas"></param>
+        /// <returns></returns>
+        private static List<SDSEventSaveData> CloneEventSaveDatas(List<SDSEventSaveData> eventSaveDatas)
+        {
+            List<SDSEventSaveData> datas = new List<SDSEventSaveData>();
+            foreach (SDSEventSaveData data in eventSaveDatas)
+            {
+                SDSEventSaveData newData = new SDSEventSaveData()
+                {
+                    EventType = data.EventType,
+                    AssetObject = data.AssetObject,
+                    Parameters = data.Parameters,
+                    Description = data.Description
+                };
+                datas.Add(newData);
+            }
+            return datas;
         }
         #endregion
     }

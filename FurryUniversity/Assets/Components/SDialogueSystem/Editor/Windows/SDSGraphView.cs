@@ -181,14 +181,14 @@ namespace SDS.Windows
         /// <param name="dialogueType"></param>
         /// <param name="position"></param>
         /// <returns></returns>
-        public SDSNode CreateNode(string nodeName, SDSDialogueType dialogueType, Vector2 position, bool sholdDraw = true)
+        public SDSNode CreateNode(string nodeName, SDSDialogueType dialogueType, Vector2 position, bool shouldDraw = true)
         {
             Type nodeType = Type.GetType($"SDS.Elements.SDS{dialogueType}Node");
 
             SDSNode node = Activator.CreateInstance(nodeType) as SDSNode;
 
             node.Initialize(nodeName, this, position);
-            if (sholdDraw)
+            if (shouldDraw)
             {
                 //只有在新创建node的时候才调用Draw；从so中加载node时，由于这时候还没有还原node的数据（ID、Text等；Initialize方法只是初始化数据，不是我们想要的），因此先不调用Draw，
                 //在设置完数据后调用Draw

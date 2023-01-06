@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor.Experimental.GraphView;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,12 +25,20 @@ namespace SDS.Elements
         private Color defaultBackgroundColor;
         public SDSGroup Group { get; set; }
 
+        //事件相关成员
+        public List<SDSEventSaveData> Events { get; set; }
+        private Foldout eventsFoldout;
+        public Action OnEventSelected;
+        private PopupField<object> popupField;
+
         public virtual void Initialize(string nodeName, SDSGraphView graphView, Vector2 position)
         {
             this.ID = Guid.NewGuid().ToString();
             this.DialogueName = nodeName;
             this.Choices = new List<SDSChoiceSaveData>();
             this.Text = "Dialogue text";
+            this.Events = new List<SDSEventSaveData>();
+            this.OnEventSelected += () => { this.popupField.index = 0; };//选择事件后，重置选择索引
 
             this.SetPosition(new Rect(position, Vector2.zero));
 
@@ -104,8 +113,135 @@ namespace SDS.Elements
             textFoldout.Add(textTextField);
 
             customDataContainer.Add(textFoldout);
-
+            this.DrawEventArea(customDataContainer);
             this.extensionContainer.Add(customDataContainer);
+        }
+
+        public void DrawEventArea(VisualElement container)
+        {
+            this.eventsFoldout = SDSElementUtility.CreateFoldout("Event Info");
+            this.eventsFoldout.AddClasses("sds-node__eventsFoldout-container");
+            this.DrawEvents();
+
+            Type eventType = typeof(SDSDialogueEventType);
+            List<object> eventValues = Enum.GetValues(eventType).Cast<object>().ToList();
+
+            this.popupField = SDSElementUtility.CreatePopupField<object>(eventValues, SDSDialogueEventType.NullEvent,
+                null,
+                this.OnSelectedPopupFieldItem);
+
+            container.Add(this.eventsFoldout);
+            container.Add(this.popupField);
+        }
+
+        private void DrawEvents()
+        {
+            this.eventsFoldout.Clear();
+
+            foreach (SDSEventSaveData eventData in this.Events)
+            {
+                ObjectField objectField = null;
+                string defaultDescription = string.Empty;
+                switch (eventData.EventType)
+                {
+                    case SDSDialogueEventType.NullEvent:
+                        continue;
+                    case SDSDialogueEventType.ShowImage:
+                        defaultDescription = "Image";
+                        objectField = SDSElementUtility.CreateObjectField<Sprite>(null, callback =>
+                        {
+                            eventData.AssetObject = callback.newValue;
+                        });
+                        break;
+                    case SDSDialogueEventType.ShowBackgroundImage:
+                        defaultDescription = "BGImage";
+                        objectField = SDSElementUtility.CreateObjectField<Sprite>(null, callback =>
+                        {
+                            eventData.AssetObject = callback.newValue;
+                        });
+                        break;
+                    case SDSDialogueEventType.PlayBGM:
+                        defaultDescription = "BGM";
+                        objectField = SDSElementUtility.CreateObjectField<AudioClip>(null, callback =>
+                        {
+                            eventData.AssetObject = callback.newValue;
+                        });
+                        break;
+                    case SDSDialogueEventType.PlaySFX:
+                        defaultDescription = "SFX";
+                        objectField = SDSElementUtility.CreateObjectField<AudioClip>(null, callback =>
+                        {
+                            eventData.AssetObject = callback.newValue;
+                        });
+                        break;
+                }
+
+                //绘制
+                if (objectField != null && this.eventsFoldout != null)
+                {
+                    objectField.value = eventData.AssetObject;
+
+                    VisualElement eventContainer = new VisualElement();
+                    eventContainer.AddClasses("sds-node__event-container");
+                    eventContainer.userData = eventData;
+
+                    TextField textField = SDSElementUtility.CreateTextField(defaultDescription, null, callback =>
+                    {
+                        eventData.Description = callback.newValue;
+                    });
+                    if (!string.IsNullOrEmpty(eventData.Description))
+                    {
+                        textField.value = eventData.Description;
+                    }
+                    else
+                    {
+                        eventData.Description = defaultDescription;
+                    }
+                    textField.AddClasses("sds-node__text-field", "sds-node__text-field__hidden", "sds-node__choice-text-field");
+
+                    Button deleteButton = SDSElementUtility.CreateButton("X", () => 
+                    {
+                        this.Events.Remove((SDSEventSaveData)eventContainer.userData);
+                        this.DrawEvents();
+                    });
+                    deleteButton.AddClasses("sds-node__button");
+
+                    eventContainer.Add(textField);
+                    eventContainer.Add(objectField);
+                    eventContainer.Add(deleteButton);
+
+                    this.eventsFoldout.Add(eventContainer);
+                }
+
+            }
+        }
+
+        private string OnSelectedPopupFieldItem(object eventTypeObj)
+        {
+            SDSDialogueEventType eventType = (SDSDialogueEventType)eventTypeObj;
+            bool added = false;
+            switch (eventType)
+            {
+                case SDSDialogueEventType.NullEvent:
+                    return SDSDialogueEventType.NullEvent.ToString();
+                case SDSDialogueEventType.ShowImage:
+                case SDSDialogueEventType.ShowBackgroundImage:
+                case SDSDialogueEventType.PlayBGM:
+                case SDSDialogueEventType.PlaySFX:
+                    this.Events.Add(new SDSEventSaveData() { EventType = eventType });
+                    added = true;
+                    break;
+            }
+
+            if (added)
+            {
+                this.DrawEvents();
+                this.OnEventSelected?.Invoke();
+            }
+
+            //选择后，PopupField所显示的string
+            //return eventTypeObj.ToString();
+            return SDSDialogueEventType.NullEvent.ToString();
         }
 
         #region Overrided Methods

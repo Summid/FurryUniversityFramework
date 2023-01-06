@@ -18,5 +18,6 @@ namespace SDS.Data.Save
         [field: SerializeField] public string GroupID { get; set; }
         [field: SerializeField] public SDSDialogueType DialogueType { get; set; }
         [field: SerializeField] public Vector2 Position { get; set; }
+        [field: SerializeField] public List<SDSEventSaveData> Events { get; set; }
     }
 }

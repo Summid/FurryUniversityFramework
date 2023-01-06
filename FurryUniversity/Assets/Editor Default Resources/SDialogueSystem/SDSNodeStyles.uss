@@ -15,6 +15,14 @@
 	padding: var(--sds-metrics-window-pixels-8);
 }
 
+.sds-node__eventsFoldout-container {
+	background-color: var(--sds-colors-window-dark-grey-6);
+}
+
+.sds-node__event-container {
+	background-color: var(--sds-colors-grid-light-grey-3);
+	padding: var(--sds-metrics-window-pixels-8);
+}
 
 /* Inputs */
 
