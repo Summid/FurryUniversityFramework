@@ -15,14 +15,16 @@ namespace SDS.ScriptableObjects
         [field: SerializeField] public List<SDSDialogueChoiceData> Choices { get; set; }
         [field: SerializeField] public SDSDialogueType DialogueType { get; set; }
         [field: SerializeField] public bool IsStartDialogue { get; set; }
+        [field: SerializeField] public List<SDSDialogueEventData> Events { get; set; }
 
-        public void Initialize(string dialogueName, string text, List<SDSDialogueChoiceData> choices, SDSDialogueType dialogueType, bool isStartDialogue)
+        public void Initialize(string dialogueName, string text, List<SDSDialogueChoiceData> choices, SDSDialogueType dialogueType, bool isStartDialogue, List<SDSDialogueEventData> events)
         {
             this.DialogueName = dialogueName;
             this.Text = text;
             this.Choices = choices;
             this.DialogueType = dialogueType;
             this.IsStartDialogue = isStartDialogue;
+            this.Events = events;
         }
     }
 }

@@ -59,6 +59,20 @@ namespace SFramework.Core.GameManagers
                         this.showInfos.AppendLine(this.dialogue.CurrentDialogue.Text);
                         this.line++;
                     }
+                    if (GUILayout.Button("显示对话事件参数"))
+                    {
+                        if (this.dialogue.CurrentDialogue.Events != null && this.dialogue.CurrentDialogue.Events.Count > 0)
+                        {
+                            foreach (var e in this.dialogue.CurrentDialogue.Events)
+                            {
+                                foreach (var p in e.Parameters)
+                                {
+                                    this.showInfos.AppendLine(p.ToString());
+                                    this.line++;
+                                }
+                            }
+                        }
+                    }
 
                     switch (this.dialogue.CurrentDialogue.DialogueType)
                     {

@@ -320,7 +320,8 @@ namespace SDS.Utilities
                 node.Text,
                 ConvertNodeChoicesToDialogueChoices(node.Choices),
                 node.DialogueType,
-                node.IsStartingNode()
+                node.IsStartingNode(),
+                ConvertNodeEventsToDialogueEvents(node.Events)
                 );
 
             createdDialogues.Add(node.ID, dialogue);
@@ -328,6 +329,11 @@ namespace SDS.Utilities
             SaveAsset(dialogue);
         }
 
+        /// <summary>
+        /// 将Editor版本的Choice数据转换为Runtime版本的
+        /// </summary>
+        /// <param name="nodeChoices"></param>
+        /// <returns></returns>
         private static List<SDSDialogueChoiceData> ConvertNodeChoicesToDialogueChoices(List<SDSChoiceSaveData> nodeChoices)
         {
             List<SDSDialogueChoiceData> dialogueChoices = new List<SDSDialogueChoiceData>();
@@ -342,6 +348,29 @@ namespace SDS.Utilities
             }
 
             return dialogueChoices;
+        }
+
+        /// <summary>
+        /// 将Editor版本的Event数据转换为Runtime版本的
+        /// </summary>
+        /// <param name="nodeEvents"></param>
+        /// <returns></returns>
+        private static List<SDSDialogueEventData> ConvertNodeEventsToDialogueEvents(List<SDSEventSaveData> nodeEvents)
+        {
+            List<SDSDialogueEventData> dialogueEvents = new List<SDSDialogueEventData>();
+
+            foreach (SDSEventSaveData nodeEvent in nodeEvents)
+            {
+                SDSDialogueEventData eventData = new SDSDialogueEventData()
+                {
+                    EventType = nodeEvent.EventType,
+                    AssetName = nodeEvent.AssetObject.name,
+                    Parameters = nodeEvent.Parameters
+                };
+                dialogueEvents.Add(eventData);
+            }
+
+            return dialogueEvents;
         }
 
         private static void UpdateDialoguesChoicesConnections()

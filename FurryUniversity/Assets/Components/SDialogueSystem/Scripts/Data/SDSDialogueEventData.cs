@@ -3,17 +3,16 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SDS.Data.Save
+namespace SDS.Data
 {
     /// <summary>
-    /// editor 使用的对话事件持久化数据
+    /// runtime 下使用的对话数据数据
     /// </summary>
     [Serializable]
-    public class SDSEventSaveData
+    public class SDSDialogueEventData
     {
         [field: SerializeField] public SDSDialogueEventType EventType { get; set; }
-        [field: SerializeField] public UnityEngine.Object AssetObject { get; set; }
+        [field: SerializeField] public string AssetName { get; set; }
         [field: SerializeField] public List<string> Parameters { get; set; }
-        [field: SerializeField] public string Description { get; set; }
     }
 }

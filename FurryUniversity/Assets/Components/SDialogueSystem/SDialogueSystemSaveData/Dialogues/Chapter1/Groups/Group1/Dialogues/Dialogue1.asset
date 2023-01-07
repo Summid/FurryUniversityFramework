@@ -19,3 +19,12 @@ MonoBehaviour:
     <NextDialogue>k__BackingField: {fileID: 11400000, guid: 94d1e42bcedd7704689b2ada8064fffc, type: 2}
   <DialogueType>k__BackingField: 0
   <IsStartDialogue>k__BackingField: 1
+  <Events>k__BackingField:
+  - <EventType>k__BackingField: 3
+    <AssetName>k__BackingField: Idonotdeserve
+    <Parameters>k__BackingField:
+    - BGM
+  - <EventType>k__BackingField: 4
+    <AssetName>k__BackingField: ui_effect_5
+    <Parameters>k__BackingField:
+    - SFX

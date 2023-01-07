@@ -21,3 +21,8 @@ MonoBehaviour:
     <NextDialogue>k__BackingField: {fileID: 11400000, guid: 8ed3b900eb29bd645bc68bc2c14c3244, type: 2}
   <DialogueType>k__BackingField: 1
   <IsStartDialogue>k__BackingField: 0
+  <Events>k__BackingField:
+  - <EventType>k__BackingField: 1
+    <AssetName>k__BackingField: doraLay
+    <Parameters>k__BackingField:
+    - Image
