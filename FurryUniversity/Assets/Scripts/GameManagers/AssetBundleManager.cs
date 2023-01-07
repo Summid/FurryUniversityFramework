@@ -5,6 +5,8 @@ using System.Diagnostics;
 using UnityEngine;
 using System;
 using System.Linq;
+using System.IO;
+using UnityEditor;
 
 namespace SFramework.Core.GameManagers
 {
@@ -227,6 +229,10 @@ namespace SFramework.Core.GameManagers
 
         private static AssetBundleManifest manifest;
 
+#if LOAD_ASSET_IN_EDITOR
+        private static string[] allAssetPaths;
+#endif
+
         public static void SetupLoader(IAssetBundleLoader assetBundleLoader)
         {
             AssetBundleLoader = assetBundleLoader;
@@ -270,6 +276,25 @@ namespace SFramework.Core.GameManagers
         /// <returns></returns>
         public static async STask<T> LoadAssetInAssetBundleAsync<T>(string assetPath, string bundleName) where T : UnityEngine.Object
         {
+#if LOAD_ASSET_IN_EDITOR
+            //TODO 按照类型T给assetPath加文件扩展名，用于匹配path；用editor加载时跳过卸载AB逻辑
+            if(allAssetPaths == null)
+                allAssetPaths = AssetDatabase.GetAllAssetPaths();
+            foreach (string path in allAssetPaths)
+            {
+                if (path.Contains(assetPath))
+                    UnityEngine.Debug.Log($"{path} contains {assetPath}");
+            }
+            foreach (string path in allAssetPaths)
+            {
+                if (Path.GetFileName(path) == assetPath)
+                {
+                    Log(false, path);
+                    return AssetDatabase.LoadAssetAtPath<T>(path);
+                }
+            }
+#endif
+
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
             if (vo.BundleState == AssetBundleVO.State.Unloaded)
             {
@@ -322,6 +347,12 @@ namespace SFramework.Core.GameManagers
             }
 
             return bundleVOMap[bundleName];
+        }
+
+        [Conditional("LOAD_BUNDLE_LOG")]
+        private static void Log(bool fromAB,string assetPath)
+        {
+            UnityEngine.Debug.Log($"load from {(fromAB ? "AssetBundle" : "AssetDataBase")}, assetPath is {assetPath}");
         }
     }
 }
