@@ -1,3 +1,5 @@
+#pragma warning disable CS1998
+
 using SFramework.Threading.Tasks;
 using SFramework.Utilities;
 using System.Collections.Generic;
@@ -231,6 +233,10 @@ namespace SFramework.Core.GameManagers
 
 #if LOAD_ASSET_IN_EDITOR
         private static string[] allAssetPaths;
+        private static readonly Type gameObjType = typeof(GameObject);
+        private static readonly Type uiInfoListType = typeof(SFramework.Core.UI.UIInfoList);
+        private static readonly Type spriteAtlasType = typeof(UnityEngine.U2D.SpriteAtlas);
+        private static readonly Type audioClipType = typeof(AudioClip);
 #endif
 
         public static void SetupLoader(IAssetBundleLoader assetBundleLoader)
@@ -258,6 +264,9 @@ namespace SFramework.Core.GameManagers
         /// <returns></returns>
         public static async STask<AssetBundleVO> LoadAssetBundleAsync(string bundleName)
         {
+#if LOAD_ASSET_IN_EDITOR
+            return null;
+#else
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
             if (vo.BundleState == AssetBundleVO.State.Unloaded)
             {
@@ -265,35 +274,21 @@ namespace SFramework.Core.GameManagers
             }
 
             return vo;
+#endif
         }
 
         /// <summary>
         /// 从AB中加载资源，若AB未被加载，则先加载AB
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="assetPath"></param>
+        /// <param name="assetName">资源名</param>
         /// <param name="bundleName"></param>
         /// <returns></returns>
-        public static async STask<T> LoadAssetInAssetBundleAsync<T>(string assetPath, string bundleName) where T : UnityEngine.Object
+        public static async STask<T> LoadAssetInAssetBundleAsync<T>(string assetName, string bundleName) where T : UnityEngine.Object
         {
 #if LOAD_ASSET_IN_EDITOR
-            //TODO 按照类型T给assetPath加文件扩展名，用于匹配path；用editor加载时跳过卸载AB逻辑
-            if(allAssetPaths == null)
-                allAssetPaths = AssetDatabase.GetAllAssetPaths();
-            foreach (string path in allAssetPaths)
-            {
-                if (path.Contains(assetPath))
-                    UnityEngine.Debug.Log($"{path} contains {assetPath}");
-            }
-            foreach (string path in allAssetPaths)
-            {
-                if (Path.GetFileName(path) == assetPath)
-                {
-                    Log(false, path);
-                    return AssetDatabase.LoadAssetAtPath<T>(path);
-                }
-            }
-#endif
+            return AssetDatabase.LoadAssetAtPath<T>(GetAssetPath<T>(assetName));
+#else
 
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
             if (vo.BundleState == AssetBundleVO.State.Unloaded)
@@ -301,8 +296,9 @@ namespace SFramework.Core.GameManagers
                 await vo.LoadAsync();
             }
 
-            T asset = await vo.Content.LoadAssetAsync(assetPath) as T;
+            T asset = await vo.Content.LoadAssetAsync(assetName) as T;
             return asset;
+#endif
         }
 
         /// <summary>
@@ -312,8 +308,12 @@ namespace SFramework.Core.GameManagers
         /// <returns></returns>
         public static async STask UnloadAssetBundleAsync(string bundleName)
         {
+#if LOAD_ASSET_IN_EDITOR
+            return;
+#else
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
             await vo.UnLoadAsync();
+#endif
         }
 
         /// <summary>
@@ -348,6 +348,57 @@ namespace SFramework.Core.GameManagers
 
             return bundleVOMap[bundleName];
         }
+
+#if LOAD_ASSET_IN_EDITOR
+        private static string GetAssetPath<T>(string assetName) where T : UnityEngine.Object
+        {
+            if (allAssetPaths == null)
+                allAssetPaths = AssetDatabase.GetAllAssetPaths();
+            Type assetType = typeof(T);
+            string assetNameWithEx = assetName;
+            if (!Path.HasExtension(assetName))
+            {
+                if (assetType == gameObjType)
+                {
+                    assetNameWithEx = assetName + ".prefab";
+                }
+                else if(assetType == uiInfoListType)
+                {
+                    assetNameWithEx = assetName + ".asset";
+                }
+                else if (assetType == spriteAtlasType)
+                {
+                    assetNameWithEx = assetName + ".spriteatlas";
+                }
+                else if (assetType == audioClipType)
+                {
+                    assetNameWithEx = assetName + ".mp3";
+                    bool find = false;
+                    foreach (string path in allAssetPaths)
+                    {
+                        if (path.Contains(assetNameWithEx))
+                        {
+                            find = true;
+                            break;
+                        }
+                    }
+                    if (!find)
+                    {
+                        assetNameWithEx = assetName + ".wav";
+                    }
+                }
+            }
+            foreach (var path in allAssetPaths)
+            {
+                if (Path.GetFileName(path) == assetNameWithEx)
+                {
+                    return path;
+                }
+            }
+            UnityEngine.Debug.LogWarning($"asset path not found: {assetNameWithEx}");
+            return null;
+        }
+#endif
 
         [Conditional("LOAD_BUNDLE_LOG")]
         private static void Log(bool fromAB,string assetPath)
