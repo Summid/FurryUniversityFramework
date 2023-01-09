@@ -170,8 +170,8 @@ namespace SFramework.Core.GameManagers
 
             if (this.BundleState == State.Unloaded)
             {
-                this.Content = await this.LoadAsync(this.BundleName);
                 await this.HandleDependentBundlesLoadAsync();
+                this.Content = await this.LoadAsync(this.BundleName);
             }
         }
 
@@ -236,7 +236,7 @@ namespace SFramework.Core.GameManagers
 
         private static AssetBundleManifest manifest;
 
-#if LOAD_ASSET_IN_EDITOR
+#if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
         private static string[] allAssetPaths;
         private static readonly Type gameObjType = typeof(GameObject);
         private static readonly Type uiInfoListType = typeof(SFramework.Core.UI.UIInfoList);
@@ -269,7 +269,7 @@ namespace SFramework.Core.GameManagers
         /// <returns></returns>
         public static async STask<AssetBundleVO> LoadAssetBundleAsync(string bundleName)
         {
-#if LOAD_ASSET_IN_EDITOR
+#if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
             return null;
 #else
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
@@ -291,7 +291,7 @@ namespace SFramework.Core.GameManagers
         /// <returns></returns>
         public static async STask<T> LoadAssetInAssetBundleAsync<T>(string assetName, string bundleName) where T : UnityEngine.Object
         {
-#if LOAD_ASSET_IN_EDITOR
+#if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
             return AssetDatabase.LoadAssetAtPath<T>(GetAssetPath<T>(assetName));
 #else
 
@@ -313,7 +313,7 @@ namespace SFramework.Core.GameManagers
         /// <returns></returns>
         public static async STask UnloadAssetBundleAsync(string bundleName)
         {
-#if LOAD_ASSET_IN_EDITOR
+#if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
             return;
 #else
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
@@ -359,7 +359,7 @@ namespace SFramework.Core.GameManagers
             return bundleVOMap[bundleName];
         }
 
-#if LOAD_ASSET_IN_EDITOR
+#if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
         private static string GetAssetPath<T>(string assetName) where T : UnityEngine.Object
         {
             if (allAssetPaths == null)

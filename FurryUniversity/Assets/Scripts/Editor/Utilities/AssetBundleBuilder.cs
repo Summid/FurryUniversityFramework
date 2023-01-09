@@ -31,14 +31,7 @@ namespace SFramework.Utilities.Editor
             UpdateAssetBundleTagsHandler(StaticVariables.UIViewPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIViewBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIItemPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIItemBundleExtension);
 
-            foreach (var file in new DirectoryInfo(StaticVariables.UISpritesPath.GetFullPath()).GetFileSystemInfos())
-            {
-                if (Path.GetExtension(file.Name) == ".meta")
-                    continue;
-                DirectoryInfo subDir = new DirectoryInfo(file.FullName);
-                UpdateAssetBundleTagsHandler(subDir.FullName.GetRelativePath(), StaticVariables.SpriteExtensionPNG, StaticVariables.SpriteAtlasBundleExtension);
-                UpdateAssetBundleTagsHandler(subDir.FullName.GetRelativePath(), StaticVariables.SpriteExtensionJPG, StaticVariables.SpriteAtlasBundleExtension);
-            }
+            UpdateSpritesAssetBundleTagsHandler();
         }
         //TODO 图片ABName按照parent folder命名
         private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension)
@@ -62,6 +55,30 @@ namespace SFramework.Utilities.Editor
                     }
                 }
                 EditorUtility.ClearProgressBar();
+            }
+        }
+
+        private static void UpdateSpritesAssetBundleTagsHandler()
+        {
+            foreach (var file in new DirectoryInfo(StaticVariables.UISpritesPath.GetFullPath()).GetFileSystemInfos())
+            {
+                if (Path.GetExtension(file.Name) == ".meta")
+                    continue;
+                DirectoryInfo subDir = new DirectoryInfo(file.FullName);
+                foreach (var subFile in subDir.GetFileSystemInfos())
+                {
+                    string fileExtension = Path.GetExtension(subFile.Name).ToLower();
+                    if (fileExtension == StaticVariables.SpriteExtensionPNG || fileExtension == StaticVariables.SpriteExtensionJPG)
+                    {
+                        string fileRelativePath = subFile.FullName.GetRelativePath();
+                        var importer = AssetImporter.GetAtPath(fileRelativePath);
+                        if (importer != null)
+                        {
+                            importer.assetBundleName = subDir.Name + StaticVariables.SpriteAtlasBundleExtension;
+                            importer.assetBundleVariant = StaticVariables.AssetBundlesFileExtensionWithoutDot;
+                        }
+                    }
+                }
             }
         }
 
