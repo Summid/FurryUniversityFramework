@@ -14,7 +14,7 @@ namespace SFramework.Core.GameManagers
             DontDestroyOnLoad(this.gameObject);
         }
 
-#if UNITY_EDITOR
+//#if UNITY_EDITOR
         private SDSDialogue dialogue;
         private StringBuilder showInfos = new StringBuilder();
         private Vector2 scrollPos;
@@ -104,6 +104,6 @@ namespace SFramework.Core.GameManagers
             }
             GUILayout.EndHorizontal();
         }
-#endif
+//#endif
     }
 }

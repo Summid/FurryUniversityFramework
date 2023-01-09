@@ -89,7 +89,12 @@ namespace SFramework.Core.GameManagers
 
         public void InitDependencies(AssetBundleManifest manifest)
         {
-            var dependent = manifest.GetAllDependencies(this.BundleName)//获取所有的依赖资源，包括递归依赖
+            string bundleFullName = this.BundleName;
+            if (!this.BundleName.EndsWith(StaticVariables.AssetBundlesFileExtension))
+            {
+                bundleFullName = Path.ChangeExtension(bundleFullName, StaticVariables.AssetBundlesFileExtension);
+            }
+            var dependent = manifest.GetAllDependencies(bundleFullName)//获取所有的依赖资源，包括递归依赖，这里的bundle名需要扩展名
                 .Select(AssetBundleManager.GetAssetBundleVO);//转为VO集合，并且加载依赖资源的依赖资源
 
             foreach (var vo in dependent)
@@ -319,7 +324,7 @@ namespace SFramework.Core.GameManagers
         /// <summary>
         /// 获取AB的包装VO，当新建VO时会加载其依赖资源
         /// </summary>
-        /// <param name="bundleName"></param>
+        /// <param name="bundleName">AB Name，不包含扩展名</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="Exception"></exception>
@@ -327,6 +332,11 @@ namespace SFramework.Core.GameManagers
         {
             if (string.IsNullOrEmpty(bundleName))
                 throw new ArgumentNullException("GetAssetBundleVO:: bundlName is null");
+
+            if (Path.HasExtension(bundleName))
+            {
+                bundleName = Path.GetFileNameWithoutExtension(bundleName);
+            }
 
             if (!bundleVOMap.ContainsKey(bundleName))
             {

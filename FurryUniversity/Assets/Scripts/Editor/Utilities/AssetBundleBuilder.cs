@@ -30,19 +30,29 @@ namespace SFramework.Utilities.Editor
             UpdateAssetBundleTagsHandler(StaticVariables.UISpriteAtalasesPath, StaticVariables.SpriteAtlasExtension, StaticVariables.SpriteAtlasBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIViewPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIViewBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIItemPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIItemBundleExtension);
-        }
 
+            foreach (var file in new DirectoryInfo(StaticVariables.UISpritesPath.GetFullPath()).GetFileSystemInfos())
+            {
+                if (Path.GetExtension(file.Name) == ".meta")
+                    continue;
+                DirectoryInfo subDir = new DirectoryInfo(file.FullName);
+                UpdateAssetBundleTagsHandler(subDir.FullName.GetRelativePath(), StaticVariables.SpriteExtensionPNG, StaticVariables.SpriteAtlasBundleExtension);
+                UpdateAssetBundleTagsHandler(subDir.FullName.GetRelativePath(), StaticVariables.SpriteExtensionJPG, StaticVariables.SpriteAtlasBundleExtension);
+            }
+        }
+        //TODO 图片ABName按照parent folder命名
         private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension)
         {
             if (AssetDatabase.IsValidFolder(path))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(path.GetFullPath());
+                Debug.Log($"dir path {directoryInfo.FullName}");
                 FileSystemInfo[] fileSystemInfos = directoryInfo.GetFileSystemInfos();
                 int index = 1;
                 foreach (var file in fileSystemInfos)
                 {
                     EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{file.Name}", index++ / fileSystemInfos.Length);
-                    if (Path.GetExtension(file.Name) != assetExtension)
+                    if (Path.GetExtension(file.Name).ToLower() != assetExtension)
                         continue;
                     var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
                     if (importer != null)

@@ -87,8 +87,15 @@ namespace SFramework.Utilities.Editor
                 return string.Empty;
             }
 
-
-            return $"{Application.dataPath}/{folderPath.Replace("Assets/", "")}";
+            if (folderPath.Contains("Assets/"))
+            {
+                folderPath = folderPath.Replace("Assets/", "");
+            }
+            else if (folderPath.Contains("Assets\\"))
+            {
+                folderPath = folderPath.Replace("Assets\\", "");
+            }
+            return $"{Application.dataPath}/{folderPath}";
         }
 
         /// <summary>
@@ -98,7 +105,7 @@ namespace SFramework.Utilities.Editor
         /// <returns></returns>
         public static string GetRelativePath(this string folderPath)
         {
-            return Assets + folderPath.Substring(Application.dataPath.Length);
+            return (Assets + folderPath.Substring(Application.dataPath.Length)).Replace(@"\\", "/");
         }
 
         public static string ConvertWindowsSeparatorToUnity(this string path)
