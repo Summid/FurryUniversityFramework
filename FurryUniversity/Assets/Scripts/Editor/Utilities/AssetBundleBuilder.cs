@@ -33,7 +33,7 @@ namespace SFramework.Utilities.Editor
 
             UpdateSpritesAssetBundleTagsHandler();
         }
-        //TODO 图片ABName按照parent folder命名
+
         private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension)
         {
             if (AssetDatabase.IsValidFolder(path))

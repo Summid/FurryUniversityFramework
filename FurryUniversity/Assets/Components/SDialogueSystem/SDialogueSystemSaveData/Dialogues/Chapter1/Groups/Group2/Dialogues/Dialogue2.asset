@@ -26,9 +26,11 @@ MonoBehaviour:
     <AssetName>k__BackingField: doraLay
     <Parameters>k__BackingField:
     - CustomizedPosition
-    - 50
-    - 50
+    - 50.5
+    - 100.233
   - <EventType>k__BackingField: 1
     <AssetName>k__BackingField: shark_1
     <Parameters>k__BackingField:
     - CustomizedPosition
+    - 111
+    - 777

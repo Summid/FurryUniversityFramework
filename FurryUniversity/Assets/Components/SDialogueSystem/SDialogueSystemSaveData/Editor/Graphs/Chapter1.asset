@@ -75,13 +75,15 @@ MonoBehaviour:
       <AssetObject>k__BackingField: {fileID: 21300000, guid: 047b94c6a401c3b4986135f80e5b9cff, type: 3}
       <Parameters>k__BackingField:
       - CustomizedPosition
-      - 50
-      - 50
+      - 50.5
+      - 100.233
       <Description>k__BackingField: "\u54C6\u5566A\u68A6"
     - <EventType>k__BackingField: 1
       <AssetObject>k__BackingField: {fileID: 21300000, guid: 455c8df1d94fcfc44aaf691d24fd543d, type: 3}
       <Parameters>k__BackingField:
       - CustomizedPosition
+      - 111
+      - 777
       <Description>k__BackingField: Image
   <OldGroupNames>k__BackingField:
   - Group2

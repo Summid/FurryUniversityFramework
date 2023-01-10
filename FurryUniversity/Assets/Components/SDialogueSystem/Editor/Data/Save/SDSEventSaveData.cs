@@ -23,6 +23,37 @@ namespace SDS.Data.Save
             return this.Parameters[index];
         }
 
+        public object GetParsedParameterByIndex<T>(int index)
+        {
+            string parameter = this.GetParameterByIndex(index);
+            if (parameter == null)
+                return default(T);
+            Type type = typeof(T);
+            if (type == typeof(float))
+            {
+                if (float.TryParse(parameter, out float result))
+                {
+                    return result;
+                }
+            }
+            else if (type == typeof(int))
+            {
+                if (int.TryParse(parameter, out int result))
+                {
+                    return result;
+                }
+            }
+            else if (type == typeof(bool))
+            {
+                if (bool.TryParse(parameter, out bool result))
+                {
+                    return result;
+                }
+            }
+
+            return default(T);
+        }
+
         public void SetParameterByIndex(int index, string value)
         {
             if(this.Parameters == null)

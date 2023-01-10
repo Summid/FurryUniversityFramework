@@ -77,15 +77,13 @@ namespace SDS.Elements
                         //自定义坐标
                         if (eventData.GetParameterByIndex(0) == SDSDialogueSpritePresetPosition.CustomizedPosition.ToString())
                         {
-                            //TODO 参数转换为float类型前，需要判断是否有该参数
-                            Vector2 currentCustomPos = new Vector2(float.Parse(eventData.GetParameterByIndex(1)), float.Parse(eventData.GetParameterByIndex(2)));
+                            Vector2 currentCustomPos = new Vector2((float)eventData.GetParsedParameterByIndex<float>(1), (float)eventData.GetParsedParameterByIndex<float>(2));
                             var vector2Field = SDSElementUtility.CreateVector2Field(currentCustomPos, string.Empty, callback =>
                             {
                                 eventData.SetParameterByIndex(1, callback.newValue.x.ToString());
                                 eventData.SetParameterByIndex(2, callback.newValue.y.ToString());
                             });
                             parameterElements.Add(vector2Field);
-                            Debug.Log("customized position");
                         }
                         break;
                     case SDSDialogueEventType.ShowBackgroundImage:

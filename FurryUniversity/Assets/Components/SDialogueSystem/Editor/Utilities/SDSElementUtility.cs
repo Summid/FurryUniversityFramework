@@ -144,6 +144,7 @@ namespace SDS.Utilities
             Vector2Field vector2Field = new Vector2Field()
             {
                 label = label,
+                value = defaultValue
             };
             vector2Field.RegisterValueChangedCallback(onValueChanged);
             return vector2Field;
