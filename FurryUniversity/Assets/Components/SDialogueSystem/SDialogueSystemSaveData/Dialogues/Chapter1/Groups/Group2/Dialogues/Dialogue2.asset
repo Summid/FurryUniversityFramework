@@ -25,4 +25,10 @@ MonoBehaviour:
   - <EventType>k__BackingField: 1
     <AssetName>k__BackingField: doraLay
     <Parameters>k__BackingField:
-    - Image
+    - CustomizedPosition
+    - 50
+    - 50
+  - <EventType>k__BackingField: 1
+    <AssetName>k__BackingField: shark_1
+    <Parameters>k__BackingField:
+    - CustomizedPosition

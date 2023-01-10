@@ -22,9 +22,7 @@ MonoBehaviour:
   <Events>k__BackingField:
   - <EventType>k__BackingField: 3
     <AssetName>k__BackingField: Idonotdeserve
-    <Parameters>k__BackingField:
-    - BGM
+    <Parameters>k__BackingField: []
   - <EventType>k__BackingField: 4
     <AssetName>k__BackingField: ui_effect_5
-    <Parameters>k__BackingField:
-    - SFX
+    <Parameters>k__BackingField: []

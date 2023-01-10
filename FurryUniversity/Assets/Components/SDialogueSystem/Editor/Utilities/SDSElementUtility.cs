@@ -138,5 +138,15 @@ namespace SDS.Utilities
             }
             return objectField;
         }
+
+        public static Vector2Field CreateVector2Field(Vector2 defaultValue, string label = "", EventCallback<ChangeEvent<Vector2>> onValueChanged = null)
+        {
+            Vector2Field vector2Field = new Vector2Field()
+            {
+                label = label,
+            };
+            vector2Field.RegisterValueChangedCallback(onValueChanged);
+            return vector2Field;
+        }
     }
 }
