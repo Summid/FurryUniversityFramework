@@ -20,6 +20,16 @@ namespace SDS.Elements
         private Foldout eventsFoldout;
         public Action OnEventSelected;
         private PopupField<object> popupField;
+        private List<EventVO> eventVOs = new List<EventVO>();
+
+        /// <summary> 给SDSEventSaveData穿件衣服 </summary>
+        private class EventVO
+        {
+            public ObjectField objectField;
+            public List<VisualElement> parameterElements = new List<VisualElement>();
+            public string defaultDescription = string.Empty;
+            public SDSEventSaveData eventData;
+        }
 
         public void DrawEventArea(VisualElement container)
         {
@@ -37,6 +47,24 @@ namespace SDS.Elements
 
             container.Add(this.eventsFoldout);
             container.Add(this.popupField);
+        }
+
+        private void RefreshEventDatas()
+        {
+            this.eventVOs.Clear();
+
+            this.CorrectErrorEvents();
+            foreach (SDSEventSaveData eventData in this.Events)
+            {
+                //TODO
+            }
+
+            this.RefreshEventArea();
+        }
+
+        private void RefreshEventArea()
+        {
+
         }
 
         private void DrawEvents()
@@ -249,12 +277,14 @@ namespace SDS.Elements
             if (bgm.Count() > 1)
             {
                 Debug.LogWarning($"一句对话只能拥有一首bgm嗷");
+                this.eventVOs = this.eventVOs.Distinct(new EventVOComparer()).ToList();
                 this.Events = this.Events.Distinct(new EventComparer()).ToList();
             }
             var bgImage = this.Events.Where(e => e.EventType == SDSDialogueEventType.ShowBackgroundImage);
             if (bgImage.Count() > 1)
             {
                 Debug.LogWarning($"一句对话只能有一个背景图");
+                this.eventVOs = this.eventVOs.Distinct(new EventVOComparer()).ToList();
                 this.Events = this.Events.Distinct(new EventComparer()).ToList();
             }
         }
@@ -285,7 +315,6 @@ namespace SDS.Elements
             }
 
             //选择后，PopupField所显示的string
-            //return eventTypeObj.ToString();
             return SDSDialogueEventType.NullEvent.ToString();
         }
 
@@ -296,8 +325,8 @@ namespace SDS.Elements
         {
             public bool Equals(SDSEventSaveData x, SDSEventSaveData y)
             {
-                if ((x.EventType == SDSDialogueEventType.ShowBackgroundImage && y.EventType == SDSDialogueEventType.ShowBackgroundImage) ||
-                    (x.EventType == SDSDialogueEventType.PlayBGM && y.EventType == SDSDialogueEventType.PlayBGM))
+                if ((x.EventType == SDSDialogueEventType.BackgroundImageOperations && x.EventType == y.EventType) ||
+                    (x.EventType == SDSDialogueEventType.PlayBGM && x.EventType == y.EventType))
                 {
                     return true;
                 }
@@ -305,6 +334,27 @@ namespace SDS.Elements
             }
 
             public int GetHashCode(SDSEventSaveData obj)
+            {
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// 用于检查一句对话中是否有多个背景图事件和bgm事件
+        /// </summary>
+        private class EventVOComparer : IEqualityComparer<EventVO>
+        {
+            public bool Equals(EventVO x, EventVO y)
+            {
+                if ((x.eventData.EventType == SDSDialogueEventType.BackgroundImageOperations && x.eventData.EventType == y.eventData.EventType) ||
+                    (x.eventData.EventType == SDSDialogueEventType.PlayBGM && x.eventData.EventType == y.eventData.EventType))
+                {
+                    return true;
+                }
+                return false;
+            }
+
+            public int GetHashCode(EventVO obj)
             {
                 return 0;
             }
