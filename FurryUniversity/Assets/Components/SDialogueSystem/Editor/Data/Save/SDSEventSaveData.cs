@@ -66,8 +66,11 @@ namespace SDS.Data.Save
 
     }
 
-    ///<see cref="SDSDialogueEventType.ShowImage"/> 事件参数：
+    ///<see cref="SDSDialogueEventType.ShowImage"/> 显示图片 事件参数：
     ///0: <see cref="SDSDialogueSpritePresetPosition"/> 预设枚举
     ///1: 非预设图片位置时启用，图片的X坐标
     ///2: 图片的Y坐标
+    
+    ///<see cref="SDSDialogueEventType.PlayBGM"/> 播放BGM 事件参数：
+    ///0: 音量，float类型，0到1闭区间
 }

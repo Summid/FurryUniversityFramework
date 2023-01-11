@@ -59,6 +59,7 @@ namespace SDS.Elements
                         {
                             eventData.AssetObject = callback.newValue;
                         });
+
                         //预设坐标选项
                         List<object> presetPosNames = Enum.GetValues(typeof(SDSDialogueSpritePresetPosition)).Cast<object>().ToList();
                         var currentPresetPos = presetPosNames.FirstOrDefault(preset => preset.ToString() == eventData.GetParameterByIndex(0));
@@ -78,6 +79,7 @@ namespace SDS.Elements
                                 return selectedName;
                             });
                         parameterElements.Add(presetPopupField);
+
                         //自定义坐标
                         if (eventData.GetParameterByIndex(0) == SDSDialogueSpritePresetPosition.CustomizedPosition.ToString())
                         {
@@ -103,6 +105,21 @@ namespace SDS.Elements
                         {
                             eventData.AssetObject = callback.newValue;
                         });
+
+                        //音量参数
+                        object currentVolume = (float)eventData.GetParsedParameterByIndex<float>(0);
+                        if (currentVolume == null)
+                        {
+                            eventData.SetParameterByIndex(0, 0f.ToString());
+                        }
+                        var volumeLabel = SDSElementUtility.CreateLabel($"音量：{currentVolume ?? 0f}");
+                        var volumeSlider = SDSElementUtility.CreateSlider(0f, 1f, true, currentVolume == null ? 0f : (float)currentVolume, string.Empty, callback =>
+                        {
+                            volumeLabel.text = $"音量：{callback.newValue}";
+                            eventData.SetParameterByIndex(0, callback.newValue.ToString());
+                        });
+                        parameterElements.Add(volumeLabel);
+                        parameterElements.Add(volumeSlider);
                         break;
                     case SDSDialogueEventType.PlaySFX:
                         defaultDescription = "SFX";

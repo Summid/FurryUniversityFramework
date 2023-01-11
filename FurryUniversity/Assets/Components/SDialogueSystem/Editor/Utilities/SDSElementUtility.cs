@@ -149,5 +149,20 @@ namespace SDS.Utilities
             vector2Field.RegisterValueChangedCallback(onValueChanged);
             return vector2Field;
         }
+
+        public static Slider CreateSlider(float startValue, float endValue, bool horizontalLayout, float defaultValue = 0, string label = "", EventCallback<ChangeEvent<float>> onValueChanged = null)
+        {
+            Slider slider = new Slider(label, startValue, endValue, horizontalLayout ? SliderDirection.Horizontal : SliderDirection.Vertical);
+            slider.value = defaultValue;
+            slider.RegisterValueChangedCallback(onValueChanged);
+            return slider;
+        }
+
+        public static Label CreateLabel(string labelValue)
+        {
+            Label label = new Label(labelValue);
+
+            return label;
+        }
     }
 }

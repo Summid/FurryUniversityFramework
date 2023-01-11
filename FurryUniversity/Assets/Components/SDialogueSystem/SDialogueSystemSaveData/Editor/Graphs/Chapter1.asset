@@ -33,7 +33,8 @@ MonoBehaviour:
     <Events>k__BackingField:
     - <EventType>k__BackingField: 3
       <AssetObject>k__BackingField: {fileID: 8300000, guid: 5a77aecd61f073641831f412fa4de1fa, type: 3}
-      <Parameters>k__BackingField: []
+      <Parameters>k__BackingField:
+      - 0.815
       <Description>k__BackingField: "\u6211\u4E0D\u914D"
     - <EventType>k__BackingField: 4
       <AssetObject>k__BackingField: {fileID: 8300000, guid: dbef983eae9f4a14883407aa1bd86487, type: 3}
