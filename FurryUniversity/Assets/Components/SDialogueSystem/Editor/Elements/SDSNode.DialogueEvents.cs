@@ -62,7 +62,11 @@ namespace SDS.Elements
                         //预设坐标选项
                         List<object> presetPosNames = Enum.GetValues(typeof(SDSDialogueSpritePresetPosition)).Cast<object>().ToList();
                         var currentPresetPos = presetPosNames.FirstOrDefault(preset => preset.ToString() == eventData.GetParameterByIndex(0));
-                        var presetPopupField = SDSElementUtility.CreatePopupField<object>(presetPosNames, currentPresetPos == null ? SDSDialogueSpritePresetPosition.CustomizedPosition : currentPresetPos,
+                        if (currentPresetPos == null)//默认为自定义坐标
+                        {
+                            eventData.SetParameterByIndex(0, SDSDialogueSpritePresetPosition.CustomizedPosition.ToString());
+                        }
+                        var presetPopupField = SDSElementUtility.CreatePopupField<object>(presetPosNames, currentPresetPos ?? SDSDialogueSpritePresetPosition.CustomizedPosition,
                             null,
                             (selectedObj) =>
                             {

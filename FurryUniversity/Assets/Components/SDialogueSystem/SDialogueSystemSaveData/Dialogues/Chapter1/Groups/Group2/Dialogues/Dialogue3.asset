@@ -19,4 +19,8 @@ MonoBehaviour:
     <NextDialogue>k__BackingField: {fileID: 0}
   <DialogueType>k__BackingField: 0
   <IsStartDialogue>k__BackingField: 0
-  <Events>k__BackingField: []
+  <Events>k__BackingField:
+  - <EventType>k__BackingField: 1
+    <AssetName>k__BackingField: dora
+    <Parameters>k__BackingField:
+    - Right
