@@ -23,6 +23,12 @@ namespace SDS.Data.Save
             return this.Parameters[index];
         }
 
+        /// <summary>
+        /// 若没有找到事件参数，则返回传入数据类型的默认值
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public object GetParsedParameterByIndex<T>(int index)
         {
             string parameter = this.GetParameterByIndex(index);
@@ -52,6 +58,16 @@ namespace SDS.Data.Save
             }
 
             return default(T);
+        }
+
+        /// <summary>
+        /// 给定索引上是否有事件参数
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool HasParameterByIndex(int index)
+        {
+            return this.GetParameterByIndex(index) != null;
         }
 
         public void SetParameterByIndex(int index, string value)

@@ -107,19 +107,22 @@ namespace SDS.Elements
                         });
 
                         //音量参数
-                        object currentVolume = (float)eventData.GetParsedParameterByIndex<float>(0);
-                        if (currentVolume == null)
+                        bool hasBGMVolumeParam = eventData.HasParameterByIndex(0);
+                        float curBGMVolume = (float)eventData.GetParsedParameterByIndex<float>(0);
+                        if (!hasBGMVolumeParam)
                         {
-                            eventData.SetParameterByIndex(0, 0f.ToString());
+                            eventData.SetParameterByIndex(0, 1f.ToString());
+                            curBGMVolume = 1f;
                         }
-                        var volumeLabel = SDSElementUtility.CreateLabel($"音量：{currentVolume ?? 0f}");
-                        var volumeSlider = SDSElementUtility.CreateSlider(0f, 1f, true, currentVolume == null ? 0f : (float)currentVolume, string.Empty, callback =>
+                        string bgmLabelText = "音量：{0}";
+                        var bgmVolumeLabel = SDSElementUtility.CreateLabel(string.Format(bgmLabelText, curBGMVolume));
+                        var bgmVolumeSlider = SDSElementUtility.CreateSlider(0f, 1f, true, curBGMVolume, string.Empty, callback =>
                         {
-                            volumeLabel.text = $"音量：{callback.newValue}";
+                            bgmVolumeLabel.text = string.Format(bgmLabelText, callback.newValue);
                             eventData.SetParameterByIndex(0, callback.newValue.ToString());
                         });
-                        parameterElements.Add(volumeLabel);
-                        parameterElements.Add(volumeSlider);
+                        parameterElements.Add(bgmVolumeLabel);
+                        parameterElements.Add(bgmVolumeSlider);
                         break;
                     case SDSDialogueEventType.PlaySFX:
                         defaultDescription = "SFX";
@@ -127,6 +130,24 @@ namespace SDS.Elements
                         {
                             eventData.AssetObject = callback.newValue;
                         });
+
+                        //音量参数
+                        bool hasSFXVolumeParam = eventData.HasParameterByIndex(0);
+                        float curSFXVolume = (float)eventData.GetParsedParameterByIndex<float>(0);
+                        if (!hasSFXVolumeParam)
+                        {
+                            eventData.SetParameterByIndex(0, 1f.ToString());
+                            curSFXVolume = 1f;
+                        }
+                        string sfxlabelText = "音量：{0}";
+                        var sfxVolumeLabel = SDSElementUtility.CreateLabel(string.Format(sfxlabelText, curSFXVolume));
+                        var sfxVolumeSlider = SDSElementUtility.CreateSlider(0f, 1f, true, curSFXVolume, string.Empty, callback =>
+                        {
+                            sfxVolumeLabel.text = string.Format(sfxlabelText, callback.newValue);
+                            eventData.SetParameterByIndex(0, callback.newValue.ToString());
+                        });
+                        parameterElements.Add(sfxVolumeLabel);
+                        parameterElements.Add(sfxVolumeSlider);
                         break;
                 }
 

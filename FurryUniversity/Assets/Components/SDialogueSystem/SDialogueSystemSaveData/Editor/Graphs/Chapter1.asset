@@ -16,7 +16,7 @@ MonoBehaviour:
   <Groups>k__BackingField:
   - <ID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
     <Name>k__BackingField: Group2
-    <Position>k__BackingField: {x: 245, y: -77}
+    <Position>k__BackingField: {x: 244.99997, y: -77.000015}
   - <ID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
     <Name>k__BackingField: Group1
     <Position>k__BackingField: {x: -180, y: -6}
@@ -38,7 +38,8 @@ MonoBehaviour:
       <Description>k__BackingField: "\u6211\u4E0D\u914D"
     - <EventType>k__BackingField: 4
       <AssetObject>k__BackingField: {fileID: 8300000, guid: dbef983eae9f4a14883407aa1bd86487, type: 3}
-      <Parameters>k__BackingField: []
+      <Parameters>k__BackingField:
+      - 1
       <Description>k__BackingField: "\u97F3\u6548"
   - <ID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
     <Name>k__BackingField: Dialogue2
@@ -75,7 +76,17 @@ MonoBehaviour:
     <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
     <DialogueType>k__BackingField: 0
     <Position>k__BackingField: {x: 574, y: 422}
-    <Events>k__BackingField: []
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 3
+      <AssetObject>k__BackingField: {fileID: 0}
+      <Parameters>k__BackingField:
+      - 1
+      <Description>k__BackingField: BGM
+    - <EventType>k__BackingField: 4
+      <AssetObject>k__BackingField: {fileID: 0}
+      <Parameters>k__BackingField:
+      - 1
+      <Description>k__BackingField: SFX
   - <ID>k__BackingField: 3d2754c3-5794-42c7-8693-a0e917af1212
     <Name>k__BackingField: Dialogue3
     <Text>k__BackingField: "\u5BF9\u8BDD3"

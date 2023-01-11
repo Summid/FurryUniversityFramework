@@ -364,7 +364,7 @@ namespace SDS.Utilities
                 SDSDialogueEventData eventData = new SDSDialogueEventData()
                 {
                     EventType = nodeEvent.EventType,
-                    AssetName = nodeEvent.AssetObject.name,
+                    AssetName = nodeEvent.AssetObject == null ? null : nodeEvent.AssetObject.name,
                     Parameters = nodeEvent.Parameters
                 };
                 dialogueEvents.Add(eventData);

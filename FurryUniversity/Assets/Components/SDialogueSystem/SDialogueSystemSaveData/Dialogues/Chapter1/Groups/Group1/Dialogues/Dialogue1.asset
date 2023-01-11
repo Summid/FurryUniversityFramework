@@ -26,4 +26,5 @@ MonoBehaviour:
     - 0.815
   - <EventType>k__BackingField: 4
     <AssetName>k__BackingField: ui_effect_5
-    <Parameters>k__BackingField: []
+    <Parameters>k__BackingField:
+    - 1
