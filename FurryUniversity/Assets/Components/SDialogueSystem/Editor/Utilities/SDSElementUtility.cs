@@ -100,7 +100,18 @@ namespace SDS.Utilities
             return port;
         }
 
-        public static PopupField<T> CreatePopupField<T>(List<T> choices, T defaultValue, Func<T, string> onListItems, Func<T, string> onSelectedItem, string label = "")
+        /// <summary>
+        /// 创建PupupField Element
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="choices"></param>
+        /// <param name="defaultValue"></param>
+        /// <param name="onListItems">当展开列表时，每个待选元素都会触发一次</param>
+        /// <param name="onSelectedItem">选择【不同的】元素后触发一次，包括第一次自动选择默认元素时也会触发</param>
+        /// <param name="onValueChanged">选择【不同的】元素后触发一次，【不】包括第一次自动选择默认元素时，会在onSelectedItem之后触发</param>
+        /// <param name="label"></param>
+        /// <returns></returns>
+        public static PopupField<T> CreatePopupField<T>(List<T> choices, T defaultValue, Func<T, string> onListItems, Func<T, string> onSelectedItem, EventCallback<ChangeEvent<T>> onValueChanged = null, string label = "")
         {
             if (choices == null || choices.Count == 0)
             {
@@ -115,6 +126,8 @@ namespace SDS.Utilities
             }
 
             PopupField<T> popupField = new PopupField<T>(label, choices, defaultValue, onSelectedItem, onListItems);
+            if (onValueChanged != null)
+                popupField.RegisterValueChangedCallback(onValueChanged);
             return popupField;
         }
 
@@ -146,7 +159,8 @@ namespace SDS.Utilities
                 label = label,
                 value = defaultValue
             };
-            vector2Field.RegisterValueChangedCallback(onValueChanged);
+            if (onValueChanged != null)
+                vector2Field.RegisterValueChangedCallback(onValueChanged);
             return vector2Field;
         }
 
@@ -154,7 +168,8 @@ namespace SDS.Utilities
         {
             Slider slider = new Slider(label, startValue, endValue, horizontalLayout ? SliderDirection.Horizontal : SliderDirection.Vertical);
             slider.value = defaultValue;
-            slider.RegisterValueChangedCallback(onValueChanged);
+            if (onValueChanged != null)
+                slider.RegisterValueChangedCallback(onValueChanged);
             return slider;
         }
 

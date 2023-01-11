@@ -22,6 +22,11 @@
 .sds-node__event-container {
 	background-color: var(--sds-colors-grid-light-grey-3);
 	padding: var(--sds-metrics-window-pixels-8);
+	margin-bottom: 10px;
+}
+
+.sds-node__eventPopupField {
+	margin-top: 10px;
 }
 
 /* Inputs */

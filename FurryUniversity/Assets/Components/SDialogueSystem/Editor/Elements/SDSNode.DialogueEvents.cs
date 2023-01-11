@@ -33,6 +33,7 @@ namespace SDS.Elements
             this.popupField = SDSElementUtility.CreatePopupField<object>(eventValues, SDSDialogueEventType.NullEvent,
                 null,
                 this.OnSelectedPopupFieldItem);
+            this.popupField.AddClasses("sds-node__eventPopupField");
 
             container.Add(this.eventsFoldout);
             container.Add(this.popupField);
@@ -53,6 +54,51 @@ namespace SDS.Elements
                 {
                     case SDSDialogueEventType.NullEvent:
                         continue;
+                    case SDSDialogueEventType.ImageOperations:
+                        defaultDescription = "Image Operations";
+                        objectField = SDSElementUtility.CreateObjectField<Sprite>(null, callback =>
+                        {
+                            eventData.AssetObject = callback.newValue;
+                        });
+                        List<object> imageOperationObjs = Enum.GetValues(typeof(SDSDialogueImageEventOperations)).Cast<object>().ToList();//不能直接用Cast转换为List<string>，这里手动搞一下
+                        List<string> imageOperationsNames = new List<string>();
+                        imageOperationObjs.ForEach(obj => imageOperationsNames.Add(obj.ToString()));
+                        SDSDialogueImageEventOperations currentOperation = (SDSDialogueImageEventOperations)eventData.GetParsedParameterByIndex<int>(0);
+                        var imageOperationsPopupField = SDSElementUtility.CreatePopupField<string>(imageOperationsNames, currentOperation.ToString(),
+                            null, selectedItem =>
+                            {
+                                //TODO 调用提取的Refresh方法，而不是在下面的callback中调用DrawEvents，取消注册下面的callback
+                                Debug.Log("onSelectedItem" + " " + selectedItem.ToString());
+                                string selectedItemName = selectedItem.ToString();
+                                if (selectedItemName == eventData.GetParameterByIndex(0))
+                                {
+                                    return selectedItemName;
+                                }
+                                eventData.SetParameterByIndex(0, imageOperationsNames.FindIndex(operation => operation == selectedItem.ToString()).ToString());
+                                return selectedItemName;
+                            }, callback =>
+                            {
+                                Debug.Log("onValueChanged new value" + " " + callback.newValue);
+                                //eventData.SetParameterByIndex(0, callback.newValue.ToString());
+                                this.DrawEvents();
+                            });
+                        parameterElements.Add(imageOperationsPopupField);
+
+                        //处理子事件
+                        currentOperation = (SDSDialogueImageEventOperations)(int)eventData.GetParsedParameterByIndex<int>(0);
+                        switch (currentOperation)
+                        {
+                            case SDSDialogueImageEventOperations.Show:
+                                Debug.Log("Show");
+                                break;
+                            case SDSDialogueImageEventOperations.Hide:
+                                Debug.Log("Hide");
+                                break;
+                            case SDSDialogueImageEventOperations.Move:
+                                Debug.Log("Move");
+                                break;
+                        }
+                        break;
                     case SDSDialogueEventType.ShowImage:
                         defaultDescription = "Image";
                         objectField = SDSElementUtility.CreateObjectField<Sprite>(null, callback =>
@@ -61,13 +107,13 @@ namespace SDS.Elements
                         });
 
                         //预设坐标选项
-                        List<object> presetPosNames = Enum.GetValues(typeof(SDSDialogueSpritePresetPosition)).Cast<object>().ToList();
+                        List<object> presetPosNames = Enum.GetValues(typeof(SDSSpritePresetPosition)).Cast<object>().ToList();
                         var currentPresetPos = presetPosNames.FirstOrDefault(preset => preset.ToString() == eventData.GetParameterByIndex(0));
                         if (currentPresetPos == null)//默认为自定义坐标
                         {
-                            eventData.SetParameterByIndex(0, SDSDialogueSpritePresetPosition.CustomizedPosition.ToString());
+                            eventData.SetParameterByIndex(0, SDSSpritePresetPosition.CustomizedPosition.ToString());
                         }
-                        var presetPopupField = SDSElementUtility.CreatePopupField<object>(presetPosNames, currentPresetPos ?? SDSDialogueSpritePresetPosition.CustomizedPosition,
+                        var presetPopupField = SDSElementUtility.CreatePopupField<object>(presetPosNames, currentPresetPos ?? SDSSpritePresetPosition.CustomizedPosition,
                             null,
                             (selectedObj) =>
                             {
@@ -81,7 +127,7 @@ namespace SDS.Elements
                         parameterElements.Add(presetPopupField);
 
                         //自定义坐标
-                        if (eventData.GetParameterByIndex(0) == SDSDialogueSpritePresetPosition.CustomizedPosition.ToString())
+                        if (eventData.GetParameterByIndex(0) == SDSSpritePresetPosition.CustomizedPosition.ToString())
                         {
                             Vector2 currentCustomPos = new Vector2((float)eventData.GetParsedParameterByIndex<float>(1), (float)eventData.GetParsedParameterByIndex<float>(2));
                             var vector2Field = SDSElementUtility.CreateVector2Field(currentCustomPos, string.Empty, callback =>
@@ -151,6 +197,7 @@ namespace SDS.Elements
                         break;
                 }
 
+                //TODO 提取为refresh方法
                 //绘制
                 if (objectField != null && this.eventsFoldout != null)
                 {
@@ -222,6 +269,8 @@ namespace SDS.Elements
                     return SDSDialogueEventType.NullEvent.ToString();
                 case SDSDialogueEventType.ShowImage:
                 case SDSDialogueEventType.ShowBackgroundImage:
+                case SDSDialogueEventType.ImageOperations:
+                case SDSDialogueEventType.BackgroundImageOperations:
                 case SDSDialogueEventType.PlayBGM:
                 case SDSDialogueEventType.PlaySFX:
                     this.Events.Add(new SDSEventSaveData() { EventType = eventType });

@@ -16,6 +16,8 @@ namespace SDS.Data.Save
         [field: SerializeField] public List<string> Parameters { get; set; }
         [field: SerializeField] public string Description { get; set; }
 
+        //TODO 事件延迟触发参数来一个秋梨膏
+
         public string GetParameterByIndex(int index)
         {
             if (this.Parameters == null || this.Parameters.Count - 1 < index)
@@ -83,10 +85,13 @@ namespace SDS.Data.Save
     }
 
     ///<see cref="SDSDialogueEventType.ShowImage"/> 显示图片 事件参数：
-    ///0: <see cref="SDSDialogueSpritePresetPosition"/> 预设枚举
+    ///0: <see cref="SDSSpritePresetPosition"/> 预设枚举
     ///1: 非预设图片位置时启用，图片的X坐标
     ///2: 图片的Y坐标
-    
+
     ///<see cref="SDSDialogueEventType.PlayBGM"/> 播放BGM 事件参数：
+    ///0: 音量，float类型，0到1闭区间
+
+    ///<see cref="SDSDialogueEventType.PlayBGM"/> 播放SFX 事件参数：
     ///0: 音量，float类型，0到1闭区间
 }
