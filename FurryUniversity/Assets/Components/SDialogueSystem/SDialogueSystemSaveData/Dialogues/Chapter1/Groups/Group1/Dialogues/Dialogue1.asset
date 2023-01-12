@@ -20,11 +20,21 @@ MonoBehaviour:
   <DialogueType>k__BackingField: 0
   <IsStartDialogue>k__BackingField: 1
   <Events>k__BackingField:
-  - <EventType>k__BackingField: 3
-    <AssetName>k__BackingField: Idonotdeserve
-    <Parameters>k__BackingField:
-    - 0.815
-  - <EventType>k__BackingField: 4
-    <AssetName>k__BackingField: ui_effect_5
+  - <EventType>k__BackingField: 1
+    <AssetName>k__BackingField: shark_1
     <Parameters>k__BackingField:
     - 1
+    - CustomizedPosition
+    - 0
+    - 0
+    - 
+    - 
+    - 1.5
+    - 
+    - 
+    - 
+    - 
+    - CustomizedPosition
+    - 233
+    - 777
+    - 2

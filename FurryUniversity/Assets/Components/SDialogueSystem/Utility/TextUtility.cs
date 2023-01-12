@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace SDS.Utility
 {
     public static class TextUtility
@@ -84,6 +86,33 @@ namespace SDS.Utility
                 {
                     continue;
                 }
+
+                textCharacters[currentWhitespacelessTextLength++] = currentTextCharacter;
+            }
+
+            return new string(textCharacters, 0, currentWhitespacelessTextLength);
+        }
+
+        public static string RemoveSpecialAndLetterCharacters(this string text, params char[] besidesChars)
+        {
+            int textLength = text.Length;
+
+            char[] textCharacters = text.ToCharArray();
+
+            int currentWhitespacelessTextLength = 0;
+
+            for (int currentCharacterIndex = 0; currentCharacterIndex < textLength; ++currentCharacterIndex)
+            {
+                char currentTextCharacter = textCharacters[currentCharacterIndex];
+
+                if (!besidesChars.Contains(currentTextCharacter))
+                {
+                    if (!char.IsDigit(currentTextCharacter) && !currentTextCharacter.IsWhitespace())
+                    {
+                        continue;
+                    }
+                }
+
 
                 textCharacters[currentWhitespacelessTextLength++] = currentTextCharacter;
             }

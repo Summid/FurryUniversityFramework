@@ -84,6 +84,34 @@ namespace SDS.Data.Save
 
     }
 
+    /// <summary>
+    /// 对话事件的事件参数所占用的索引的约定
+    /// </summary>
+    public class SDSDialogueEventParameterEnum
+    {
+        /// <summary> <see cref="SDSDialogueEventType.ImageOperations"/> 事件的事件参数约定 </summary>
+        public enum ImageOperations
+        {
+            ///<see cref="SDSDialogueEventType.ImageOperations"/> 图片事件 参数：
+            ///0: <see cref="SDSDialogueImageEventOperations"/> 子事件类型枚举索引
+            ///1~5 <see cref="SDSDialogueImageEventOperations.Show"/> 占用，1：<see cref="SDSSpritePresetPosition"/> 枚举字符串；2：自定义X坐标；3：自定义Y坐标
+            ///6~10 <see cref="SDSDialogueImageEventOperations.Hide"/> 占用，6：隐藏背景时所花时间
+            ///11~15 <see cref="SDSDialogueImageEventOperations.Move"/> 占用，11：<see cref="SDSSpritePresetPosition"/> 枚举字符串；12：目标X坐标；13：目标Y坐标；14：移动时间
+            OperationType = 0,
+
+            ShowImagePresetPositionType = 1,
+            ShowImageXPosition = 2,
+            ShowImageYPosition = 3,
+
+            HideImageConsumeTime = 6,
+
+            MoveImagePresetPositionType = 11,
+            MoveImageXPosition = 12,
+            MoveImageYPosition = 13,
+            MoveImageConsumeTime = 14,
+        }
+    }
+
     ///<see cref="SDSDialogueEventType.ShowImage"/> 显示图片 事件参数：
     ///0: <see cref="SDSSpritePresetPosition"/> 预设枚举
     ///1: 非预设图片位置时启用，图片的X坐标

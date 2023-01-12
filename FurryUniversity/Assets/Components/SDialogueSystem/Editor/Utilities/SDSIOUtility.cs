@@ -321,7 +321,7 @@ namespace SDS.Utilities
                 ConvertNodeChoicesToDialogueChoices(node.Choices),
                 node.DialogueType,
                 node.IsStartingNode(),
-                ConvertNodeEventsToDialogueEvents(node.Events)
+                ConvertNodeEventsToDialogueEvents(CloneEventSaveDatas(node.Events))
                 );
 
             createdDialogues.Add(node.ID, dialogue);
@@ -557,11 +557,13 @@ namespace SDS.Utilities
             List<SDSEventSaveData> datas = new List<SDSEventSaveData>();
             foreach (SDSEventSaveData data in eventSaveDatas)
             {
+                List<string> parameters = new List<string>();
+                data.Parameters.ForEach(p => parameters.Add(p));
                 SDSEventSaveData newData = new SDSEventSaveData()
                 {
                     EventType = data.EventType,
                     AssetObject = data.AssetObject,
-                    Parameters = data.Parameters,
+                    Parameters = parameters,
                     Description = data.Description
                 };
                 datas.Add(newData);

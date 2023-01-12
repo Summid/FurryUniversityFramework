@@ -5,7 +5,7 @@ namespace SDS.Enumerations
     /// </summary>
     public enum SDSDialogueImageEventOperations
     {
-        Show,
+        Show = 0,
         Hide,
         Move
     }
@@ -15,7 +15,7 @@ namespace SDS.Enumerations
     /// </summary>
     public enum SDSDialogueBackgroundImageEventOperations
     {
-        Show,
+        Show = 0,
         Hide,
     }
 

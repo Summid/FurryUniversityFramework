@@ -16,31 +16,31 @@ MonoBehaviour:
   <Groups>k__BackingField:
   - <ID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
     <Name>k__BackingField: Group2
-    <Position>k__BackingField: {x: 245.00009, y: -76.99999}
+    <Position>k__BackingField: {x: 245, y: -77}
   - <ID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
     <Name>k__BackingField: Group1
-    <Position>k__BackingField: {x: -180, y: -6}
+    <Position>k__BackingField: {x: -135, y: -15}
   <Nodes>k__BackingField:
-  - <ID>k__BackingField: 50cf6b54-1081-4a26-8b02-52369a6ea765
-    <Name>k__BackingField: Dialogue1
-    <Text>k__BackingField: "\u5BF9\u8BDD1"
+  - <ID>k__BackingField: cc8f3970-f764-4ac0-8f02-3dff546c2b0d
+    <Name>k__BackingField: Dialogue4
+    <Text>k__BackingField: "\u5BF9\u8BDD4"
     <Choices>k__BackingField:
     - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
-    <GroupID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
     <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: -155, y: 53}
-    <Events>k__BackingField:
-    - <EventType>k__BackingField: 3
-      <AssetObject>k__BackingField: {fileID: 8300000, guid: 5a77aecd61f073641831f412fa4de1fa, type: 3}
-      <Parameters>k__BackingField:
-      - 0.815
-      <Description>k__BackingField: "\u6211\u4E0D\u914D"
-    - <EventType>k__BackingField: 4
-      <AssetObject>k__BackingField: {fileID: 8300000, guid: dbef983eae9f4a14883407aa1bd86487, type: 3}
-      <Parameters>k__BackingField:
-      - 1
-      <Description>k__BackingField: "\u97F3\u6548"
+    <Position>k__BackingField: {x: 574, y: 422}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 3d2754c3-5794-42c7-8693-a0e917af1212
+    <Name>k__BackingField: Dialogue3
+    <Text>k__BackingField: "\u5BF9\u8BDD3"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 574, y: -18}
+    <Events>k__BackingField: []
   - <ID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
     <Name>k__BackingField: Dialogue2
     <Text>k__BackingField: "\u5BF9\u8BDD2"
@@ -53,47 +53,46 @@ MonoBehaviour:
     <DialogueType>k__BackingField: 1
     <Position>k__BackingField: {x: 270, y: 44}
     <Events>k__BackingField: []
-  - <ID>k__BackingField: cc8f3970-f764-4ac0-8f02-3dff546c2b0d
-    <Name>k__BackingField: Dialogue4
-    <Text>k__BackingField: "\u5BF9\u8BDD4"
+  - <ID>k__BackingField: 50cf6b54-1081-4a26-8b02-52369a6ea765
+    <Name>k__BackingField: Dialogue1
+    <Text>k__BackingField: "\u5BF9\u8BDD1"
     <Choices>k__BackingField:
     - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
+      <NodeID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
+    <GroupID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
     <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 574, y: 422}
+    <Position>k__BackingField: {x: -110, y: 44}
     <Events>k__BackingField:
-    - <EventType>k__BackingField: 3
-      <AssetObject>k__BackingField: {fileID: 0}
+    - <EventType>k__BackingField: 1
+      <AssetObject>k__BackingField: {fileID: 21300000, guid: 455c8df1d94fcfc44aaf691d24fd543d, type: 3}
       <Parameters>k__BackingField:
       - 1
-      <Description>k__BackingField: BGM
-    - <EventType>k__BackingField: 4
-      <AssetObject>k__BackingField: {fileID: 0}
-      <Parameters>k__BackingField:
-      - 1
-      <Description>k__BackingField: SFX
-  - <ID>k__BackingField: 3d2754c3-5794-42c7-8693-a0e917af1212
-    <Name>k__BackingField: Dialogue3
-    <Text>k__BackingField: "\u5BF9\u8BDD3"
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 574, y: -18}
-    <Events>k__BackingField: []
+      - CustomizedPosition
+      - 0
+      - 0
+      - 
+      - 
+      - 1.5
+      - 
+      - 
+      - 
+      - 
+      - CustomizedPosition
+      - 233
+      - 777
+      - 2
+      <Description>k__BackingField: Image Operations
   <OldGroupNames>k__BackingField:
   - Group2
   - Group1
   <OldUngroupedNodeNames>k__BackingField: []
   <OldGroupedNodeNames>k__BackingField:
     list:
+    - Key: Group2
+      Value:
+      - Dialogue4
+      - Dialogue3
+      - Dialogue2
     - Key: Group1
       Value:
       - Dialogue1
-    - Key: Group2
-      Value:
-      - Dialogue2
-      - Dialogue4
-      - Dialogue3
