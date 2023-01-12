@@ -5,9 +5,7 @@ namespace SDS.Enumerations
         NullEvent,
         ImageOperations,
         BackgroundImageOperations,
-        ShowImage,
-        ShowBackgroundImage,
-        PlayBGM,
-        PlaySFX,
+        BGMOperations,
+        SFXOperations,
     }
 }

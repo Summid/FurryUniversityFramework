@@ -26,4 +26,15 @@ namespace SDS.Enumerations
         Middle,
         Right,
     }
+
+    /// <summary>
+    /// <see cref="SDSDialogueEventType.BGMOperations"/> 的子事件类型
+    /// </summary>
+    public enum SDSDialogueBGMEventOperations
+    {
+        Play = 0,
+        Pause,
+        Resume,
+        Stop,
+    }
 }

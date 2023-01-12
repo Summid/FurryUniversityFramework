@@ -18,6 +18,8 @@ namespace SDS.Data.Save
 
         //TODO 事件延迟触发参数来一个秋梨膏
 
+        //TODO 进入对话与离开对话触发事件标识：离开对话所触发的事件用空对话节点来实现，该节点触发所有事件后自动跳转到下一对话节点
+
         public string GetParameterByIndex(int index)
         {
             if (this.Parameters == null || this.Parameters.Count - 1 < index)
@@ -103,19 +105,40 @@ namespace SDS.Data.Save
             ShowImageXPosition = 2,
             ShowImageYPosition = 3,
 
-            HideImageConsumeTime = 6,
+            HideImageTransitionTime = 6,
 
             MoveImagePresetPositionType = 11,
             MoveImageXPosition = 12,
             MoveImageYPosition = 13,
             MoveImageConsumeTime = 14,
         }
-    }
 
-    ///<see cref="SDSDialogueEventType.ShowImage"/> 显示图片 事件参数：
-    ///0: <see cref="SDSSpritePresetPosition"/> 预设枚举
-    ///1: 非预设图片位置时启用，图片的X坐标
-    ///2: 图片的Y坐标
+        /// <summary>
+        /// <see cref="SDSDialogueEventType.BackgroundImageOperations"/> 事件的事件参数约定
+        /// </summary>
+        public enum BGImageOperations 
+        {
+            /// <summary> <see cref="SDSDialogueBackgroundImageEventOperations"/> 索引 </summary>
+            OperationType = 0,
+
+            /// <summary> 透明度从0到1所花时间；Hide同理 </summary>
+            ShowBGImageTransitionTime = 1,
+
+            HideBGImageTransitionTime = 6,
+        }
+
+        /// <summary>
+        /// <see cref="SDSDialogueEventType.BGMOperations"/>
+        /// </summary>
+        public enum BGMOperation
+        {
+            /// <summary> <see cref="SDSDialogueBGMEventOperations"/> 索引 </summary>
+            OperationType = 0,
+
+            Volume = 1,//播放音量，该参数共用
+            TransitionTime = 2,//播放或停止播放时的音量渐变时间，该参数共用
+        }
+    }
 
     ///<see cref="SDSDialogueEventType.PlayBGM"/> 播放BGM 事件参数：
     ///0: 音量，float类型，0到1闭区间
