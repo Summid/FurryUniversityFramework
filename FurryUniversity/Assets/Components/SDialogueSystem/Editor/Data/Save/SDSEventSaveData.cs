@@ -138,11 +138,17 @@ namespace SDS.Data.Save
             Volume = 1,//播放音量，该参数共用
             TransitionTime = 2,//播放或停止播放时的音量渐变时间，该参数共用
         }
+
+        /// <summary>
+        /// <see cref="SDSDialogueEventType.SFXOperations"/>
+        /// </summary>
+        public enum SFXOperation
+        {
+            /// <summary> <see cref="SDSDialogueSFXEventOperations"/> 索引 </summary>
+            OperationType = 0,
+
+            Volume = 1,
+            LoopTimes = 2,
+        }
     }
-
-    ///<see cref="SDSDialogueEventType.PlayBGM"/> 播放BGM 事件参数：
-    ///0: 音量，float类型，0到1闭区间
-
-    ///<see cref="SDSDialogueEventType.PlayBGM"/> 播放SFX 事件参数：
-    ///0: 音量，float类型，0到1闭区间
 }

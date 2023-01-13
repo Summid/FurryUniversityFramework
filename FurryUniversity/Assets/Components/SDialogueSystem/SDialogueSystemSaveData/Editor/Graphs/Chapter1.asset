@@ -19,57 +19,8 @@ MonoBehaviour:
     <Position>k__BackingField: {x: 245, y: -77}
   - <ID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
     <Name>k__BackingField: Group1
-    <Position>k__BackingField: {x: -135, y: -15}
+    <Position>k__BackingField: {x: -144, y: -25}
   <Nodes>k__BackingField:
-  - <ID>k__BackingField: cc8f3970-f764-4ac0-8f02-3dff546c2b0d
-    <Name>k__BackingField: Dialogue4
-    <Text>k__BackingField: "\u5BF9\u8BDD4"
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 574, y: 422}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: 3d2754c3-5794-42c7-8693-a0e917af1212
-    <Name>k__BackingField: Dialogue3
-    <Text>k__BackingField: "\u5BF9\u8BDD3"
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 574, y: -18}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: 50cf6b54-1081-4a26-8b02-52369a6ea765
-    <Name>k__BackingField: Dialogue1
-    <Text>k__BackingField: "\u5BF9\u8BDD1"
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
-    <GroupID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: -110, y: 44}
-    <Events>k__BackingField:
-    - <EventType>k__BackingField: 1
-      <AssetObject>k__BackingField: {fileID: 21300000, guid: 455c8df1d94fcfc44aaf691d24fd543d, type: 3}
-      <Parameters>k__BackingField:
-      - 1
-      - CustomizedPosition
-      - 0
-      - 0
-      - 
-      - 
-      - 1.5
-      - 
-      - 
-      - 
-      - 
-      - CustomizedPosition
-      - 233
-      - 777
-      - 2
-      <Description>k__BackingField: Image Operations
   - <ID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
     <Name>k__BackingField: Dialogue2
     <Text>k__BackingField: "\u5BF9\u8BDD2"
@@ -93,6 +44,88 @@ MonoBehaviour:
       - 
       - 2.33
       <Description>k__BackingField: Background Image Operation
+  - <ID>k__BackingField: 3d2754c3-5794-42c7-8693-a0e917af1212
+    <Name>k__BackingField: Dialogue3
+    <Text>k__BackingField: "\u5BF9\u8BDD3"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 574, y: -18}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 1
+      <AssetObject>k__BackingField: {fileID: 21300000, guid: 047b94c6a401c3b4986135f80e5b9cff, type: 3}
+      <Parameters>k__BackingField:
+      - 2
+      - CustomizedPosition
+      - 0
+      - 0
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - Right
+      - 0
+      - 0
+      - 1.2
+      <Description>k__BackingField: Image Operations
+  - <ID>k__BackingField: 50cf6b54-1081-4a26-8b02-52369a6ea765
+    <Name>k__BackingField: Dialogue1
+    <Text>k__BackingField: "\u5BF9\u8BDD1"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 3563b840-d50d-4c9b-ad01-9c8c7e5e68f3
+    <GroupID>k__BackingField: 47734185-cf84-4f5b-9fc6-bcfb71dee833
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: -119, y: 34}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 1
+      <AssetObject>k__BackingField: {fileID: 21300000, guid: 455c8df1d94fcfc44aaf691d24fd543d, type: 3}
+      <Parameters>k__BackingField:
+      - 1
+      - CustomizedPosition
+      - 0
+      - 0
+      - 
+      - 
+      - 1.5
+      - 
+      - 
+      - 
+      - 
+      - CustomizedPosition
+      - 233
+      - 777
+      - 2
+      <Description>k__BackingField: Image Operations
+  - <ID>k__BackingField: cc8f3970-f764-4ac0-8f02-3dff546c2b0d
+    <Name>k__BackingField: Dialogue4
+    <Text>k__BackingField: "\u5BF9\u8BDD4"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 95f93fa7-d481-410d-b92d-c13530297061
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 574, y: 454}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 3
+      <AssetObject>k__BackingField: {fileID: 8300000, guid: 5a77aecd61f073641831f412fa4de1fa, type: 3}
+      <Parameters>k__BackingField:
+      - 3
+      - 0.017
+      - 0.5
+      <Description>k__BackingField: BGM Operations
+    - <EventType>k__BackingField: 4
+      <AssetObject>k__BackingField: {fileID: 8300000, guid: e16ba51a5b1a2534384601f3cde56175, type: 3}
+      <Parameters>k__BackingField:
+      - 0
+      - 0.964
+      - 3
+      <Description>k__BackingField: Play SFX
   <OldGroupNames>k__BackingField:
   - Group2
   - Group1
@@ -101,9 +134,9 @@ MonoBehaviour:
     list:
     - Key: Group2
       Value:
-      - Dialogue4
-      - Dialogue3
       - Dialogue2
+      - Dialogue3
+      - Dialogue4
     - Key: Group1
       Value:
       - Dialogue1

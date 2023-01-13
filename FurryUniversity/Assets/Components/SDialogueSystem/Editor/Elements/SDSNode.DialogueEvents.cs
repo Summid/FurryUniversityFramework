@@ -71,25 +71,7 @@ namespace SDS.Elements
                             eventData.AssetObject = callback.newValue;
                         });
 
-                        List<object> imageOperatioinObjs = Enum.GetValues(typeof(SDSDialogueImageEventOperations)).Cast<object>().ToList();
-                        List<string> imageOperationNames = new List<string>();
-                        imageOperatioinObjs.ForEach(obj => imageOperationNames.Add(obj.ToString()));
-                        int imageOperationSubEventParamIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.OperationType;
-                        SDSDialogueImageEventOperations currentImageOperation = (SDSDialogueImageEventOperations)eventData.GetParsedParameterByIndex<int>(imageOperationSubEventParamIndex);
-                        var imageOperationsPopupField = SDSElementUtility.CreatePopupField<string>(imageOperationNames, currentImageOperation.ToString(),
-                            null, selectedItem =>
-                            {
-                                string selectedItemName = selectedItem.ToString();
-                                if (selectedItemName == eventData.GetParameterByIndex(imageOperationSubEventParamIndex))
-                                {
-                                    return selectedItemName;
-                                }
-                                //保存的是子事件枚举的索引
-                                eventData.SetParameterByIndex(imageOperationSubEventParamIndex, imageOperationNames.FindIndex(operation => operation == selectedItemName).ToString());
-                                this.RefreshImageOperationSubEventElements(eventVO);
-                                return selectedItemName;
-                            });
-                        eventVO.parameterElements.Insert(0, imageOperationsPopupField);
+                        RefreshSubEventPopupField<SDSDialogueImageEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.ImageOperations.OperationType, this.RefreshImageOperationSubEventElements);
                         break;
                     case SDSDialogueEventType.BackgroundImageOperations:
                         eventVO.defaultDescription = "Background Image Operation";
@@ -98,24 +80,7 @@ namespace SDS.Elements
                             eventData.AssetObject = callback.newValue;
                         });
 
-                        List<object> bgImageOperationObjs = Enum.GetValues(typeof(SDSDialogueBackgroundImageEventOperations)).Cast<object>().ToList();
-                        List<string> bgImageOperationNames = new List<string>();
-                        bgImageOperationObjs.ForEach(obj => bgImageOperationNames.Add(obj.ToString()));
-                        int bgImageOperationSubEventParamIndex = (int)SDSDialogueEventParameterEnum.BGImageOperations.OperationType;
-                        SDSDialogueBackgroundImageEventOperations currentBGImageOperation = (SDSDialogueBackgroundImageEventOperations)eventData.GetParsedParameterByIndex<int>(bgImageOperationSubEventParamIndex);
-                        var bgImageOperationPopupField = SDSElementUtility.CreatePopupField<string>(bgImageOperationNames, currentBGImageOperation.ToString(),
-                            null, selectedItem =>
-                            {
-                                string selectedItemName = selectedItem.ToString();
-                                if (selectedItemName == eventData.GetParameterByIndex(bgImageOperationSubEventParamIndex))
-                                {
-                                    return selectedItemName;
-                                }
-                                eventData.SetParameterByIndex(bgImageOperationSubEventParamIndex, bgImageOperationNames.FindIndex(operation => operation == selectedItemName).ToString());
-                                this.RefreshBGImageOperationSubEventElements(eventVO);
-                                return selectedItemName;
-                            });
-                        eventVO.parameterElements.Insert(0, bgImageOperationPopupField);
+                        RefreshSubEventPopupField<SDSDialogueBackgroundImageEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.BGImageOperations.OperationType, this.RefreshBGImageOperationSubEventElements);
                         break;
                     case SDSDialogueEventType.BGMOperations:
                         eventVO.defaultDescription = "BGM Operations";
@@ -124,23 +89,7 @@ namespace SDS.Elements
                             eventData.AssetObject = callback.newValue;
                         });
 
-                        //音量参数
-                        bool hasBGMVolumeParam = eventData.HasParameterByIndex(0);
-                        float curBGMVolume = (float)eventData.GetParsedParameterByIndex<float>(0);
-                        if (!hasBGMVolumeParam)
-                        {
-                            eventData.SetParameterByIndex(0, 1f.ToString());
-                            curBGMVolume = 1f;
-                        }
-                        string bgmLabelText = "音量：{0}";
-                        var bgmVolumeLabel = SDSElementUtility.CreateLabel(string.Format(bgmLabelText, curBGMVolume));
-                        var bgmVolumeSlider = SDSElementUtility.CreateSlider(0f, 1f, true, curBGMVolume, string.Empty, callback =>
-                        {
-                            bgmVolumeLabel.text = string.Format(bgmLabelText, callback.newValue);
-                            eventData.SetParameterByIndex(0, callback.newValue.ToString());
-                        });
-                        eventVO.parameterElements.Add(bgmVolumeLabel);
-                        eventVO.parameterElements.Add(bgmVolumeSlider);
+                        RefreshSubEventPopupField<SDSDialogueBGMEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.BGMOperation.OperationType, this.RefreshBGMOperationSubEventElements);
                         break;
                     case SDSDialogueEventType.SFXOperations:
                         eventVO.defaultDescription = "Play SFX";
@@ -149,29 +98,34 @@ namespace SDS.Elements
                             eventData.AssetObject = callback.newValue;
                         });
 
-                        //音量参数
-                        bool hasSFXVolumeParam = eventData.HasParameterByIndex(0);
-                        float curSFXVolume = (float)eventData.GetParsedParameterByIndex<float>(0);
-                        if (!hasSFXVolumeParam)
-                        {
-                            eventData.SetParameterByIndex(0, 1f.ToString());
-                            curSFXVolume = 1f;
-                        }
-                        string sfxlabelText = "音量：{0}";
-                        var sfxVolumeLabel = SDSElementUtility.CreateLabel(string.Format(sfxlabelText, curSFXVolume));
-                        var sfxVolumeSlider = SDSElementUtility.CreateSlider(0f, 1f, true, curSFXVolume, string.Empty, callback =>
-                        {
-                            sfxVolumeLabel.text = string.Format(sfxlabelText, callback.newValue);
-                            eventData.SetParameterByIndex(0, callback.newValue.ToString());
-                        });
-                        eventVO.parameterElements.Add(sfxVolumeLabel);
-                        eventVO.parameterElements.Add(sfxVolumeSlider);
+                        RefreshSubEventPopupField<SDSDialogueSFXEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.SFXOperation.OperationType, this.RefreshSFXOperationSubEventElements);
                         break;
                 }
                 this.eventVOs.Add(eventVO);
             }
 
             this.RefreshEventArea();
+
+            void RefreshSubEventPopupField<T>(EventVO eventVO, int subEventParameterIndex, Action<EventVO> onSelectedItemCallback) where T : Enum
+            {
+                var operationObjs = Enum.GetValues(typeof(T)).Cast<object>().ToList();
+                List<string> operationNames = new List<string>();
+                operationObjs.ForEach(operation => operationNames.Add(operation.ToString()));
+                T currentImageOperation = (T)eventVO.eventData.GetParsedParameterByIndex<int>(subEventParameterIndex);
+                var operationsPopupField = SDSElementUtility.CreatePopupField<string>(operationNames, currentImageOperation.ToString(), null,
+                    selectedItem =>
+                    {
+                        if (selectedItem == eventVO.eventData.GetParameterByIndex(subEventParameterIndex))
+                        {
+                            return selectedItem;
+                        }
+                        //保存的是子事件枚举的索引
+                        eventVO.eventData.SetParameterByIndex(subEventParameterIndex, operationNames.FindIndex(operation => operation == selectedItem).ToString());
+                        onSelectedItemCallback?.Invoke(eventVO);
+                        return selectedItem;
+                    });
+                eventVO.parameterElements.Insert(0, operationsPopupField);
+            }
         }
 
         private void RefreshEventArea()
@@ -298,7 +252,7 @@ namespace SDS.Elements
                 case SDSDialogueImageEventOperations.Hide:
                     int hideParamIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.HideImageTransitionTime;
                     var currentHideTime = eventVO.eventData.GetParameterByIndex(hideParamIndex);
-                    this.RefreshTimeConsumeElements(eventVO, currentHideTime, "隐藏所花时间（秒）", hideParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentHideTime, "隐藏所花时间（秒）", hideParamIndex);
                     break;
                 case SDSDialogueImageEventOperations.Move:
                     //移动图片
@@ -307,7 +261,7 @@ namespace SDS.Elements
 
                     int moveParamIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.MoveImageConsumeTime;
                     var currentMoveTime = eventVO.eventData.GetParameterByIndex(moveParamIndex);
-                    this.RefreshTimeConsumeElements(eventVO, currentMoveTime, "移动时间（秒）", moveParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentMoveTime, "移动时间（秒）", moveParamIndex);
                     break;
             }
             this.RefreshEventArea();
@@ -369,20 +323,106 @@ namespace SDS.Elements
                 case SDSDialogueBackgroundImageEventOperations.Show:
                     int showParamIndex = (int)SDSDialogueEventParameterEnum.BGImageOperations.ShowBGImageTransitionTime;
                     string currentShowConsumeTime = eventVO.eventData.GetParameterByIndex(showParamIndex);
-                    this.RefreshTimeConsumeElements(eventVO, currentShowConsumeTime, "显示所花时间（秒）", showParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentShowConsumeTime, "显示所花时间（秒）", showParamIndex);
                     break;
                 case SDSDialogueBackgroundImageEventOperations.Hide:
                     int hideParamIndex = (int)SDSDialogueEventParameterEnum.BGImageOperations.HideBGImageTransitionTime;
                     string currentHideConsumeTime = eventVO.eventData.GetParameterByIndex(hideParamIndex);
-                    this.RefreshTimeConsumeElements(eventVO, currentHideConsumeTime, "显示所花时间（秒）", hideParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentHideConsumeTime, "显示所花时间（秒）", hideParamIndex);
                     break;
             }
             this.RefreshEventArea();
         }
 
-        private void RefreshTimeConsumeElements(EventVO eventVO, string currentMoveTime, string label, int paramIndex)
+        /// <summary>
+        /// 绘制 BGM Operations 子事件元素
+        /// </summary>
+        /// <param name="eventVO"></param>
+        private void RefreshBGMOperationSubEventElements(EventVO eventVO)
         {
-            var timeConsumeTextField = SDSElementUtility.CreateTextField(currentMoveTime, label, callback =>
+            if (eventVO.parameterElements.Count > 1)
+                eventVO.parameterElements.RemoveRange(1, eventVO.parameterElements.Count - 1);
+
+            SDSDialogueBGMEventOperations currentOperation = (SDSDialogueBGMEventOperations)eventVO.eventData.GetParsedParameterByIndex<int>((int)SDSDialogueEventParameterEnum.BGMOperation.OperationType);
+
+            int transitionTimeParamIndex = (int)SDSDialogueEventParameterEnum.BGMOperation.TransitionTime;
+            bool hasBGMTransitionTimeParam = eventVO.eventData.HasParameterByIndex(transitionTimeParamIndex);
+            float curBGMTransitionTime = (float)eventVO.eventData.GetParsedParameterByIndex<float>(transitionTimeParamIndex);
+            if (!hasBGMTransitionTimeParam)
+            {
+                eventVO.eventData.SetParameterByIndex(transitionTimeParamIndex, 0f.ToString());
+                curBGMTransitionTime = 0f;
+            }
+
+            switch (currentOperation)
+            {
+                case SDSDialogueBGMEventOperations.Play:
+                case SDSDialogueBGMEventOperations.Resume:
+                    int volumeParamIndex = (int)SDSDialogueEventParameterEnum.BGMOperation.Volume;
+
+                    bool hasBGMVolumeParam = eventVO.eventData.HasParameterByIndex(volumeParamIndex);
+                    float curBGMVolume = (float)eventVO.eventData.GetParsedParameterByIndex<float>(volumeParamIndex);
+                    if (!hasBGMVolumeParam)
+                    {
+                        eventVO.eventData.SetParameterByIndex(volumeParamIndex, 1f.ToString());
+                        curBGMVolume = 1f;
+                    }
+                    string bgmLabelText = "音量：{0}";
+                    this.RefreshSliderElements(eventVO, 0, 1, curBGMVolume, bgmLabelText, volumeParamIndex);
+
+                    this.RefreshFloatValueElements(eventVO, curBGMTransitionTime.ToString(), "过渡时间（秒）", transitionTimeParamIndex);
+                    break;
+                case SDSDialogueBGMEventOperations.Pause:
+                case SDSDialogueBGMEventOperations.Stop:
+                    this.RefreshFloatValueElements(eventVO, curBGMTransitionTime.ToString(), "过渡时间（秒）", transitionTimeParamIndex);
+                    break;
+            }
+            this.RefreshEventArea();
+        }
+
+        /// <summary>
+        /// 绘制 SFX Operation 子事件元素
+        /// </summary>
+        /// <param name="eventVO"></param>
+        private void RefreshSFXOperationSubEventElements(EventVO eventVO)
+        {
+            if (eventVO.parameterElements.Count > 1)
+                eventVO.parameterElements.RemoveRange(1, eventVO.parameterElements.Count - 1);
+
+            SDSDialogueSFXEventOperations currentOperation = (SDSDialogueSFXEventOperations)eventVO.eventData.GetParsedParameterByIndex<int>((int)SDSDialogueEventParameterEnum.SFXOperation.OperationType);
+
+            int volumeParamIndex = (int)SDSDialogueEventParameterEnum.SFXOperation.Volume;
+            int loopTimesParamIndex = (int)SDSDialogueEventParameterEnum.SFXOperation.LoopTimes;
+
+            bool hasVolumeParam = eventVO.eventData.HasParameterByIndex(volumeParamIndex);
+            float curVolumeValue = (float)eventVO.eventData.GetParsedParameterByIndex<float>(volumeParamIndex);
+            if (!hasVolumeParam)
+            {
+                eventVO.eventData.SetParameterByIndex(volumeParamIndex, 1f.ToString());
+                curVolumeValue = 1f;
+            }
+
+            bool hasTimesParam = eventVO.eventData.HasParameterByIndex(loopTimesParamIndex);
+            int curLoopTimesValue = (int)eventVO.eventData.GetParsedParameterByIndex<int>(loopTimesParamIndex);
+            if (!hasTimesParam)
+            {
+                eventVO.eventData.SetParameterByIndex(loopTimesParamIndex, 0f.ToString());
+                curLoopTimesValue = 0;
+            }
+
+            switch (currentOperation)
+            {
+                case SDSDialogueSFXEventOperations.Play:
+                    this.RefreshSliderElements(eventVO, 0, 1, curVolumeValue, "音量：{0}", volumeParamIndex);
+                    this.RefreshIntValueElements(eventVO, curLoopTimesValue.ToString(), "循环次数", loopTimesParamIndex);
+                    break;
+            }
+            this.RefreshEventArea();
+        }
+
+        private void RefreshFloatValueElements(EventVO eventVO, string currentValue, string label, int paramIndex)
+        {
+            var textField = SDSElementUtility.CreateTextField(currentValue, label, callback =>
             {
                 string newValue = string.IsNullOrEmpty(callback.newValue) ? "0" : callback.newValue;
                 if (float.TryParse(newValue, out float parsedNewValue))
@@ -394,7 +434,36 @@ namespace SDS.Elements
                     Debug.LogWarning($"非法浮点数值: {newValue}");
                 }
             });
-            eventVO.parameterElements.Add(timeConsumeTextField);
+            eventVO.parameterElements.Add(textField);
+        }
+
+        private void RefreshIntValueElements(EventVO eventVO, string currentValue, string label, int paramIndex)
+        {
+            var textField = SDSElementUtility.CreateTextField(currentValue, label, callback =>
+            {
+                string newValue = string.IsNullOrEmpty(callback.newValue) ? "0" : callback.newValue;
+                if (int.TryParse(newValue, out int parsedNewValue))
+                {
+                    eventVO.eventData.SetParameterByIndex(paramIndex, newValue);
+                }
+                else
+                {
+                    Debug.LogWarning($"非法整形数值: {newValue}");
+                }
+            });
+            eventVO.parameterElements.Add(textField);
+        }
+
+        private void RefreshSliderElements(EventVO eventVO, float startValue, float endValue, float currentValue, string formatLabelValue, int paramIndex)
+        {
+            var labelField = SDSElementUtility.CreateLabel(string.Format(formatLabelValue, currentValue));
+            var sliderField = SDSElementUtility.CreateSlider(startValue, endValue, true, currentValue, string.Empty, callback =>
+            {
+                labelField.text = string.Format(formatLabelValue, callback.newValue);
+                eventVO.eventData.SetParameterByIndex(paramIndex, callback.newValue.ToString());
+            });
+            eventVO.parameterElements.Add(labelField);
+            eventVO.parameterElements.Add(sliderField);
         }
         #endregion
 

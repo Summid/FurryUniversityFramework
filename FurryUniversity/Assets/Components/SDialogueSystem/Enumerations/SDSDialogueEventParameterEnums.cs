@@ -37,4 +37,13 @@ namespace SDS.Enumerations
         Resume,
         Stop,
     }
+
+    /// <summary>
+    /// <see cref="SDSDialogueEventType.SFXOperations"/> 的子事件类型
+    /// </summary>
+    public enum SDSDialogueSFXEventOperations
+    {
+        //SFX有哪些子事件，小编也不知道捏
+        Play = 0,
+    }
 }
