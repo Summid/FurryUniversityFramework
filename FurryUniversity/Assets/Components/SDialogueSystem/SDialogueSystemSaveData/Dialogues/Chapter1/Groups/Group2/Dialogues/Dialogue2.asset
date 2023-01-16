@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <DialogueName>k__BackingField: Dialogue2
   <Text>k__BackingField: "\u5BF9\u8BDD2"
+  <Contents>k__BackingField: []
   <Choices>k__BackingField:
   - <Text>k__BackingField: Choice1
     <NextDialogue>k__BackingField: {fileID: 11400000, guid: c44ea738fcd7bd541b61da41eedecc77, type: 2}

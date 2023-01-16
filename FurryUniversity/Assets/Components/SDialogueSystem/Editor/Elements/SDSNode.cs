@@ -18,6 +18,7 @@ namespace SDS.Elements
         public string ID { get; set; }
         public string DialogueName { get; set; }
         public List<SDSChoiceSaveData> Choices { get; set; }
+        public List<SDSDialogueContentSaveData> Contents { get; set; }
         public string Text { get; set; }
         public SDSDialogueType DialogueType { get; set; }
 
@@ -29,6 +30,7 @@ namespace SDS.Elements
         {
             this.ID = Guid.NewGuid().ToString();
             this.DialogueName = nodeName;
+            this.Contents = new List<SDSDialogueContentSaveData>();
             this.Choices = new List<SDSChoiceSaveData>();
             this.Text = "Dialogue text";
             this.Events = new List<SDSEventSaveData>();

@@ -126,6 +126,7 @@ namespace SDS.Utilities
                 SDSNode node = graphView.CreateNode(nodeData.Name, nodeData.DialogueType, nodeData.Position, false);
 
                 node.ID = nodeData.ID;
+                node.Contents = CloneContenSaveDatas(nodeData.Contents);
                 node.Choices = CloneNodeChoices(nodeData.Choices);
                 node.Text = nodeData.Text;
                 node.Events = CloneEventSaveDatas(nodeData.Events);
@@ -276,6 +277,7 @@ namespace SDS.Utilities
         /// <param name="graphData"></param>
         private static void SaveNodeToGraph(SDSNode node, SDSGraphSaveDataSO graphData)
         {
+            List<SDSDialogueContentSaveData> contents = CloneContenSaveDatas(node.Contents);
             List<SDSChoiceSaveData> choices = CloneNodeChoices(node.Choices);
             List<SDSEventSaveData> events = CloneEventSaveDatas(node.Events);
 
@@ -283,6 +285,7 @@ namespace SDS.Utilities
             {
                 ID = node.ID,
                 Name = node.DialogueName,
+                Contents = contents,
                 Choices = choices,
                 Text = node.Text,
                 GroupID = node.Group?.ID,
@@ -317,6 +320,7 @@ namespace SDS.Utilities
 
             dialogue.Initialize(
                 node.DialogueName,
+                ConvertNodeContentsToDialogueContents(node.Contents),
                 node.Text,
                 ConvertNodeChoicesToDialogueChoices(node.Choices),
                 node.DialogueType,
@@ -372,6 +376,28 @@ namespace SDS.Utilities
             }
 
             return dialogueEvents;
+        }
+
+        /// <summary>
+        /// 将Editor版本的对话数据转换为Runtime版本的
+        /// </summary>
+        /// <param name="nodeContents"></param>
+        /// <returns></returns>
+        private static List<SDSDialogueContentData> ConvertNodeContentsToDialogueContents(List<SDSDialogueContentSaveData> nodeContents)
+        {
+            List<SDSDialogueContentData> dialogueContents = new List<SDSDialogueContentData>();
+
+            foreach (SDSDialogueContentSaveData nodeContent in nodeContents)
+            {
+                SDSDialogueContentData contentData = new SDSDialogueContentData()
+                {
+                    Text = nodeContent.Text,
+                    Spokesman = nodeContent.Spokesman
+                };
+                dialogueContents.Add(contentData);
+            }
+
+            return dialogueContents;
         }
 
         private static void UpdateDialoguesChoicesConnections()
@@ -567,6 +593,26 @@ namespace SDS.Utilities
                     Parameters = parameters,
                     Description = data.Description,
                     IsEventOnExit = data.IsEventOnExit
+                };
+                datas.Add(newData);
+            }
+            return datas;
+        }
+
+        /// <summary>
+        /// 深拷贝一下，避免在graphView中修改时，把SO中的数据也一起修改了
+        /// </summary>
+        /// <param name="contentSaveData"></param>
+        /// <returns></returns>
+        private static List<SDSDialogueContentSaveData> CloneContenSaveDatas(List<SDSDialogueContentSaveData> contentSaveData)
+        {
+            List<SDSDialogueContentSaveData> datas = new List<SDSDialogueContentSaveData>();
+            foreach (SDSDialogueContentSaveData data in contentSaveData)
+            {
+                SDSDialogueContentSaveData newData = new SDSDialogueContentSaveData()
+                {
+                    Text = data.Text,
+                    Spokesman = data.Spokesman
                 };
                 datas.Add(newData);
             }
