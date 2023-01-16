@@ -15,10 +15,9 @@ namespace SDS.Data.Save
         [field: SerializeField] public UnityEngine.Object AssetObject { get; set; }
         [field: SerializeField] public List<string> Parameters { get; set; }
         [field: SerializeField] public string Description { get; set; }
+        [field: SerializeField] public bool IsEventOnExit { get; set; }
 
         //TODO 事件延迟触发参数来一个秋梨膏
-
-        //TODO 进入对话与离开对话触发事件标识：离开对话所触发的事件用空对话节点来实现，该节点触发所有事件后自动跳转到下一对话节点
 
         public string GetParameterByIndex(int index)
         {

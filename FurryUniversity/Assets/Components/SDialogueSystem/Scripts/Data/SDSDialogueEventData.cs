@@ -14,5 +14,6 @@ namespace SDS.Data
         [field: SerializeField] public SDSDialogueEventType EventType { get; set; }
         [field: SerializeField] public string AssetName { get; set; }
         [field: SerializeField] public List<string> Parameters { get; set; }
+        [field: SerializeField] public bool IsEventOnExit { get; set; }
     }
 }

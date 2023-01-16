@@ -35,7 +35,6 @@ namespace SDS.Elements
         {
             this.eventsFoldout = SDSElementUtility.CreateFoldout("Event Info");
             this.eventsFoldout.AddClasses("sds-node__eventsFoldout-container");
-            //this.DrawEvents();
             this.RefreshEventDatas();
 
             Type eventType = typeof(SDSDialogueEventType);
@@ -168,12 +167,18 @@ namespace SDS.Elements
                 });
                 deleteButton.AddClasses("sds-node__button");
 
+                Toggle isOnExitToggle = SDSElementUtility.CreateToggle("退出事件", eventVO.eventData.IsEventOnExit, callback =>
+                {
+                    eventVO.eventData.IsEventOnExit = callback.newValue;
+                });
+
                 eventContainer.Add(eventTitleTextField);
                 eventContainer.Add(eventVO.objectField);
                 foreach (var parameterElement in eventVO.parameterElements)
                 {
                     eventContainer.Add(parameterElement);
                 }
+                eventContainer.Add(isOnExitToggle);
                 eventContainer.Add(deleteButton);
 
                 this.eventsFoldout.Add(eventContainer);
@@ -218,7 +223,6 @@ namespace SDS.Elements
 
             if (added)
             {
-                //this.DrawEvents();
                 this.RefreshEventDatas();
                 this.OnEventSelected?.Invoke();
             }

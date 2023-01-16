@@ -365,7 +365,8 @@ namespace SDS.Utilities
                 {
                     EventType = nodeEvent.EventType,
                     AssetName = nodeEvent.AssetObject == null ? null : nodeEvent.AssetObject.name,
-                    Parameters = nodeEvent.Parameters
+                    Parameters = nodeEvent.Parameters,
+                    IsEventOnExit = nodeEvent.IsEventOnExit
                 };
                 dialogueEvents.Add(eventData);
             }
@@ -564,7 +565,8 @@ namespace SDS.Utilities
                     EventType = data.EventType,
                     AssetObject = data.AssetObject,
                     Parameters = parameters,
-                    Description = data.Description
+                    Description = data.Description,
+                    IsEventOnExit = data.IsEventOnExit
                 };
                 datas.Add(newData);
             }

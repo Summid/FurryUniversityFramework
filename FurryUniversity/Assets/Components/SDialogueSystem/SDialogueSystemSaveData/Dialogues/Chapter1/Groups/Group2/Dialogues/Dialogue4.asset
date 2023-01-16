@@ -26,9 +26,11 @@ MonoBehaviour:
     - 3
     - 0.017
     - 0.5
+    <IsEventOnExit>k__BackingField: 0
   - <EventType>k__BackingField: 4
     <AssetName>k__BackingField: ui_effect_14
     <Parameters>k__BackingField:
     - 0
     - 0.964
     - 3
+    <IsEventOnExit>k__BackingField: 0

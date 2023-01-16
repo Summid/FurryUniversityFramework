@@ -179,5 +179,18 @@ namespace SDS.Utilities
 
             return label;
         }
+
+        public static Toggle CreateToggle(string label = "", bool defaultValue = false, EventCallback<ChangeEvent<bool>> onValueChanged = null)
+        {
+            Toggle toggle = new Toggle()
+            {
+                //label = label,
+                value = defaultValue,
+                text = label
+            };
+            if (onValueChanged != null)
+                toggle.RegisterValueChangedCallback(onValueChanged);
+            return toggle;
+        }
     }
 }
