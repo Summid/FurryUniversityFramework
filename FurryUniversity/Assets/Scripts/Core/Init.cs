@@ -1,4 +1,5 @@
 using SDS;
+using System.Linq;
 using System.Text;
 using UnityEngine;
 
@@ -56,7 +57,7 @@ namespace SFramework.Core.GameManagers
                 {
                     if (GUILayout.Button("显示当前对话"))
                     {
-                        this.showInfos.AppendLine(this.dialogue.CurrentDialogue.Text);
+                        this.showInfos.AppendLine(this.dialogue.CurrentDialogue.Contents.First().Text);
                         this.line++;
                     }
                     if (GUILayout.Button("显示对话事件参数"))

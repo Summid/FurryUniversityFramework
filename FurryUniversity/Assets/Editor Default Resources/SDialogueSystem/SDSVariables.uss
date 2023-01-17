@@ -12,13 +12,16 @@
 
 	--sds-metrics-grid-25: 25;
 	--sds-metrics-window-pixels-n12: -12px;
+	--sds-metrics-window-pixels-n6: -6px;
 	--sds-metrics-window-pixels-n4: -4px;
 	--sds-metrics-window-pixels-0: 0px;
 	--sds-metrics-window-pixels-2: 2px;
 	--sds-metrics-window-pixels-4: 4px;
 	--sds-metrics-window-pixels-6: 6px;
 	--sds-metrics-window-pixels-8: 8px;
+	--sds-metrics-window-pixels-10: 10px;
 	--sds-metrics-window-pixels-11: 11px;
+	--sds-metrics-window-pixels-14: 14px;
 	--sds-metrics-window-pixels-16: 16px;
 	--sds-metrics-window-pixels-25: 25px;
 	--sds-metrics-window-pixels-35: 35px;

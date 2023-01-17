@@ -19,7 +19,6 @@ namespace SDS.Elements
         public string DialogueName { get; set; }
         public List<SDSChoiceSaveData> Choices { get; set; }
         public List<SDSDialogueContentSaveData> Contents { get; set; }
-        public string Text { get; set; }
         public SDSDialogueType DialogueType { get; set; }
 
         protected SDSGraphView graphView;
@@ -32,7 +31,6 @@ namespace SDS.Elements
             this.DialogueName = nodeName;
             this.Contents = new List<SDSDialogueContentSaveData>();
             this.Choices = new List<SDSChoiceSaveData>();
-            this.Text = "Dialogue text";
             this.Events = new List<SDSEventSaveData>();
             this.OnEventSelected += () => { this.popupField.index = 0; };//选择事件后，重置选择索引
 
@@ -99,16 +97,7 @@ namespace SDS.Elements
             VisualElement customDataContainer = new VisualElement();
             customDataContainer.AddClasses("sds-node__custom-data-container");
 
-            Foldout textFoldout = SDSElementUtility.CreateFoldout("Dialogue Text");
-            TextField textTextField = SDSElementUtility.CreateTextArea(this.Text, null, callback =>
-            {
-                this.Text = callback.newValue;
-            });
-            textTextField.AddClasses("sds-node__text-field", "sds-node__quote-text-field");
-
-            textFoldout.Add(textTextField);
-
-            customDataContainer.Add(textFoldout);
+            this.DrawContentArea(customDataContainer);
             this.DrawEventArea(customDataContainer);
             this.extensionContainer.Add(customDataContainer);
         }

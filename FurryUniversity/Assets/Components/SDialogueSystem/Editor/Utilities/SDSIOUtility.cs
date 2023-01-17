@@ -128,7 +128,6 @@ namespace SDS.Utilities
                 node.ID = nodeData.ID;
                 node.Contents = CloneContenSaveDatas(nodeData.Contents);
                 node.Choices = CloneNodeChoices(nodeData.Choices);
-                node.Text = nodeData.Text;
                 node.Events = CloneEventSaveDatas(nodeData.Events);
                 node.Draw();
 
@@ -287,7 +286,6 @@ namespace SDS.Utilities
                 Name = node.DialogueName,
                 Contents = contents,
                 Choices = choices,
-                Text = node.Text,
                 GroupID = node.Group?.ID,
                 DialogueType = node.DialogueType,
                 Position = node.GetPosition().position,
@@ -321,7 +319,6 @@ namespace SDS.Utilities
             dialogue.Initialize(
                 node.DialogueName,
                 ConvertNodeContentsToDialogueContents(node.Contents),
-                node.Text,
                 ConvertNodeChoicesToDialogueChoices(node.Choices),
                 node.DialogueType,
                 node.IsStartingNode(),
