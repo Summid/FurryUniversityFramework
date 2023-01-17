@@ -69,7 +69,7 @@ namespace SDS.Windows
             {
                 case SDSDialogueType.SingleChoice:
                     {
-                        SDSSingleChoiceNode singleChoiceNode = this.graphView.CreateNode("DialogueName", SDSDialogueType.SingleChoice, localMousePosition) as SDSSingleChoiceNode;
+                        SDSSingleChoiceNode singleChoiceNode = this.graphView.CreateNode(null, SDSDialogueType.SingleChoice, localMousePosition) as SDSSingleChoiceNode;
 
                         this.graphView.AddElement(singleChoiceNode);
 
@@ -78,7 +78,7 @@ namespace SDS.Windows
 
                 case SDSDialogueType.MultipleChoice:
                     {
-                        SDSMultipleChoiceNode multipleChoiceNode = this.graphView.CreateNode("DialogueName", SDSDialogueType.MultipleChoice, localMousePosition) as SDSMultipleChoiceNode;
+                        SDSMultipleChoiceNode multipleChoiceNode = this.graphView.CreateNode(null, SDSDialogueType.MultipleChoice, localMousePosition) as SDSMultipleChoiceNode;
 
                         this.graphView.AddElement(multipleChoiceNode);
 
@@ -87,7 +87,7 @@ namespace SDS.Windows
 
                 case Group _:
                     {
-                        this.graphView.CreateGroup("DialogueGroup", localMousePosition);
+                        this.graphView.CreateGroup(null, localMousePosition);
 
                         return true;
                     }

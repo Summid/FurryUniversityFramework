@@ -17,8 +17,8 @@ namespace SDS.Elements
         public SDSGroup(string groupTitle, Vector2 position)
         {
             this.ID = Guid.NewGuid().ToString();
-            this.title = groupTitle;
-            this.OldTitle = groupTitle;
+            this.title = groupTitle ?? "DialogueGroup-" + this.ID;
+            this.OldTitle = groupTitle ?? "DialogueGroup-" + this.ID;
 
             this.SetPosition(new Rect(position, Vector2.zero));
 

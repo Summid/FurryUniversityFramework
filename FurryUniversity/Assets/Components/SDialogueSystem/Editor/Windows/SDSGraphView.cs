@@ -121,7 +121,7 @@ namespace SDS.Windows
         {
             ContextualMenuManipulator contextualMenuManipulator = new ContextualMenuManipulator(
                 menuEvent => menuEvent.menu.AppendAction(actionTitle,
-                actionEvent => this.AddElement(this.CreateNode("DialogueName", dialogueType, this.GetLocalMousePosition(actionEvent.eventInfo.localMousePosition))))
+                actionEvent => this.AddElement(this.CreateNode(null, dialogueType, this.GetLocalMousePosition(actionEvent.eventInfo.localMousePosition))))
             );
             return contextualMenuManipulator;
         }
@@ -132,7 +132,7 @@ namespace SDS.Windows
         {
             ContextualMenuManipulator contextualMenuManipulator = new ContextualMenuManipulator(
                 menuEvent => menuEvent.menu.AppendAction("Add Group",
-                actionEvent => this.CreateGroup("DialogueGroup", this.GetLocalMousePosition(actionEvent.eventInfo.localMousePosition)))
+                actionEvent => this.CreateGroup(null, this.GetLocalMousePosition(actionEvent.eventInfo.localMousePosition)))
             );
             return contextualMenuManipulator;
         }

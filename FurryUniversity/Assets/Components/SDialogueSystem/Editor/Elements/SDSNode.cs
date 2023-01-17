@@ -28,7 +28,7 @@ namespace SDS.Elements
         public virtual void Initialize(string nodeName, SDSGraphView graphView, Vector2 position)
         {
             this.ID = Guid.NewGuid().ToString();
-            this.DialogueName = nodeName;
+            this.DialogueName = nodeName ?? "DialogueName-" + this.ID;
             this.Contents = new List<SDSDialogueContentSaveData>();
             this.Choices = new List<SDSChoiceSaveData>();
             this.Events = new List<SDSEventSaveData>();
