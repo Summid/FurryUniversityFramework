@@ -16,8 +16,7 @@ namespace SDS.Data.Save
         [field: SerializeField] public List<string> Parameters { get; set; }
         [field: SerializeField] public string Description { get; set; }
         [field: SerializeField] public bool IsEventOnExit { get; set; }
-
-        //TODO 事件延迟触发参数来一个秋梨膏
+        [field: SerializeField] public float DelayTime { get; set; }
 
         public string GetParameterByIndex(int index)
         {

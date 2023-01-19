@@ -25,4 +25,13 @@ MonoBehaviour:
     <NextDialogue>k__BackingField: {fileID: 0}
   <DialogueType>k__BackingField: 1
   <IsStartDialogue>k__BackingField: 1
-  <Events>k__BackingField: []
+  <Events>k__BackingField:
+  - <EventType>k__BackingField: 1
+    <AssetName>k__BackingField: 
+    <Parameters>k__BackingField:
+    - 0
+    - CustomizedPosition
+    - 0
+    - 0
+    <IsEventOnExit>k__BackingField: 0
+    <DelayTime>k__BackingField: 2.5

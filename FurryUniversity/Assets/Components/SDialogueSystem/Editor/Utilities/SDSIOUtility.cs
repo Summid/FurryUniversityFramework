@@ -367,7 +367,8 @@ namespace SDS.Utilities
                     EventType = nodeEvent.EventType,
                     AssetName = nodeEvent.AssetObject == null ? null : nodeEvent.AssetObject.name,
                     Parameters = nodeEvent.Parameters,
-                    IsEventOnExit = nodeEvent.IsEventOnExit
+                    IsEventOnExit = nodeEvent.IsEventOnExit,
+                    DelayTime = nodeEvent.DelayTime
                 };
                 dialogueEvents.Add(eventData);
             }
@@ -589,7 +590,8 @@ namespace SDS.Utilities
                     AssetObject = data.AssetObject,
                     Parameters = parameters,
                     Description = data.Description,
-                    IsEventOnExit = data.IsEventOnExit
+                    IsEventOnExit = data.IsEventOnExit,
+                    DelayTime = data.DelayTime
                 };
                 datas.Add(newData);
             }

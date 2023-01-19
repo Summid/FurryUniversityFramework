@@ -167,6 +167,19 @@ namespace SDS.Elements
                 });
                 deleteButton.AddClasses("sds-node__button");
 
+                TextField delayTimeTextField = SDSElementUtility.CreateTextField(eventVO.eventData.DelayTime.ToString(), "延迟时间（秒）", callback =>
+                {
+                    string newValue = string.IsNullOrEmpty(callback.newValue) ? "0" : callback.newValue;
+                    if (float.TryParse(newValue, out float parsedNewValue))
+                    {
+                        eventVO.eventData.DelayTime = parsedNewValue;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"非法浮点数值：{newValue}");
+                    }
+                });
+
                 Toggle isOnExitToggle = SDSElementUtility.CreateToggle("退出事件", eventVO.eventData.IsEventOnExit, callback =>
                 {
                     eventVO.eventData.IsEventOnExit = callback.newValue;
@@ -178,6 +191,7 @@ namespace SDS.Elements
                 {
                     eventContainer.Add(parameterElement);
                 }
+                eventContainer.Add(delayTimeTextField);
                 eventContainer.Add(isOnExitToggle);
                 eventContainer.Add(deleteButton);
 

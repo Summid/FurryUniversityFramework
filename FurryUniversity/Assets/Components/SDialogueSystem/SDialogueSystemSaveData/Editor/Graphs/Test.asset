@@ -31,7 +31,17 @@ MonoBehaviour:
     <GroupID>k__BackingField: 
     <DialogueType>k__BackingField: 1
     <Position>k__BackingField: {x: 310, y: 30}
-    <Events>k__BackingField: []
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 1
+      <AssetObject>k__BackingField: {fileID: 0}
+      <Parameters>k__BackingField:
+      - 0
+      - CustomizedPosition
+      - 0
+      - 0
+      <Description>k__BackingField: Image Operations
+      <IsEventOnExit>k__BackingField: 0
+      <DelayTime>k__BackingField: 2.5
   <OldGroupNames>k__BackingField: []
   <OldUngroupedNodeNames>k__BackingField:
   - DialogueName

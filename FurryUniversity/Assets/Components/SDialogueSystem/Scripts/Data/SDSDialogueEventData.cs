@@ -15,5 +15,7 @@ namespace SDS.Data
         [field: SerializeField] public string AssetName { get; set; }
         [field: SerializeField] public List<string> Parameters { get; set; }
         [field: SerializeField] public bool IsEventOnExit { get; set; }
+        [field: SerializeField] public float DelayTime { get; set; }
+
     }
 }
