@@ -24,6 +24,8 @@ namespace SDS
 
         public SDSDialogueSO CurrentDialogue => this.dialogue;
 
+        public int CurrentIndexOfSentenceInDialogue = 0;
+
         private void Awake()
         {
             DontDestroyOnLoad(this);
@@ -31,6 +33,11 @@ namespace SDS
 
         public bool CheckCurrentDialogueHasNextNode()
         {
+            if (this.dialogue.Contents.Count > this.CurrentIndexOfSentenceInDialogue + 1)
+            {
+                return true;
+            }
+
             foreach (Data.SDSDialogueChoiceData choice in this.dialogue.Choices)
             {
                 if (choice.NextDialogue != null)
@@ -44,20 +51,31 @@ namespace SDS
         {
             if (this.dialogue == null)
                 return false;
-            if (this.dialogue.DialogueType != Enumerations.SDSDialogueType.SingleChoice)
+
+            if (this.dialogue.Contents.Count > this.CurrentIndexOfSentenceInDialogue + 1)
             {
-                Debug.LogWarning($"{this.dialogue.DialogueName} 不是单选对话，不能直接切换到下一句");
-                return false;
+                this.CurrentIndexOfSentenceInDialogue++;
+                return true;
+            }
+            else
+            {
+                if (this.dialogue.DialogueType != Enumerations.SDSDialogueType.SingleChoice)
+                {
+                    Debug.LogWarning($"{this.dialogue.DialogueName} 不是单选对话，不能直接切换到下一句");
+                    return false;
+                }
+
+                List<Data.SDSDialogueChoiceData> choices = this.dialogue.Choices;
+                if (choices == null || choices.Count == 0 || choices[0].NextDialogue == null)
+                {
+                    Debug.LogWarning($"{this.dialogue.DialogueName} 没有后续对话节点");
+                    return false;
+                }
+                this.dialogue = choices[0].NextDialogue;
+                this.CurrentIndexOfSentenceInDialogue = 0;
             }
 
-            List<Data.SDSDialogueChoiceData> choices = this.dialogue.Choices;
-            if (choices == null || choices.Count == 0 || choices[0].NextDialogue == null)
-            {
-                Debug.LogWarning($"{this.dialogue.DialogueName} 没有后续对话节点");
-                return false;
-            }
 
-            this.dialogue = choices[0].NextDialogue;
             return true;
         }
 
@@ -85,6 +103,7 @@ namespace SDS
             }
 
             this.dialogue = choices[branchIndex].NextDialogue;
+            this.CurrentIndexOfSentenceInDialogue = 0;
             return true;
         }
     }

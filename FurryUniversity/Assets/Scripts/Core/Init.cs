@@ -57,7 +57,7 @@ namespace SFramework.Core.GameManagers
                 {
                     if (GUILayout.Button("显示当前对话"))
                     {
-                        this.showInfos.AppendLine(this.dialogue.CurrentDialogue.Contents.First().Text);
+                        this.showInfos.AppendLine(this.dialogue.CurrentDialogue.Contents[this.dialogue.CurrentIndexOfSentenceInDialogue].Text);
                         this.line++;
                     }
                     if (GUILayout.Button("显示对话事件参数"))
@@ -89,12 +89,22 @@ namespace SFramework.Core.GameManagers
                         case SDS.Enumerations.SDSDialogueType.MultipleChoice:
                             if (this.dialogue.CheckCurrentDialogueHasNextNode())
                             {
-                                for (int i = 0; i < this.dialogue.CurrentDialogue.Choices.Count; ++i)
+                                if (this.dialogue.CurrentDialogue.Contents.Count > this.dialogue.CurrentIndexOfSentenceInDialogue + 1)
                                 {
-                                    var curChoice = this.dialogue.CurrentDialogue.Choices[i];
-                                    if (GUILayout.Button($"选择分支 {curChoice.Text}"))
+                                    if (GUILayout.Button("切换到下一句"))
                                     {
-                                        this.dialogue.ChooseDialogueBranch(i);
+                                        this.dialogue.SwitchToNextDialogue();
+                                    }
+                                }
+                                else
+                                {
+                                    for (int i = 0; i < this.dialogue.CurrentDialogue.Choices.Count; ++i)
+                                    {
+                                        var curChoice = this.dialogue.CurrentDialogue.Choices[i];
+                                        if (GUILayout.Button($"选择分支 {curChoice.Text}"))
+                                        {
+                                            this.dialogue.ChooseDialogueBranch(i);
+                                        }
                                     }
                                 }
                             }
