@@ -1,10 +1,8 @@
 {
-    "name": "SFramework",
+    "name": "SFrameworkAdapters",
     "rootNamespace": "",
     "references": [
-        "GUID:545c05b61d3e3064c83ad45b22076e4d",
-        "GUID:2be9c19e322963d4daf6184d2f5d8555",
-        "GUID:bc6616c29432e7b4ab3be262df97d308"
+        "GUID:046fc005e6ee1b24b8676dcc20900a06"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
