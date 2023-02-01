@@ -41,5 +41,10 @@ namespace SFramework.Core.UI
 
             this.DisposeSFXBundlesButton_Button.onClick.AddListener(() => { GameManager.Instance.AudioManager.DisposeSFXGroupBunudles(); });
         }
+
+        protected override void OnShow()
+        {
+            Debug.Log("in MainView OnShow");
+        }
     }
 }

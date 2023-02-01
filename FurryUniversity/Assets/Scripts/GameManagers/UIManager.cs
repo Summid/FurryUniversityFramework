@@ -167,7 +167,7 @@ namespace SFramework.Core.GameManagers
                 while (needRemoveCount > 0)
                 {
                     var uiInfoNeedRemove = cacheList[index];
-                    Debug.Log($"<color=#00ff00>超出UI缓存最大限制:{UIInstanceCacheLimitCount}，移除UI实例:[{uiInfoNeedRemove.ViewName}]</color>");
+                    Debug.Log($"<color=#00ff00>超出UI缓存最大限制:{this.UIInstanceCacheLimitCount}，移除UI实例:[{uiInfoNeedRemove.ViewName}]</color>");
                     uiInfoNeedRemove.ViewInstance.Dispose();
                     needRemoveCount--;
                     index++;

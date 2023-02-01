@@ -4,6 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading;
 using UnityEngine;
 
 namespace SFramework.Core.UI
@@ -23,13 +24,14 @@ namespace SFramework.Core.UI
         private Dictionary<UIObject, GameObject> childrenUIList = new Dictionary<UIObject, GameObject>();
         private UIManager UIManager { get { return GameManager.Instance.UIManager; } }
 
+        private CancellationTokenSource updateCTS;
+
         public virtual void Awake(GameObject gameObjectHost)
         {
             this.ClassType = this.GetType();
             this.gameObject = gameObjectHost;
             this.rc = this.gameObject.GetComponent<ReferenceCollector>();
 
-            //TODO update logic
             this.InitItemSelector(this.gameObject.transform);
             this.InitCustomAttribute();
 
@@ -343,6 +345,19 @@ namespace SFramework.Core.UI
 
             return itemObj;
         }
+
+        /// <summary>
+        /// 初始化Update迭代逻辑
+        /// </summary>
+        private void InitUpdateLogic()
+        {
+            if (this is IUIUpdator updator)
+            {
+                this.updateCTS?.Cancel();
+                this.updateCTS = new CancellationTokenSource();
+                STask.UpdateTask(updator.OnUpdate, PlayerLoopTiming.Update, this.updateCTS.Token);
+            }
+        }
         #endregion
 
         #region 外部接口
@@ -426,17 +441,29 @@ namespace SFramework.Core.UI
 
         /// <summary> 首次创建时触发 </summary>
         protected virtual void OnAwake() { }
+
         /// <summary> 调用<see cref="Show"/>后触发 </summary>
         protected virtual void OnShow() { }
+
         /// <summary> 调用<see cref="Hide"/>后触发，用户使用 </summary>
         protected virtual void OnHide() { }
+
         /// <summary> 调用<see cref="Dispose"/>后触发 </summary>
         protected virtual void OnDispose() { }
+
+        /// <summary> 调用<see cref="Show"/>后触发，底层使用，不暴露给用户 </summary>
+        protected virtual void OnEnable()
+        {
+            this.OnShow();
+            this.InitUpdateLogic();
+        }
+
         /// <summary> 调用<see cref="Hide"/>后触发，底层使用，不暴露给用户 </summary>
         protected virtual void OnDisable()
         {
-            this.OnHide();
             //Remove something here，协程、计时器等
+            this.updateCTS?.Cancel();
+            this.OnHide();
         }
         #endregion
 
@@ -465,5 +492,13 @@ namespace SFramework.Core.UI
     public class UISerializableAttribute : Attribute
     {
 
+    }
+
+    /// <summary>
+    /// 实现该接口来实现类似Update的功能
+    /// </summary>
+    public interface IUIUpdator
+    {
+        void OnUpdate();
     }
 }

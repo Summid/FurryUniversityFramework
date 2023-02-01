@@ -131,7 +131,7 @@ namespace SFramework.Core.UI
             }
             this.OnWillShow();
             this.Mask.EnableRaycast = true;
-            this.OnShow();
+            this.OnEnable();
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace SFramework.Core.UI
         {
             if(this.UIState != EnumViewState.Shown)
                 this.UIState = EnumViewState.Shown;
-            this.OnShow();
+            this.OnEnable();
         }
 
         /// <summary>
@@ -260,7 +260,7 @@ namespace SFramework.Core.UI
         /// </summary>
         internal void SetStateHide()
         {
-            if (this.UIState == EnumViewState.Hidding)
+            if (this.UIState == EnumViewState.Hidden)
                 return;
 
             this.UIState = EnumViewState.Hidding;
@@ -270,6 +270,14 @@ namespace SFramework.Core.UI
                 return;
             this.UIState = EnumViewState.Hidden;
             this.OnDisable();
+        }
+
+        /// <summary>
+        /// 调用Show后触发，底层使用不暴露给用户
+        /// </summary>
+        protected sealed override void OnEnable()
+        {
+            base.OnEnable();
         }
 
         /// <summary>

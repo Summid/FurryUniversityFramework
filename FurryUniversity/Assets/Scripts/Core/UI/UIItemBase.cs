@@ -44,7 +44,7 @@ namespace SFramework.Core.UI
 
             if (this.selector.gameObject.activeInHierarchy)
             {
-                this.OnShow();
+                this.OnEnable();
             }
         }
 
@@ -79,12 +79,20 @@ namespace SFramework.Core.UI
 
         private void OnGameObjectEnable()
         {
-            this.OnShow();
+            this.OnEnable();
         }
 
         private void OnGameObjectDisable()
         {
             this.OnDisable();
+        }
+
+        /// <summary>
+        /// 调用Show后触发，底层使用不暴露给用户
+        /// </summary>
+        protected sealed override void OnEnable()
+        {
+            base.OnEnable();
         }
 
         /// <summary> 调用Hide()后触发，或Unity触发OnDisable时调用，底层使用，不暴露给用户 </summary>
