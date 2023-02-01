@@ -17,6 +17,9 @@ public class SandBoxMain : MonoBehaviour
     public Button kingsFallButton;
     public Button clearButton;
 
+    public Button updateTestButton;
+    private CancellationTokenSource cts;
+
     private void Awake()
     {
         this.discipleshipButton.onClick.AddListener(() =>
@@ -37,6 +40,23 @@ public class SandBoxMain : MonoBehaviour
         this.clearButton.onClick.AddListener(() =>
         {
             this.showImage.UnloadSprite();
+        });
+
+        this.updateTestButton.onClick.AddListener(() =>
+        {
+            if (this.cts == null)
+            {
+                this.cts = new CancellationTokenSource();
+                STask.UpdateTask(() =>
+                {
+                    Debug.Log("Update");
+                }, PlayerLoopTiming.Update, this.cts.Token);
+            }
+            else
+            {
+                this.cts.Cancel();
+                this.cts = null;
+            }
         });
     }
 
