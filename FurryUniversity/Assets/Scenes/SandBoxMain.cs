@@ -51,6 +51,7 @@ public class SandBoxMain : MonoBehaviour
             if (this.cts == null)
             {
                 this.cts = new CancellationTokenSource();
+                this.cts.CancelAfterSilm(3000);
                 STask.UpdateTask(() =>
                 {
                     Debug.Log("Update");

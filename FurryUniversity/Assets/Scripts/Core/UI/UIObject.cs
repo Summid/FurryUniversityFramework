@@ -353,7 +353,12 @@ namespace SFramework.Core.UI
         {
             if (this is IUIUpdator updator)
             {
-                this.updateCTS?.Cancel();
+                if (this.updateCTS != null)
+                {
+                    this.updateCTS.Cancel();
+                    this.updateCTS.Dispose();
+                    this.updateCTS = null;
+                }
                 this.updateCTS = new CancellationTokenSource();
                 STask.UpdateTask(updator.OnUpdate, PlayerLoopTiming.Update, this.updateCTS.Token);
             }
@@ -418,6 +423,13 @@ namespace SFramework.Core.UI
             if (this.UIState == EnumViewState.Disposed)
                 return;
             this.UIState = EnumViewState.Disposed;
+
+            if (this.updateCTS != null)
+            {
+                this.updateCTS.Cancel();
+                this.updateCTS.Dispose();
+                this.updateCTS = null;
+            }
 
             if (this.gameObject != null && !this.gameObject.Equals(null))
                 GameObject.Destroy(this.gameObject);
