@@ -66,7 +66,7 @@ namespace SFramework.Core.GameManagers
 
             this.isInited = true;
 
-            this.UIInstanceCacheLimitCount = 5;//暂定5个缓存
+            this.UIInstanceCacheLimitCount = 0;//暂定这么多个缓存
 
             Debug.Log("UIManager Initialized");
 

@@ -11,7 +11,7 @@ namespace SFramework.Core.UI
     {
         public void OnUpdate()
         {
-            Debug.Log("OnUpdate");
+            //Debug.Log("OnUpdate");
         }
 
         protected override void OnAwake()

@@ -112,5 +112,10 @@ public class SandBoxMain : MonoBehaviour
         //    this.showImage.sprite = null;
         //    GC.Collect();
         //}
+
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            AssetBundleManager.Dump();
+        }
     }
 }

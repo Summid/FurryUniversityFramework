@@ -62,6 +62,7 @@ namespace SFramework.Core.GameManagers
         public HashSet<AssetBundleVO> BeDependedVO { get; }
 
         private uint refCount;
+        public uint RefCount { get => this.refCount; }
         private bool isLoading;
 
         public State BundleState
@@ -126,12 +127,13 @@ namespace SFramework.Core.GameManagers
             {
                 foreach (var depVO in this.DependentVO)
                 {
-                    await this.UnLoadAsync(true, false);
+                    await depVO.UnLoadAsync(true, false);
                 }
             }
 
             if (this.refCount <= 0)
             {
+                UnityEngine.Debug.Log($"unload ab {this.BundleName}");
                 this.Content.Unload(unloadAllLoadedObjects);
                 this.Content = null;//State == Unloaded
                 this.isLoading = false;
@@ -187,10 +189,7 @@ namespace SFramework.Core.GameManagers
         {
             foreach (var vo in this.DependentVO)
             {
-                if (vo.BundleState == State.Unloaded)
-                {
-                    vo.Load();
-                }
+                vo.Load();
             }
         }
 
@@ -198,10 +197,7 @@ namespace SFramework.Core.GameManagers
         {
             foreach (var vo in this.DependentVO)
             {
-                if (vo.BundleState == State.Unloaded)
-                {
-                    await vo.LoadAsync();
-                }
+                await vo.LoadAsync();
             }
         }
 
@@ -220,6 +216,11 @@ namespace SFramework.Core.GameManagers
             {
                 throw new Exception($"AssetBundleVO::Load failed, {this.BundleName}, {this.BundleName}");
             }
+        }
+
+        public void RequestLoadedAsset()
+        {
+            this.refCount++;
         }
 
         public override string ToString()
@@ -273,10 +274,7 @@ namespace SFramework.Core.GameManagers
             return null;
 #else
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
-            if (vo.BundleState == AssetBundleVO.State.Unloaded)
-            {
-                await vo.LoadAsync();
-            }
+            await vo.LoadAsync();
 
             return vo;
 #endif
@@ -296,10 +294,8 @@ namespace SFramework.Core.GameManagers
 #else
 
             AssetBundleVO vo = GetAssetBundleVO(bundleName);
-            if (vo.BundleState == AssetBundleVO.State.Unloaded)
-            {
-                await vo.LoadAsync();
-            }
+
+            await vo.LoadAsync();
 
             T asset = await vo.Content.LoadAssetAsync(assetName) as T;
             return asset;
@@ -415,5 +411,15 @@ namespace SFramework.Core.GameManagers
         {
             UnityEngine.Debug.Log($"load from {(fromAB ? "AssetBundle" : "AssetDataBase")}, assetPath is {assetPath}");
         }
+
+#if UNITY_EDITOR
+        public static void Dump()
+        {
+            foreach (var kvp in bundleVOMap)
+            {
+                UnityEngine.Debug.Log($"ab <color=#00ff00>{kvp.Key}</color> has ref count <color=#00ff00>{kvp.Value.RefCount}</color>");
+            }
+        }
+#endif
     }
 }
