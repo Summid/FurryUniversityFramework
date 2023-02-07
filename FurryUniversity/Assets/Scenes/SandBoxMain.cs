@@ -20,6 +20,10 @@ public class SandBoxMain : MonoBehaviour
     public Button updateTestButton;
     private CancellationTokenSource cts;
 
+    public Button timerTestButton;
+    private CancellationTokenSource timerCTS;
+    private PlayerLoopTimer timer;
+
     private void Awake()
     {
         this.discipleshipButton.onClick.AddListener(() =>
@@ -58,6 +62,36 @@ public class SandBoxMain : MonoBehaviour
                 this.cts = null;
             }
         });
+
+        this.timerTestButton.onClick.AddListener(() =>
+        {
+            //if (this.timer == null)
+            //{
+            //    this.timerCTS = new CancellationTokenSource();
+            //    this.timer = PlayerLoopTimer.StartNew(TimeSpan.FromSeconds(2), true, DelayType.RealTime, PlayerLoopTiming.Update,
+            //        this.timerCTS.Token, (state) => { Debug.Log(state); }, "timer state");
+            //}
+            //else
+            //{
+            //    this.timerCTS.Cancel();
+            //    this.timer.Dispose();
+            //    this.timer = null;
+            //}
+            this.TimerAutoDisposeTest();
+        });
+    }
+
+    private async void TimerAutoDisposeTest()
+    {
+        Debug.Log("before create timer");
+        using (PlayerLoopTimer timer = PlayerLoopTimer.StartNew(TimeSpan.FromSeconds(1), true, DelayType.RealTime, PlayerLoopTiming.Update,
+            new CancellationToken(), (state) => { Debug.Log(state); }, "tiktok"))
+        {
+            Debug.Log("before delay timer");
+            await STask.Delay(5000);
+            Debug.Log("after delay timer");
+        }
+        Debug.Log("after create timer");
     }
 
     private void Start()
