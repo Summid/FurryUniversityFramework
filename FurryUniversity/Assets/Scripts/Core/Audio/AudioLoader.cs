@@ -91,9 +91,11 @@ namespace SFramework.Core.Audio
 
         private class CommonSFXLoader
         {
+            private AssetBundleVO commonSFXBundleVO;
+
             public async STask LoadCommonSFXBundleAsync()
             {
-                await AssetBundleManager.LoadAssetBundleAsync(StaticVariables.AudioCommonSFXBundleName);
+                this.commonSFXBundleVO = await AssetBundleManager.LoadAssetBundleAsync(StaticVariables.AudioCommonSFXBundleName);
             }
 
             public async STask<AudioClip> LoadAudioClipAsync(string assetName)
@@ -101,13 +103,13 @@ namespace SFramework.Core.Audio
                 if (string.IsNullOrEmpty(assetName))
                     return default;
 
-                return await AssetBundleManager.LoadAssetInAssetBundleAsync<AudioClip>(assetName, StaticVariables.AudioCommonSFXBundleName);
+                return await this.commonSFXBundleVO.Content.LoadAssetAsync(assetName) as AudioClip;
             }
         }
 
         private class SFXGroupAssetLoader
         {
-            private HashSet<string> loadedBundles = new HashSet<string>();
+            private Dictionary<string,AssetBundleVO> loadedBundles = new Dictionary<string,AssetBundleVO>();
 
             public async STask<AudioClip> LoadAudioClipAsync(string assetName)
             {
@@ -115,18 +117,25 @@ namespace SFramework.Core.Audio
                 if (bundleName == null)
                     return default;
 
-                if (!this.loadedBundles.Contains(bundleName))
+                if (!this.loadedBundles.TryGetValue(bundleName, out AssetBundleVO vo))
                 {
-                    await AssetBundleManager.LoadAssetBundleAsync(bundleName);
-                    this.loadedBundles.Add(bundleName);
+                    vo = await AssetBundleManager.LoadAssetBundleAsync(bundleName);
+                    this.loadedBundles.Add(bundleName, vo);
                 }
 
-                return await AssetBundleManager.LoadAssetInAssetBundleAsync<AudioClip>(assetName, bundleName);
+                if (vo != null)
+                {
+                    return await vo.Content.LoadAssetAsync(assetName) as AudioClip;
+                }
+                else
+                {
+                    throw new System.Exception($"未找到名为 {assetName} 的音频文件");
+                }
             }
 
             public async STask DisposeLoadedGroups()
             {
-                foreach (string bundleName in this.loadedBundles)
+                foreach (string bundleName in this.loadedBundles.Keys)
                 {
                     await AssetBundleManager.UnloadAssetBundleAsync(bundleName);
                 }

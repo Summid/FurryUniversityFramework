@@ -38,7 +38,7 @@ namespace SFramework.Core.GameManagers
                 return null;
 
             float volume = 1f;//暂时默认已最大音量播放
-            string clip = audioName;//后期可能会考虑将audioName换成整形id，因此这里换一下
+            string clip = audioName;//后期可能会考虑将audioName换成整型id，因此这里换一下
             AudioSource audioSource = await AudioManagerCore.PlaySoundAsync(clip, loop);
             if (audioSource == null)
             {

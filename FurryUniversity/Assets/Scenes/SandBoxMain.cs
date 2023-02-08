@@ -117,5 +117,10 @@ public class SandBoxMain : MonoBehaviour
         {
             AssetBundleManager.Dump();
         }
+
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            AssetBundleManager.SweepAssetBundleVO();
+        }
     }
 }

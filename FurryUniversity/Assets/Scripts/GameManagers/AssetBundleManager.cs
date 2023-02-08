@@ -233,7 +233,7 @@ namespace SFramework.Core.GameManagers
     {
         internal static IAssetBundleLoader AssetBundleLoader = new DefaultAssetBundleLoader();
 
-        private static readonly Dictionary<string,AssetBundleVO> bundleVOMap = new Dictionary<string,AssetBundleVO>();
+        private static Dictionary<string,AssetBundleVO> bundleVOMap = new Dictionary<string,AssetBundleVO>();
 
         private static AssetBundleManifest manifest;
 
@@ -264,7 +264,7 @@ namespace SFramework.Core.GameManagers
         }
 
         /// <summary>
-        /// 只加载AB
+        /// 只加载AB；会计算引用计数
         /// </summary>
         /// <param name="bundleName"></param>
         /// <returns></returns>
@@ -281,7 +281,7 @@ namespace SFramework.Core.GameManagers
         }
 
         /// <summary>
-        /// 从AB中加载资源，若AB未被加载，则先加载AB
+        /// 从AB中加载资源，若AB未被加载，则先加载AB；会计算引用计数
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="assetName">资源名</param>
@@ -353,6 +353,16 @@ namespace SFramework.Core.GameManagers
             }
 
             return bundleVOMap[bundleName];
+        }
+
+        /// <summary>
+        /// 清理无引用的ABVO
+        /// </summary>
+        public static void SweepAssetBundleVO()
+        {
+            bundleVOMap = bundleVOMap.Where(kvp => kvp.Value.RefCount > 0 || kvp.Key == StaticVariables.AssetBundlesFolderName)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            UnityEngine.Debug.Log($"Sweep assetbundlevo data");
         }
 
 #if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
