@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.U2D;
 using UnityEngine.UI;
 
@@ -23,6 +24,8 @@ public class SandBoxMain : MonoBehaviour
     public Button timerTestButton;
     private CancellationTokenSource timerCTS;
     private PlayerLoopTimer timer;
+
+    public Button loadSceneTestButton;
 
     private void Awake()
     {
@@ -79,6 +82,12 @@ public class SandBoxMain : MonoBehaviour
             //    this.timer = null;
             //}
             this.TimerAutoDisposeTest();
+        });
+
+        this.loadSceneTestButton.onClick.AddListener(async () =>
+        {
+            var progress = Progress.Create<float>(x => Debug.Log(x));
+            await SceneManager.LoadSceneAsync("TestLoadScene").ToSTask(progress: progress);
         });
     }
 
