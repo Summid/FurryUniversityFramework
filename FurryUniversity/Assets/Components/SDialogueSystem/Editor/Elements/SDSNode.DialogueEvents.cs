@@ -346,7 +346,7 @@ namespace SDS.Elements
                 case SDSDialogueBackgroundImageEventOperations.Hide:
                     int hideParamIndex = (int)SDSDialogueEventParameterEnum.BGImageOperations.HideBGImageTransitionTime;
                     string currentHideConsumeTime = eventVO.eventData.GetParameterByIndex(hideParamIndex);
-                    this.RefreshFloatValueElements(eventVO, currentHideConsumeTime, "显示所花时间（秒）", hideParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentHideConsumeTime, "隐藏所花时间（秒）", hideParamIndex);
                     break;
             }
             this.RefreshEventArea();

@@ -46,7 +46,7 @@ namespace SFramework.Threading.Tasks
             {
                 if (this.source == null)
                     return STaskStatus.Succeeded;
-                return this.source.GetStatus(token);
+                return this.source.GetStatus(this.token);
             }
         }
 
