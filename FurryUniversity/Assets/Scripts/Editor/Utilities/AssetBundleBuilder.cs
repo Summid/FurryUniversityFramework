@@ -31,6 +31,9 @@ namespace SFramework.Utilities.Editor
             UpdateAssetBundleTagsHandler(StaticVariables.UIViewPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIViewBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIItemPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIItemBundleExtension);
 
+            UpdateAssetBundleTagsHandler(StaticVariables.VideoPath, StaticVariables.MP4Extension, StaticVariables.VideoBundleExtension);
+            UpdateAssetBundleTagsHandler(StaticVariables.TexturePath, StaticVariables.RenderTextureExtension, StaticVariables.RenderTextureBundleExtension);
+
             UpdateSpritesAssetBundleTagsHandler();
         }
 
@@ -45,7 +48,7 @@ namespace SFramework.Utilities.Editor
                 foreach (var file in fileSystemInfos)
                 {
                     EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{file.Name}", index++ / fileSystemInfos.Length);
-                    if (Path.GetExtension(file.Name).ToLower() != assetExtension)
+                    if (Path.GetExtension(file.Name).ToLower() != assetExtension.ToLower())
                         continue;
                     var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
                     if (importer != null)

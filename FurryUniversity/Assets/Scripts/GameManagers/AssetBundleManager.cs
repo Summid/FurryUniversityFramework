@@ -421,7 +421,6 @@ namespace SFramework.Core.GameManagers
         {
             UnityEngine.Debug.Log($"load from {(fromAB ? "AssetBundle" : "AssetDataBase")}, assetPath is {assetPath}");
         }
-
 #if UNITY_EDITOR
         public static void Dump()
         {

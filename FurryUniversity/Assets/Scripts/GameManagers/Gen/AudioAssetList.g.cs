@@ -9,9 +9,6 @@ namespace SFramework.Core.Audio
         public static Dictionary<string, string> sfxGroupAssetInfo = new Dictionary<string, string>();
         public static void Init()
         {
-            audioAssetInfo.Add("Idonotdeserve",AudioLoader.AudioAssetType.BGM);
-            audioAssetInfo.Add("Whenlovegoeswithflow",AudioLoader.AudioAssetType.BGM);
-            audioAssetInfo.Add("Whereisurhug",AudioLoader.AudioAssetType.BGM);
             audioAssetInfo.Add("ui_effect_14",AudioLoader.AudioAssetType.CommonSFX);
             audioAssetInfo.Add("ui_effect_5",AudioLoader.AudioAssetType.CommonSFX);
             audioAssetInfo.Add("ui_effect_6",AudioLoader.AudioAssetType.CommonSFX);

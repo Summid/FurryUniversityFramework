@@ -47,6 +47,14 @@ namespace SFramework.Utilities
         public static readonly string UIItemPrefabsPath = $"{BundlesPath}/Prefabs/UIItemTemplate";
         public static readonly string UIItemGenerateCodeFileName = "UIItemBase.g.cs";
 
+        public static readonly string MP4Extension = ".mp4";
+        public static readonly string VideoBundleExtension = "_video";
+        public static readonly string VideoPath = $"{BundlesPath}/Videos";
+
+        public static readonly string RenderTextureExtension = ".renderTexture";
+        public static readonly string RenderTextureBundleExtension = "_renderTexture";
+        public static readonly string TexturePath = $"{BundlesPath}/Textures";
+
         /// <summary> UIList清单文件名称 </summary>
         public static readonly string UIListName = "uiinfolist.asset";
         /// <summary> UIList清单Bundle名称 </summary>

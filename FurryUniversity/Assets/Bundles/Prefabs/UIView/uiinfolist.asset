@@ -18,20 +18,7 @@ MonoBehaviour:
     ViewType: 0
     ViewClassName: SFramework.Core.UI.MainView
     IsDisableNavigatePage: 0
-  - ViewAssetBundleName: testuiprefab_uiview
-    ViewAssetName: TestUIPrefab
-    ViewType: 1
-    ViewClassName: SFramework.Core.UI.TestUIPrefab
-    IsDisableNavigatePage: 0
-  - ViewAssetBundleName: testuiprefab2_uiview
-    ViewAssetName: TestUIPrefab2
-    ViewType: 0
-    ViewClassName: SFramework.Core.UI.TestUIPrefab2
-    IsDisableNavigatePage: 0
   UIItemInfo:
-  - UIItemAssetBundleName: testuiitem_uiitem
-    UIItemAssetName: TestUIItem
-    UIItemClassName: SFramework.Core.UI.TestUIItem
   - UIItemAssetBundleName: viewmask_uiitem
     UIItemAssetName: ViewMask
     UIItemClassName: SFramework.Core.UI.ViewMask

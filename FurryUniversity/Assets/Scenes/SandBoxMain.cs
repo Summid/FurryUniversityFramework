@@ -29,27 +29,27 @@ public class SandBoxMain : MonoBehaviour
 
     private void Awake()
     {
-        this.discipleshipButton.onClick.AddListener(() =>
-        {
-            this.showImage.SetSpriteAsync(UISpriteManager.Discipleship.Discipleship1).Forget();
-        });
+        //this.discipleshipButton.onClick.AddListener(() =>
+        //{
+        //    this.showImage.SetSpriteAsync(UISpriteManager.Discipleship.Discipleship1).Forget();
+        //});
 
-        this.dualityButton.onClick.AddListener(() =>
-        {
-            this.showImage.SetSpriteAsync(UISpriteManager.Duality.Duality1).Forget();
-        });
+        //this.dualityButton.onClick.AddListener(() =>
+        //{
+        //    this.showImage.SetSpriteAsync(UISpriteManager.Duality.Duality1).Forget();
+        //});
 
-        this.kingsFallButton.onClick.AddListener(() =>
-        {
-            this.showImage.SetSpriteAsync(UISpriteManager.KingsFall.KingsFall1).Forget();
-        });
+        //this.kingsFallButton.onClick.AddListener(() =>
+        //{
+        //    this.showImage.SetSpriteAsync(UISpriteManager.KingsFall.KingsFall1).Forget();
+        //});
 
-        this.clearButton.onClick.AddListener(() =>
+        this.clearButton?.onClick.AddListener(() =>
         {
             this.showImage.UnloadSprite();
         });
 
-        this.updateTestButton.onClick.AddListener(() =>
+        this.updateTestButton?.onClick.AddListener(() =>
         {
             if (this.cts == null)
             {
@@ -67,7 +67,7 @@ public class SandBoxMain : MonoBehaviour
             }
         });
 
-        this.timerTestButton.onClick.AddListener(() =>
+        this.timerTestButton?.onClick.AddListener(() =>
         {
             //if (this.timer == null)
             //{
@@ -84,7 +84,7 @@ public class SandBoxMain : MonoBehaviour
             this.TimerAutoDisposeTest();
         });
 
-        this.loadSceneTestButton.onClick.AddListener(async () =>
+        this.loadSceneTestButton?.onClick.AddListener(async () =>
         {
             var progress = Progress.Create<float>(x => Debug.Log(x));
             await SceneManager.LoadSceneAsync("TestLoadScene").ToSTask(progress: progress);
@@ -122,10 +122,12 @@ public class SandBoxMain : MonoBehaviour
         //    GC.Collect();
         //}
 
+#if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.D))
         {
             AssetBundleManager.Dump();
         }
+#endif
 
         if (Input.GetKeyDown(KeyCode.S))
         {
