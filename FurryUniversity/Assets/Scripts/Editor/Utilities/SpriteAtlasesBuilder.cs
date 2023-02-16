@@ -85,7 +85,8 @@ namespace SFramework.Utilities.Editor
             string atlasName = Path.GetFileNameWithoutExtension(folderFullPath);
             if (!atlasInfos.ContainsKey(Path.GetFileNameWithoutExtension(atlasName)))
             {
-                SpriteAtlas atlas = SetAtlasSettings();
+                bool alpha = !atlasName.Contains("_NA");
+                SpriteAtlas atlas = SetAtlasSettings(alpha);
                 string finalPath = StaticVariables.UISpriteAtalasesPath + $"/{directoryInfo.Name}" + ".spriteatlas";
                 AssetDatabase.CreateAsset(atlas, finalPath);
                 atlasInfos.Add(atlasName, atlas);
@@ -98,9 +99,11 @@ namespace SFramework.Utilities.Editor
 
         }
 
-        private static SpriteAtlas SetAtlasSettings()
+        private static SpriteAtlas SetAtlasSettings(bool alpha)
         {
             SpriteAtlas atlas = new SpriteAtlas();
+
+            atlas.SetIncludeInBuild(true);
 
             SpriteAtlasPackingSettings packingSettings = new SpriteAtlasPackingSettings()
             {
@@ -120,15 +123,27 @@ namespace SFramework.Utilities.Editor
             };
             atlas.SetTextureSettings(textureSettings);
 
-            TextureImporterPlatformSettings platformSettings = new TextureImporterPlatformSettings()
+            TextureImporterPlatformSettings standalonePlatformSettings = new TextureImporterPlatformSettings()
             {
+                name = "Standalone",
+                overridden = true,
                 maxTextureSize = 2048,
-                format = TextureImporterFormat.Automatic,
-                crunchedCompression = true,
+                format = alpha ? TextureImporterFormat.DXT5 : TextureImporterFormat.DXT1,
+                //crunchedCompression = true,
                 textureCompression = TextureImporterCompression.Compressed,
-                compressionQuality = 50,
+                //compressionQuality = 50,
             };
-            atlas.SetPlatformSettings(platformSettings);
+            atlas.SetPlatformSettings(standalonePlatformSettings);
+
+            TextureImporterPlatformSettings androidPlatformSettings = new TextureImporterPlatformSettings()
+            {
+                name = "Android",
+                overridden = true,
+                maxTextureSize = 2048,
+                format = alpha ? TextureImporterFormat.ASTC_6x6 : TextureImporterFormat.ASTC_6x6,
+                textureCompression = TextureImporterCompression.Compressed,
+            };
+            atlas.SetPlatformSettings(androidPlatformSettings);
 
             return atlas;
         }
