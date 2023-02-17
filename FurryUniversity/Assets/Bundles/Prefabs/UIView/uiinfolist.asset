@@ -18,6 +18,11 @@ MonoBehaviour:
     ViewType: 0
     ViewClassName: SFramework.Core.UI.MainView
     IsDisableNavigatePage: 0
+  - ViewAssetBundleName: loginview_uiview
+    ViewAssetName: LoginView
+    ViewType: 0
+    ViewClassName: SFramework.Core.UI.LoginView
+    IsDisableNavigatePage: 0
   UIItemInfo:
   - UIItemAssetBundleName: viewmask_uiitem
     UIItemAssetName: ViewMask

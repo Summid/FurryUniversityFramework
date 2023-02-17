@@ -11,6 +11,7 @@ namespace SFramework.Core.UI
     {
         protected override void OnAwake()
         {
+            Debug.Log("in MainView OnAwake");
         }
 
         protected override void OnShow()

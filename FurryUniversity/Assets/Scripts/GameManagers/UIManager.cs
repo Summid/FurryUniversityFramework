@@ -72,18 +72,25 @@ namespace SFramework.Core.GameManagers
 
             //TODO 刘海屏设备清单加载
 
-            //默认显示主界面
-            this.ShowUIAsync<MainView>().Forget();
+            //默认显示界面
+            this.ShowUIAsync<LoginView>().Forget();
         }
 
         #region 外部接口
-        public async STask<ViewInstance> ShowUIAsync<ViewInstance>() where ViewInstance : UIViewBase, new()
+        /// <summary>
+        /// 显示UI View
+        /// </summary>
+        /// <typeparam name="ViewInstance"></typeparam>
+        /// <param name="showImmediately">为false时，加载完毕资源后不会立即显示，会调用Awake但不会调用Show</param>
+        /// <param name="progress">加载完成后会调用Report(0.8)</param>
+        /// <returns></returns>
+        public async STask<ViewInstance> ShowUIAsync<ViewInstance>(bool showImmediately = true, IProgress<float> progress = null) where ViewInstance : UIViewBase, new()
         {
             if (!this.isInited)
                 return null;
 
             Type viewType = typeof(ViewInstance);
-            return await this.ShowUIInternalAsync(viewType) as ViewInstance;
+            return await this.ShowUIInternalAsync(viewType, showImmediately, progress) as ViewInstance;
         }
 
         public UIViewInfo GetUIViewInfo(Type uiObjectType)
@@ -194,7 +201,7 @@ namespace SFramework.Core.GameManagers
         #endregion
 
         #region 内部方法
-        private async STask<UIViewBase> ShowUIInternalAsync(Type viewType)
+        private async STask<UIViewBase> ShowUIInternalAsync(Type viewType, bool showImmediately = true, IProgress<float> progress = null)
         {
             UIViewBase view = null;
 
@@ -213,7 +220,7 @@ namespace SFramework.Core.GameManagers
                 {
                     if (targetUIInfo.ViewAssetBundleName != null && targetUIInfo.ViewAssetName != null)
                     {
-                        view = await this.InitViewAsync(targetUIInfo.ViewAssetBundleName, targetUIInfo.ViewAssetName, viewType, targetUIInfo.ViewType);
+                        view = await this.InitViewAsync(targetUIInfo.ViewAssetBundleName, targetUIInfo.ViewAssetName, viewType, targetUIInfo.ViewType, progress);
                     }
                 }
             }
@@ -222,14 +229,17 @@ namespace SFramework.Core.GameManagers
                 view.BasedPage = this.navigateQueue[this.navigateQueue.Count - 1].Name;
             }
             this.uiInstances[viewType].ViewInstance.gameObject.transform.SetAsFirstSibling();
-            view.Show();
+            if (showImmediately)
+                view.Show();
 
             return view;
         }
 
-        private async STask<UIViewBase> InitViewAsync(string viewBundleName, string viewPrefabName, Type viewType, EnumUIType uiType)
+        private async STask<UIViewBase> InitViewAsync(string viewBundleName, string viewPrefabName, Type viewType, EnumUIType uiType, IProgress<float> progress = null)
         {
+            progress?.Report(0.1f);
             GameObject bundleGO = await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(viewPrefabName, viewBundleName);
+            progress?.Report(0.5f);
             GameObject gameObject = UnityEngine.Object.Instantiate(bundleGO);
             UIViewBase view = Activator.CreateInstance(viewType) as UIViewBase;
             view.UIType = uiType;
@@ -243,6 +253,7 @@ namespace SFramework.Core.GameManagers
 
             gameObject.SetActive(false);
             await view.AwakeAsync(gameObject);
+            progress?.Report(0.8f);
 
             return view;
         }
