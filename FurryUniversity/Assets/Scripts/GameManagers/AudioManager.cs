@@ -49,7 +49,7 @@ namespace SFramework.Core.GameManagers
             return audioSource;
         }
 
-        public async STask PlayBGMAsync(string audioName)
+        public async STask<AudioSource> PlayBGMAsync(string audioName)
         {
             while (selfInstance == null)
                 await STask.NextFrame();
@@ -63,11 +63,13 @@ namespace SFramework.Core.GameManagers
                 if (this.musicAudio == null)
                 {
                     Debug.LogError($"Audio {audioName} not found");
-                    return;
+                    return null;
                 }
 
                 this.musicAudio.volume = this.musicVolume * volume;
+                return this.musicAudio;
             }
+            return null;
         }
 
         public async STaskVoid PauseBGM()

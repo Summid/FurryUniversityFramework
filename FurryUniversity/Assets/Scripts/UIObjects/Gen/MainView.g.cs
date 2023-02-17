@@ -5,6 +5,10 @@ namespace SFramework.Core.UI
 {
     public partial class MainView
     {
+        [UIFieldInit("BG")]
+        public UnityEngine.UI.RawImage BG_RawImage;
+        [UIFieldInit("BG")]
+        public UnityEngine.Video.VideoPlayer BG_VideoPlayer;
 
     }
 }

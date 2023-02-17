@@ -13,15 +13,15 @@ MonoBehaviour:
   m_Name: uiinfolist
   m_EditorClassIdentifier: 
   UIList:
-  - ViewAssetBundleName: mainview_uiview
-    ViewAssetName: MainView
-    ViewType: 0
-    ViewClassName: SFramework.Core.UI.MainView
-    IsDisableNavigatePage: 0
   - ViewAssetBundleName: loginview_uiview
     ViewAssetName: LoginView
     ViewType: 0
     ViewClassName: SFramework.Core.UI.LoginView
+    IsDisableNavigatePage: 0
+  - ViewAssetBundleName: mainview_uiview
+    ViewAssetName: MainView
+    ViewType: 0
+    ViewClassName: SFramework.Core.UI.MainView
     IsDisableNavigatePage: 0
   UIItemInfo:
   - UIItemAssetBundleName: viewmask_uiitem
