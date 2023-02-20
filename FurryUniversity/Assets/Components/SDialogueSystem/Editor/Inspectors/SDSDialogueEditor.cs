@@ -23,6 +23,8 @@ namespace SDS.Inspectors
         private SerializedProperty selectedDialogueGroupIndexProperty;
         private SerializedProperty selectedDialogueIndexProperty;
 
+        private SerializedProperty includedContainersProperty;
+
         private void OnEnable()
         {
             this.dialogueContainerProperty = this.serializedObject.FindProperty("dialogueContainer");
@@ -34,6 +36,8 @@ namespace SDS.Inspectors
 
             this.selectedDialogueGroupIndexProperty = this.serializedObject.FindProperty("selectedDialogueGroupIndex");
             this.selectedDialogueIndexProperty = this.serializedObject.FindProperty("selectedDialogueIndex");
+
+            this.includedContainersProperty = this.serializedObject.FindProperty("includedContainers");
         }
 
         public override void OnInspectorGUI()
@@ -103,7 +107,8 @@ namespace SDS.Inspectors
                 this.DrawDialogueArea(dialogueNames, dialogueFolderPath);
             }
 
-
+            SDSInspectorUtility.DrawSpace();
+            this.DrawIncludedContainersArea();
             this.serializedObject.ApplyModifiedProperties();
         }
 
@@ -167,13 +172,20 @@ namespace SDS.Inspectors
             SDSInspectorUtility.DrawDisabledFields(this.dialogueProperty.DrawPropertyField);
         }
 
-        private void StopDrawing(string reason,MessageType messageType = MessageType.Info)
+        private void StopDrawing(string reason, MessageType messageType = MessageType.Info)
         {
             SDSInspectorUtility.DrawHelpBox(reason, messageType);
             SDSInspectorUtility.DrawSpace();
             SDSInspectorUtility.DrawHelpBox("You need to select a Dialogue for this componet to work properly at Runtime", MessageType.Warning);
 
             this.serializedObject.ApplyModifiedProperties();
+        }
+
+        private void DrawIncludedContainersArea()
+        {
+            SDSInspectorUtility.DrawHeader("Pick Included Containers");
+
+            SDSInspectorUtility.DrawPropertyField(this.includedContainersProperty);
         }
 
         #endregion

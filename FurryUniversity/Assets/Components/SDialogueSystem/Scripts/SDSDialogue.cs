@@ -1,3 +1,4 @@
+using SDS.Data;
 using SDS.ScriptableObjects;
 using System.Collections;
 using System.Collections.Generic;
@@ -20,6 +21,8 @@ namespace SDS
         [SerializeField] private int selectedDialogueGroupIndex;
         [SerializeField] private int selectedDialogueIndex;
 
+        [SerializeField] private List<SDSDialogueContainerSO> includedContainers;
+
         public SDSDialogueContainerSO DialogueContainer { get => this.dialogueContainer; }
 
         public SDSDialogueSO CurrentDialogue => this.dialogue;
@@ -31,7 +34,7 @@ namespace SDS
             DontDestroyOnLoad(this);
         }
 
-        public bool CheckCurrentDialogueHasNextNode()
+        public bool CurrentDialogueHasNextNode()
         {
             if (this.dialogue.Contents.Count > this.CurrentIndexOfSentenceInDialogue + 1)
             {
@@ -77,6 +80,11 @@ namespace SDS
 
 
             return true;
+        }
+
+        public SDSDialogueContentData GetCurrentDialogueData()
+        {
+            return this.dialogue.Contents[this.CurrentIndexOfSentenceInDialogue];
         }
 
         public bool ChooseDialogueBranch(int branchIndex)

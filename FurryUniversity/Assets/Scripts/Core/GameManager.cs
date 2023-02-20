@@ -1,6 +1,8 @@
+using SDS;
 using SFramework.Utilities;
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace SFramework.Core.GameManagers
 {
@@ -44,6 +46,17 @@ namespace SFramework.Core.GameManagers
             else
             {
                 return null;
+            }
+        }
+
+        private SDSDialogue dialogueSystem;
+        public SDSDialogue DialogueSystem
+        {
+            get
+            {
+                if (this.dialogueSystem == null)
+                    this.dialogueSystem = GameObject.Find("DialoguesContainer").GetComponent<SDSDialogue>();
+                return this.dialogueSystem;
             }
         }
     }
