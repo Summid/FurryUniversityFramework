@@ -9,6 +9,12 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.RawImage BG_RawImage;
         [UIFieldInit("BG")]
         public UnityEngine.Video.VideoPlayer BG_VideoPlayer;
+        [UIFieldInit("MainButtons")]
+        public UnityEngine.GameObject MainButtons;
+        [UIFieldInit("SelectChapterButton")]
+        public UnityEngine.UI.Button SelectChapterButton_Button;
+        [UIFieldInit("SelectChapterButton")]
+        public TMPro.TextMeshProUGUI SelectChapterButton_TextMeshProUGUI;
 
     }
 }
