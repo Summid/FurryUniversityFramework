@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d2f7a74bd2bcbfe40aaa3fa0aa9045ee, type: 3}
-  m_Name: Chapter1
+  m_Name: Chapter2
   m_EditorClassIdentifier: 
-  <FileName>k__BackingField: Chapter1
+  <FileName>k__BackingField: Chapter2
   <Groups>k__BackingField:
   - <ID>k__BackingField: a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
     <Name>k__BackingField: DialogueGroup-a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826

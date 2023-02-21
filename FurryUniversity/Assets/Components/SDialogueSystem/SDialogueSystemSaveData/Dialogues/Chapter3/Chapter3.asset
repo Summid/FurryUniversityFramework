@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5664ee5a8609aed46a34cd8b96aff185, type: 3}
-  m_Name: Chapter1
+  m_Name: Chapter3
   m_EditorClassIdentifier: 
-  <FileName>k__BackingField: Chapter1
+  <FileName>k__BackingField: Chapter3
   <DialogueGroups>k__BackingField:
     list:
-    - Key: {fileID: 11400000, guid: 58b914fdd87ce9244ba11dec4e4e08b3, type: 2}
+    - Key: {fileID: 11400000, guid: b7dd3ba7352d5624a8fb1f25bcdb3226, type: 2}
       Value:
-      - {fileID: 11400000, guid: 895ff5f48e0393b47a8bb9e5f1f6246d, type: 2}
-      - {fileID: 11400000, guid: 4aab3f8969de1c74e8b6d0a6716a0f5c, type: 2}
+      - {fileID: 11400000, guid: 27ddee063c641c24a877ce83e1ee4d98, type: 2}
+      - {fileID: 11400000, guid: 209af4b0462f22c4c921b5d3f2ff9d83, type: 2}
   <UnGroupedDialogues>k__BackingField: []

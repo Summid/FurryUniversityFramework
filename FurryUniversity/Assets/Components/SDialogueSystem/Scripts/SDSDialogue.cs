@@ -22,12 +22,14 @@ namespace SDS
         [SerializeField] private int selectedDialogueIndex;
 
         [SerializeField] private List<SDSDialogueContainerSO> includedContainers;
+        public List<SDSDialogueContainerSO> IncludedContainers { get => this.includedContainers; }
 
         public SDSDialogueContainerSO DialogueContainer { get => this.dialogueContainer; }
 
         public SDSDialogueSO CurrentDialogue => this.dialogue;
 
         public int CurrentIndexOfSentenceInDialogue = 0;
+
 
         private void Awake()
         {
