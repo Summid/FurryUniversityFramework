@@ -22,6 +22,7 @@ namespace SFramework.Core.UI
 
         private ReferenceCollector rc;
         private Dictionary<UIObject, GameObject> childrenUIList = new Dictionary<UIObject, GameObject>();
+        public Dictionary<UIObject, GameObject> ChildrenUIList => this.childrenUIList;
         private UIManager UIManager { get { return GameManager.Instance.UIManager; } }
 
         private CancellationTokenSource updateCTS;
@@ -307,7 +308,7 @@ namespace SFramework.Core.UI
         }
 
         /// <summary>
-        /// 激活子UIItem对象
+        /// 激活子UIItem对象脚本
         /// </summary>
         /// <param name="selector"></param>
         /// <param name="itemType"></param>
@@ -403,6 +404,26 @@ namespace SFramework.Core.UI
                 }
             }
             return default;
+        }
+
+        /// <summary>
+        /// 给GameObject添加UIItem脚本
+        /// </summary>
+        /// <typeparam name="TUIItem"></typeparam>
+        /// <param name="go"></param>
+        /// <returns></returns>
+        public TUIItem AddUIItemOnGameObject<TUIItem>(GameObject go) where TUIItem : UIItemBase, new()
+        {
+            foreach (var pair in this.childrenUIList)
+            {
+                if (pair.Value == go)
+                    return pair.Key as TUIItem;
+            }
+
+            TUIItem itemObj = Activator.CreateInstance<TUIItem>();
+            this.childrenUIList.Add(itemObj, go);
+            itemObj.Awake(go);
+            return itemObj;
         }
 
         protected void DisposeChildItem<UIItem>(UIItem item) where UIItem : UIItemBase, new()
