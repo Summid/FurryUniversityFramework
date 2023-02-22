@@ -24,6 +24,9 @@ MonoBehaviour:
     ViewClassName: SFramework.Core.UI.MainView
     IsDisableNavigatePage: 0
   UIItemInfo:
+  - UIItemAssetBundleName: mainviewchapterbutton_uiitem
+    UIItemAssetName: MainViewChapterButton
+    UIItemClassName: SFramework.Core.UI.MainViewChapterButon
   - UIItemAssetBundleName: viewmask_uiitem
     UIItemAssetName: ViewMask
     UIItemClassName: SFramework.Core.UI.ViewMask

@@ -8,6 +8,7 @@ using SFramework.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SFramework.Core.UI
@@ -66,10 +67,17 @@ namespace SFramework.Core.UI
 
         private void OnClickSelectChapter()
         {
-            foreach (var dialogue in this.dialogueSystem.IncludedContainers)
+            //foreach (var dialogue in this.dialogueSystem.IncludedContainers)
+            //{
+            //    Debug.Log($"current included dialogue: {dialogue.FileName}");
+            //}
+
+            this.ChapterButtonsPool.UpdateList<string, MainViewChapterButon>(this.dialogueSystem.IncludedContainers.Select(dialogue =>
             {
-                Debug.Log($"current included dialogue: {dialogue.FileName}");
-            }
+                return dialogue.FileName;
+            }).ToList());
+            this.ChapterButtonsPool.gameObject.SetActive(true);
+            this.MainButtons.SetActive(false);
         }
 
         protected override void OnHide()
