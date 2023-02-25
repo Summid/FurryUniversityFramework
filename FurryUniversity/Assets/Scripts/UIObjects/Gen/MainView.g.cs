@@ -16,7 +16,9 @@ namespace SFramework.Core.UI
         [UIFieldInit("SelectChapterButton")]
         public TMPro.TextMeshProUGUI SelectChapterButton_TextMeshProUGUI;
         [UIFieldInit("ChapterButtonsPool")]
-        public SFramework.Core.UI.UIItemPool ChapterButtonsPool;
+        public SFramework.Core.UI.UIItemPool ChapterButtonsPool_UIItemPool;
+        [UIFieldInit("ChapterButtonsPool")]
+        public UnityEngine.UI.VerticalLayoutGroup ChapterButtonsPool_VerticalLayoutGroup;
 
     }
 }

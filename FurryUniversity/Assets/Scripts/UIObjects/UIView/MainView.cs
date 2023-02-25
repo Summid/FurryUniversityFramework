@@ -72,11 +72,11 @@ namespace SFramework.Core.UI
             //    Debug.Log($"current included dialogue: {dialogue.FileName}");
             //}
 
-            this.ChapterButtonsPool.UpdateList<string, MainViewChapterButon>(this.dialogueSystem.IncludedContainers.Select(dialogue =>
+            this.ChapterButtonsPool_UIItemPool.UpdateList<string, MainViewChapterButon>(this.dialogueSystem.IncludedContainers.Select(dialogue =>
             {
                 return dialogue.FileName;
             }).ToList());
-            this.ChapterButtonsPool.gameObject.SetActive(true);
+            this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(true);
             this.MainButtons.SetActive(false);
         }
 

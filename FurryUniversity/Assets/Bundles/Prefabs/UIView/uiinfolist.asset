@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: uiinfolist
   m_EditorClassIdentifier: 
   UIList:
+  - ViewAssetBundleName: dialogueview_uiview
+    ViewAssetName: DialogueView
+    ViewType: 0
+    ViewClassName: SFramework.Core.UI.DialogueView
+    IsDisableNavigatePage: 0
   - ViewAssetBundleName: loginview_uiview
     ViewAssetName: LoginView
     ViewType: 0
