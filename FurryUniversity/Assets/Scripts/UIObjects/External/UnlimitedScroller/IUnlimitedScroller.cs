@@ -21,22 +21,22 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         int RowCount { get; }
 
         /// <summary>
-        /// 可见的首行
+        /// 可见的首行的索引
         /// </summary>
         int FirstRow { get; }
 
         /// <summary>
-        /// 可见的最后一行
+        /// 可见的最后一行的索引
         /// </summary>
         int LastRow { get; }
 
         /// <summary>
-        /// 可见的首列
+        /// 可见的首列的索引
         /// </summary>
         int FirstColumn { get; }
 
         /// <summary>
-        /// 可见的最后一列
+        /// 可见的最后一列的索引
         /// </summary>
         int LastColumn { get; }
 

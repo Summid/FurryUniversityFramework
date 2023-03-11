@@ -23,7 +23,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
     internal struct Cell
     {
-        public int number;
+        public int index;
         public GameObject go;
     }
 
