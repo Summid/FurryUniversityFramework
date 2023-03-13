@@ -14,7 +14,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         Right
     }
 
-    public enum Aligment
+    public enum Alignment
     {
         Left,
         Center,
