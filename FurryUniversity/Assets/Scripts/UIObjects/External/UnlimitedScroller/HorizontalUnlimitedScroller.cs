@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace SFramework.Core.UI.External.UnlimitedScroller
 {
-    public class VerticalUnlimitedScroller : VerticalLayoutGroup, IUnlimitedScroller
+    public class HorizontalUnlimitedScroller : HorizontalLayoutGroup, IUnlimitedScroller
     {
         #region Properties
 
@@ -16,37 +16,34 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         public bool Generated { get; private set; }
 
         /// <inheritdoc cref="IUnlimitedScroller.RowCount"/>
-        public int RowCount => this.totalCount;
+        public int RowCount => 1;//horizontal scroller 行数固定为1
 
         /// <inheritdoc cref="IUnlimitedScroller.FirstRow"/>
-        public int FirstRow
-        {
-            get
-            {
-                //锚点为(0,1)，若contentTrans高度超过parentTrans，只计算超出部分；若没超过，则肯定为0
-                int row = (int)((this.contentTrans.anchoredPosition.y - this.offsetPadding.top) / (this.cellY + this.spacingY));
-                return Mathf.Clamp(row, 0, this.RowCount - 1);
-            }
-        }
+        public int FirstRow => 0;
 
         /// <inheritdoc cref="IUnlimitedScroller.LastRow"/>
-        public int LastRow
+        public int LastRow => 0;
+
+        /// <inheritdoc cref="IUnlimitedScroller.FirstColumn"/>
+        public int FirstColumn
         {
             get
             {
-                //锚点为(0,1)，若contentTrans高度超过parentTrans，只计算viewport高度加超出部分
-                int row = (int)((this.contentTrans.anchoredPosition.y + this.ViewportHeight - this.offsetPadding.top) / (this.cellY + this.spacingY));//锚点为(0,1)
-                return Mathf.Clamp(row, 0, this.RowCount - 1);
+                //锚点为(0,1)，pivot为(0,1)，若contentTrans宽度超过parentTrans，只计算超出部分；若没超过，则肯定为0
+                int col = (int)((-this.contentTrans.anchoredPosition.x - this.offsetPadding.left) / (this.cellX + this.spacingX));
+                return Mathf.Clamp(col, 0, this.CellPerRow - 1);
             }
         }
 
-        /// <inheritdoc cref="IUnlimitedScroller.FirstColumn"/>
-        /// 永远只有1列
-        public int FirstColumn => 0;
-
         /// <inheritdoc cref="IUnlimitedScroller.LastColumn"/>
-        /// 永远只有1列
-        public int LastColumn => 0;
+        public int LastColumn
+        {
+            get
+            {
+                int col = (int)((-this.contentTrans.anchoredPosition.x + this.ViewportWidth - this.offsetPadding.left) / (this.cellX + this.spacingX));
+                return Mathf.Clamp(col, 0, this.CellPerRow - 1);
+            }
+        }
 
         /// <inheritdoc cref="IUnlimitedScroller.ContentHeight"/>
         public float ContentHeight
@@ -68,8 +65,8 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         /// <inheritdoc cref="IUnlimitedScroller.ViewportWidth"/>
         public float ViewportWidth => this.viewportRectTransform.rect.width;
 
-        /// <inheritdoc cref="IUnlimitedScroller.CellPerRow"/>
-        public int CellPerRow => 1;
+        /// <inheritdoc cref="IUnlimitedScroller.ViewportWidth"/>
+        public int CellPerRow => this.totalCount;
 
         #endregion
 
@@ -78,7 +75,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         [Tooltip("Max size of cached cell")]
         public uint cacheSize;
 
-        [Tooltip("The ScrollRect component on ScrollView")]
+        [Tooltip("The scrollRect component on ScrollView")]
         public ScrollRect scrollRect;
 
         #endregion
@@ -119,7 +116,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             this.DestroyAllCells();
             this.ClearCache();
-            Destroy(pendingDestroyGo);
+            Destroy(this.pendingDestroyGo);
             this.Generated = false;
 
             this.ContentHeight = 0f;
@@ -162,49 +159,45 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             if (index >= this.totalCount)
                 return;
 
-            var cellRowCount = index / this.CellPerRow;//在第几行
-            float verticalPosition;
+            var cellColCount = index % this.CellPerRow;//在第几列
+            float horizontalPositon;
             switch (method)
             {
                 case JumpToMethod.OnScreen:
-                    if (cellRowCount >= this.FirstRow && cellRowCount <= this.LastRow)
+                    if (cellColCount >= this.FirstColumn && cellColCount <= this.LastColumn)
                         return;
 
-
-                    if (cellRowCount > this.LastRow)
+                    if (cellColCount <= this.LastColumn)
                     {
-                        //在viewport下方
-                        verticalPosition =
-                            (this.offsetPadding.bottom +
-                            (this.RowCount - cellRowCount - 1) * this.cellY +
-                            (this.RowCount - cellRowCount - 1) * this.spacingY) /
-                            (this.ContentHeight - this.ViewportHeight); //除以content与viewport的高度差delta，而不是content的高度，因为scroll的移动距离就是delta的高度
+                        //在viewport左边
+                        horizontalPositon =
+                            (this.offsetPadding.left +
+                             (cellColCount) * this.cellX + cellColCount * this.spacingX) /
+                            (this.ContentWidth - this.ViewportWidth); //除以content与viewport的宽度差delta，而不是content的宽度，因为scroll的移动距离就是delta的宽度
                     }
                     else
                     {
-                        //在viewport上方
-                        verticalPosition =
-                            (this.offsetPadding.bottom +
-                            (this.RowCount - cellRowCount) * this.cellY +
-                            (this.RowCount - cellRowCount - 1) * this.spacingY - this.ViewportHeight / //同上，因为scroll的移动距离是delta的高度，这里cell放在viewport最顶上，因此计算出的坐标需减去viewport的高度后再计算比值
-                            (this.ContentHeight - this.ViewportHeight));
+                        //在viewport右边
+                        horizontalPositon =
+                            (this.offsetPadding.left +
+                            (cellColCount + 1) * this.cellX + cellColCount * this.spacingX - this.ViewportWidth) / //同上，因为scroll的移动距离是delta的宽度，这里要把cell放在viewport最右方，因此计算出的坐标需减去viewport的高度后再计算比值
+                            (this.ContentWidth - this.ViewportWidth);
                     }
 
-                    if(this.ContentHeight > this.ViewportHeight && !(cellRowCount >= this.FirstRow && cellRowCount <= this.LastRow))
+                    if (this.ContentWidth > this.ViewportWidth && !(cellColCount >= this.FirstColumn && cellColCount <= this.LastColumn))
                     {
-                        this.scrollRect.verticalNormalizedPosition = verticalPosition;//[0,1]，0为最底处
+                        this.scrollRect.horizontalNormalizedPosition = horizontalPositon;//[0,1]，0为最左方
                     }
                     return;
                 case JumpToMethod.Center:
-                    verticalPosition =
-                        (this.offsetPadding.bottom +
-                        (this.RowCount - cellRowCount - 0.5f) * this.cellY +
-                        (this.RowCount - cellRowCount - 1) * this.spacingY - this.ViewportHeight / 2f) /
-                        (this.ContentHeight - this.ViewportHeight);
+                    horizontalPositon =
+                        (this.offsetPadding.left +
+                        (cellColCount + 0.5f) * this.cellX + cellColCount * this.spacingX - this.ViewportWidth / 2f) /
+                        (this.ContentWidth - this.ViewportWidth);
 
-                    if (this.ContentHeight > this.ViewportHeight)
+                    if (this.ContentWidth > this.ViewportWidth)
                     {
-                        this.scrollRect.verticalNormalizedPosition = verticalPosition;
+                        this.scrollRect.horizontalNormalizedPosition = horizontalPositon;
                     }
                     return;
                 default:
@@ -242,8 +235,8 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             Rect rect = this.cellPrefab.GetComponent<RectTransform>().rect;
             this.cellX = rect.width;
             this.cellY = rect.height;
-            this.spacingX = 0f;//vertical scroller固定为0
-            this.spacingY = ((HorizontalOrVerticalLayoutGroup)this.layoutGroup).spacing;
+            this.spacingX = ((HorizontalOrVerticalLayoutGroup)this.layoutGroup).spacing;
+            this.spacingY = 0f;
 
             this.currentCells = new List<Cell>();
             this.contentTrans.anchoredPosition = Vector2.zero;
@@ -259,16 +252,11 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.cachedCells = new UnlimitedScrollerLRUCache<int, GameObject>((_, go) => Destroy(go), this.cacheSize);
         }
 
-        private int GetCellIndex(int row, int column)
+        private int GetCellIndex(int row, int col)
         {
-            return this.CellPerRow * row + column;
+            return this.CellPerRow * row + col;
         }
 
-        /// <summary>
-        /// 获取第一个比index大的index，主要解决越界
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
         private int GetFirstGreater(int index)
         {
             int start = 0;
@@ -309,8 +297,8 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             }
 
             int order = this.GetFirstGreater(index);
-            instance.GetComponent<Transform>().SetSiblingIndex(order);
-            Cell cell = new Cell() { go = instance, index = index };
+            instance.transform.SetSiblingIndex(order);
+            Cell cell = new Cell { go = instance, index = index };
             this.currentCells.Insert(order, cell);
 
             iCell.OnBecomeVisible(side);
@@ -332,7 +320,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             for (int i = 0; i < total; i++)
             {
                 Cell cell = this.currentCells[0];
-                this.currentCells.RemoveAt(0);
+                this.currentCells.RemoveAt(i);
                 cell.go.GetComponent<ICell>().OnBecomeInvisible(ScrollerPanelSide.NoSide);
                 Destroy(cell.go);
             }
@@ -355,12 +343,11 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 ? 0
                 : (int)(this.currentFirstRow * this.cellY + (this.currentFirstRow - 1) * this.spacingY));
             this.layoutGroup.padding.bottom = this.offsetPadding.bottom + (int)((this.RowCount - this.LastRow - 1) * (this.cellY + this.spacingY));
-            
             for (int r = this.currentFirstRow; r <= this.currentLastRow; ++r)
             {
-                for (int c = this.currentFirstCol; c <= this.currentLastCol; ++c)
+                for (var c = this.currentFirstCol; c <= this.currentLastCol; ++c)
                 {
-                    var index = this.GetCellIndex(r, c);
+                    int index = this.GetCellIndex(r, c);
                     if (index >= this.totalCount)
                         continue;
                     this.GenerateCell(index, ScrollerPanelSide.NoSide);
@@ -380,7 +367,6 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 this.GenerateCell(i, onTop ? ScrollerPanelSide.Top : ScrollerPanelSide.Bottom);
             }
 
-            //控制需cell处于viewport中央
             if (onTop)
             {
                 this.layoutGroup.padding.top -= (int)(this.cellY + this.spacingY);
@@ -396,7 +382,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             int firstRow = this.currentFirstRow;
             int lastRow = this.currentLastRow;
 
-            for(int i = firstRow; i <= lastRow; ++i)
+            for (int i = firstRow; i <= lastRow; ++i)
             {
                 int index = this.GetCellIndex(i, col);
                 if (index >= this.totalCount)
@@ -436,12 +422,12 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             }
         }
 
-        private void DesstroyCol(int col, bool onLeft)
+        private void DestroyCol(int col, bool onLeft)
         {
             int firstRow = this.currentFirstRow;
             int lastRow = this.currentLastRow;
 
-            for (int i = firstRow; i <= lastRow; ++i)
+            for(int i = firstRow; i <= lastRow; ++i)
             {
                 int index = this.GetCellIndex(i, col);
                 if (index >= this.totalCount)
@@ -459,13 +445,12 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             }
         }
 
-        private void OnScroll(Vector2 position)
+        private void OnScroll(Vector2 positon)
         {
             if (!this.Generated || this.totalCount <= 0)
                 return;
 
-            if (this.LastColumn < this.currentFirstCol || this.FirstColumn > this.currentLastCol || this.FirstRow > this.currentLastRow ||
-                this.LastRow < this.currentFirstRow)
+            if (this.LastColumn < this.currentFirstCol || this.FirstColumn > this.currentLastCol || this.FirstRow > this.currentLastRow || this.LastRow < this.currentFirstRow)
             {
                 this.DestroyAllCells();
                 this.GenerateAllCells();
@@ -474,7 +459,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.currentFirstCol > this.FirstColumn)
             {
-                //new left column
+                //new left col
                 for (int col = this.currentFirstCol - 1; col >= this.FirstColumn; --col)
                 {
                     this.GenerateCol(col, true);
@@ -488,7 +473,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 //new right col
                 for (int col = this.currentLastCol + 1; col <= this.LastColumn; ++col)
                 {
-                    this.GenerateCol(col, true);
+                    this.GenerateCol(col, false);
                 }
 
                 this.currentLastCol = this.LastColumn;
@@ -499,7 +484,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 //left col invisible
                 for (int col = this.currentFirstCol; col < this.FirstColumn; ++col)
                 {
-                    this.DesstroyCol(col, true);
+                    this.DestroyCol(col, true);
                 }
 
                 this.currentFirstCol = this.FirstColumn;
@@ -510,10 +495,10 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 //right col invisible
                 for (int col = this.currentLastCol; col > this.LastColumn; --col)
                 {
-                    this.DesstroyCol(col, false);
+                    this.DestroyCol(col, true);
                 }
 
-                this.currentLastCol = this.LastColumn;
+                this.currentLastCol = this.FirstColumn;
             }
 
             if (this.currentFirstRow > this.FirstRow)
@@ -540,6 +525,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.currentFirstRow < this.FirstRow)
             {
+                //top row invisible
                 for (int row = this.currentFirstRow; row < this.FirstRow; ++row)
                 {
                     this.DestroyRow(row, true);
@@ -550,12 +536,13 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.currentLastRow > this.LastRow)
             {
+                //bottom row invisible
                 for (int row = this.currentLastRow; row > this.LastRow; --row)
                 {
                     this.DestroyRow(row, false);
                 }
 
-                this.currentFirstRow = this.LastRow;
+                this.currentLastRow = this.LastRow;
             }
         }
     }
