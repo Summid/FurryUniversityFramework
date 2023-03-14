@@ -540,6 +540,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.currentFirstRow < this.FirstRow)
             {
+                //top row invisible
                 for (int row = this.currentFirstRow; row < this.FirstRow; ++row)
                 {
                     this.DestroyRow(row, true);
@@ -550,12 +551,13 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.currentLastRow > this.LastRow)
             {
+                //bottom row invisible
                 for (int row = this.currentLastRow; row > this.LastRow; --row)
                 {
                     this.DestroyRow(row, false);
                 }
 
-                this.currentFirstRow = this.LastRow;
+                this.currentLastRow = this.LastRow;
             }
         }
     }

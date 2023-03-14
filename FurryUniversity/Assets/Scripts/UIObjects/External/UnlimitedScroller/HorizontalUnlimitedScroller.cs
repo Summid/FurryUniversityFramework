@@ -495,10 +495,10 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 //right col invisible
                 for (int col = this.currentLastCol; col > this.LastColumn; --col)
                 {
-                    this.DestroyCol(col, true);
+                    this.DestroyCol(col, false);
                 }
 
-                this.currentLastCol = this.FirstColumn;
+                this.currentLastCol = this.LastColumn;
             }
 
             if (this.currentFirstRow > this.FirstRow)
