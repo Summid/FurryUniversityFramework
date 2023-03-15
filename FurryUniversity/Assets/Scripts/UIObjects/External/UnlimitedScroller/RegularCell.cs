@@ -5,8 +5,10 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 {
     public class RegularCell : MonoBehaviour, ICell
     {
+        public GameObject GameObject => this.gameObject;
+
         public event Action<ScrollerPanelSide> OnVisible;
-        public event Action<ScrollerPanelSide> OnInvisible;
+        public event Action<ScrollerPanelSide> OnInvisible;        
 
         public void OnBecomeInvisible(ScrollerPanelSide side)
         {

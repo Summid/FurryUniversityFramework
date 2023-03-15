@@ -68,6 +68,9 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         /// <inheritdoc cref="IUnlimitedScroller.ViewportWidth"/>
         public int CellPerRow => this.totalCount;
 
+        /// <inheritdoc cref="IUnlimitedScroller.CellPrefab"/>
+        public GameObject CellPrefab => this.cellPrefab;
+
         #endregion
 
         #region Public Fields
@@ -77,6 +80,9 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
         [Tooltip("The scrollRect component on ScrollView")]
         public ScrollRect scrollRect;
+
+        [Tooltip("The template GameObject")]
+        public GameObject cellPrefab;
 
         #endregion
 
@@ -93,7 +99,6 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         private Padding offsetPadding;
 
         private int totalCount;
-        private GameObject cellPrefab;
         private List<Cell> currentCells;
 
         private int currentFirstRow;

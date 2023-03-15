@@ -20,5 +20,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         /// cell出现的方位；例如<see cref="ScrollerPanelSide.Right"/> 意味着玩家向右拖动panel时，cell从panel右边消失
         /// </param>
         void OnBecomeInvisible(ScrollerPanelSide side);
+
+        UnityEngine.GameObject GameObject { get; }
     }
 }

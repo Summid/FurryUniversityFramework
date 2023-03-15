@@ -1,10 +1,11 @@
+using SFramework.Core.UI.External.UnlimitedScroller;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework.Core.UI
 {
-    public class MainViewChapterButon : UIItemBase, IUIPool<string>
+    public class MainViewChapterButon : UIItemBase, IUIPool<string>, IUIScrollerCell<string>
     {
         [UIFieldInit("MainViewChapterButton")]
         public TMPro.TextMeshProUGUI MainViewChapterButton_TextMeshProUGUI;
@@ -27,6 +28,11 @@ namespace SFramework.Core.UI
             this.MainViewChapterButton_TextMeshProUGUI.text = data;
         }
 
-
+        public void ScrollerSetData(string data)
+        {
+            Debug.Log($"scroller set data {data}");
+            this.data = data;
+            this.MainViewChapterButton_TextMeshProUGUI.text = data;
+        }
     }
 }

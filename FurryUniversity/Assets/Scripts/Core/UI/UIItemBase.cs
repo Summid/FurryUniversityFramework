@@ -26,6 +26,9 @@ namespace SFramework.Core.UI
             protected set => base.UIState = value; 
         }
 
+        /// <summary>
+        /// BundleName不为空时才会在Dispose时卸载AB，目前在 <see cref="UIObject.CreateChildItemAsync{UIItem}(string, Transform)"/> 方法中会设置改变量
+        /// </summary>
         public string BundleName { get; set; }
 
         public sealed override void Awake(GameObject gameObjectHost)

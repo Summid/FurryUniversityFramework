@@ -1,15 +1,15 @@
-using UnityEditor.UI;
-using UnityEngine;
 using UnityEditor;
+using UnityEditor.UI;
 
 namespace SFramework.Core.UI.External.UnlimitedScroller.Editor
 {
-    [CustomEditor(typeof(VerticalUnlimitedScroller), true)]
+    [CustomEditor(typeof(HorizontalUnlimitedScroller), true)]
     [CanEditMultipleObjects]
-    public class VerticalUnlimitedScrollerEditor : HorizontalOrVerticalLayoutGroupEditor
+    public class HorizontalUnlimitedScrollerEditor : HorizontalOrVerticalLayoutGroupEditor
     {
         private SerializedProperty cacheSize;
         private SerializedProperty scrollRect;
+        private SerializedProperty cellPrefab;
 
         protected override void OnEnable()
         {
@@ -17,6 +17,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller.Editor
 
             this.cacheSize = this.serializedObject.FindProperty("cacheSize");
             this.scrollRect = this.serializedObject.FindProperty("scrollRect");
+            this.cellPrefab = this.serializedObject.FindProperty("cellPrefab");
         }
 
         public override void OnInspectorGUI()
@@ -27,6 +28,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller.Editor
 
             EditorGUILayout.PropertyField(this.cacheSize, true);
             EditorGUILayout.PropertyField(this.scrollRect, true);
+            EditorGUILayout.PropertyField(this.cellPrefab, true);
 
             this.serializedObject.ApplyModifiedProperties();
         }

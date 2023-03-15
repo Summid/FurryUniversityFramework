@@ -12,6 +12,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller.Editor
         private SerializedProperty horizontalAlignment;
         private SerializedProperty cacheSize;
         private SerializedProperty scrollRect;
+        private SerializedProperty cellPrefab;
 
         protected override void OnEnable()
         {
@@ -22,6 +23,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller.Editor
             this.horizontalAlignment = this.serializedObject.FindProperty("horizontalAlignment");
             this.cacheSize = this.serializedObject.FindProperty("cacheSize");
             this.scrollRect = this.serializedObject.FindProperty("scrollRect");
+            this.cellPrefab = this.serializedObject.FindProperty("cellPrefab");
         }
 
         public override void OnInspectorGUI()
@@ -39,6 +41,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller.Editor
             EditorGUILayout.PropertyField(this.horizontalAlignment, true);
             EditorGUILayout.PropertyField(this.cacheSize, true);
             EditorGUILayout.PropertyField(this.scrollRect, true);
+            EditorGUILayout.PropertyField(this.cellPrefab, true);
 
             this.serializedObject.ApplyModifiedProperties();
         }

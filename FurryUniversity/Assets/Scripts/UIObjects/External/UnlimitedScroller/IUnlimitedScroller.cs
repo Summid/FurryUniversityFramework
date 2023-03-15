@@ -66,6 +66,11 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         int CellPerRow { get; }
 
         /// <summary>
+        /// 模板game object，用于生成
+        /// </summary>
+        GameObject CellPrefab { get; }
+
+        /// <summary>
         /// 调用该方法来初始化并生成cell
         /// </summary>
         /// <param name="newCell">the cell game object</param>

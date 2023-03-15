@@ -19,6 +19,8 @@ namespace SFramework.Core.UI
         public SFramework.Core.UI.UIItemPool ChapterButtonsPool_UIItemPool;
         [UIFieldInit("ChapterButtonsPool")]
         public UnityEngine.UI.VerticalLayoutGroup ChapterButtonsPool_VerticalLayoutGroup;
+        [UIFieldInit("Content")]
+        public SFramework.Core.UI.External.UnlimitedScroller.VerticalUnlimitedScroller Content;
 
     }
 }

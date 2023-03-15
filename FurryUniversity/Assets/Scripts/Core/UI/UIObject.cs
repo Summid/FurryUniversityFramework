@@ -388,8 +388,7 @@ namespace SFramework.Core.UI
                 prefabObj = UnityEngine.Object.Instantiate(prefabObj, parent);
                 prefabObj.transform.localScale = Vector3.one;
                 prefabObj.transform.localPosition = Vector3.zero;
-                var selector = prefabObj.GetComponent<UIItemSelector>();
-                if (selector == null)
+                if (!prefabObj.TryGetComponent<UIItemSelector>(out var selector))
                     selector = prefabObj.AddComponent<UIItemSelector>();
 
                 selector.SelectClass = className;
