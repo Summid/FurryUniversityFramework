@@ -406,7 +406,7 @@ namespace SFramework.Core.UI
         }
 
         /// <summary>
-        /// 给GameObject添加UIItem脚本
+        /// 给GameObject添加UIItem脚本，若GameObject上已有需添加的脚本则直接返回
         /// </summary>
         /// <typeparam name="TUIItem"></typeparam>
         /// <param name="go"></param>

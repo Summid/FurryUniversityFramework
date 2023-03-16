@@ -110,6 +110,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         private int currentLastCol;
 
         private Action<int, ICell> onCellGenerate;
+        private Action<ICell> onCellDestroy;
 
         private GameObject pendingDestroyGo;
         private UnlimitedScrollerLRUCache<int, GameObject> cachedCells;
@@ -141,8 +142,8 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.cachedCells.Clear();
         }
 
-        /// <inheritdoc cref="IUnlimitedScroller.Generate(GameObject, int, Action{int, ICell})"/>
-        public void Generate(GameObject newCell, int newTotalCount, Action<int, ICell> onGenerate)
+        /// <inheritdoc cref="IUnlimitedScroller.Generate(GameObject, int, Action{int, ICell}, Action{ICell})"/>
+        public void Generate(GameObject newCell, int newTotalCount, Action<int, ICell> onGenerate, Action<ICell> onDestroy = null)
         {
             if (this.Generated)
                 return;
@@ -153,6 +154,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.cellPrefab = newCell;
             this.totalCount = newTotalCount;
             this.onCellGenerate = onGenerate;
+            this.onCellDestroy = onDestroy;
             this.InitParams();
             this.Generated = true;
 
@@ -261,7 +263,11 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.pendingDestroyGo.transform.SetParent(this.transform);
             this.pendingDestroyGo.SetActive(false);
 
-            this.cachedCells = new UnlimitedScrollerLRUCache<int, GameObject>((_, go) => Destroy(go), this.cacheSize);
+            this.cachedCells = new UnlimitedScrollerLRUCache<int, GameObject>((_, go) => 
+            {
+                this.onCellDestroy?.Invoke(go.GetComponent<ICell>());
+                Destroy(go); 
+            }, this.cacheSize);
         }
 
         private int GetCellIndex(int row, int column)

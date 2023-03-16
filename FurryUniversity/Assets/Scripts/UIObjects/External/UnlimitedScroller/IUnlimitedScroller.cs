@@ -76,7 +76,8 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         /// <param name="newCell">the cell game object</param>
         /// <param name="newTotalCount">意图生成cell的总数量</param>
         /// <param name="onGenerate">生成cell后的回调，可在此设置cell的相关数据</param>
-        void Generate(GameObject newCell, int newTotalCount, Action<int, ICell> onGenerate);
+        /// <param name="onDestroyCell">销毁cell之前的回调</param>
+        void Generate(GameObject newCell, int newTotalCount, Action<int, ICell> onGenerate, Action<ICell> onDestroyCell = null);
 
         /// <summary>
         /// 调用该方法，通过索引来定位cell

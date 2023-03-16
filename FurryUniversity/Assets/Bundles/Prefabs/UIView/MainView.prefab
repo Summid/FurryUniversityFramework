@@ -575,7 +575,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 4774861305396963382}
   m_Direction: 2
   m_Value: 0
-  m_Size: 1
+  m_Size: 0.9997075
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -703,7 +703,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 0.000024637871, y: 0.00003622159}
+  m_AnchoredPosition: {x: 0.000024637871, y: 0.000021935157}
   m_SizeDelta: {x: 183, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &5638624489958221150
@@ -732,7 +732,7 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
-  cacheSize: 5
+  cacheSize: 1
   scrollRect: {fileID: 5716919984576050072}
   cellPrefab: {fileID: 5225583410759992956, guid: b2d8abd1b978d7c438551ccf8eeeb399, type: 3}
 --- !u!1 &6126565331972453984
