@@ -13,6 +13,8 @@ namespace SDS.ScriptableObjects
         [field: SerializeField] public SerializableDictionary<SDSDialogueGroupSO, List<SDSDialogueSO>> DialogueGroups { get; set; }
         [field: SerializeField] public List<SDSDialogueSO> UnGroupedDialogues { get; set; }
 
+        #region Editor
+
         public void Initialize(string fileName)
         {
             this.FileName = fileName;
@@ -61,5 +63,43 @@ namespace SDS.ScriptableObjects
             }
             return ungroupedDialogueNames;
         }
+
+        #endregion
+
+        #region Runtime
+
+        /// <summary>
+        /// 获取第一个对话节点，即无前置节点的节点；优先返回组内节点
+        /// </summary>
+        /// <param name="firstDialogue"></param>
+        /// <returns></returns>
+        public bool TryGetFirstDialogue(out SDSDialogueSO firstDialogue)
+        {
+            foreach (var dialogues in this.DialogueGroups.Values)
+            {
+                foreach (var dialogue in dialogues)
+                {
+                    if (dialogue.IsStartDialogue)
+                    {
+                        firstDialogue = dialogue;
+                        return true;
+                    }
+                }
+            }
+
+            foreach (var ungroupedDialogue in this.UnGroupedDialogues)
+            {
+                if (ungroupedDialogue.IsStartDialogue)
+                {
+                    firstDialogue = ungroupedDialogue;
+                    return true;
+                }
+            }
+
+            firstDialogue = null;
+            return false;
+        }
+
+        #endregion
     }
 }

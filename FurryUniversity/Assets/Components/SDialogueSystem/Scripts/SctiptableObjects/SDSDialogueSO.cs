@@ -1,6 +1,7 @@
 using SDS.Data;
 using SDS.Enumerations;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace SDS.ScriptableObjects
@@ -26,5 +27,59 @@ namespace SDS.ScriptableObjects
             this.IsStartDialogue = isStartDialogue;
             this.Events = events;
         }
+
+        #region Runtime
+
+        /// <summary>
+        /// 获取该节点第一句话
+        /// </summary>
+        /// <param name="content"></param>
+        /// <returns></returns>
+        public bool TryGetFirstDialogueContent(out SDSDialogueContentData content)
+        {
+            content = null;
+            if (this.Contents.Count <= 0)
+                return false;
+
+            content = this.Contents[0];
+            return true;
+        }
+
+        /// <summary>
+        /// 获取该节点中，给定句子的下一句；若没有下一句则返回false
+        /// </summary>
+        /// <param name="current"></param>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public bool TryGetNextDialogueContent(SDSDialogueContentData current, out SDSDialogueContentData next)
+        {
+            next = null;
+            if (current == null)
+                return false;
+
+            int currentIndex = this.Contents.IndexOf(current);
+            if (currentIndex >= this.Contents.Count - 1)
+                return false;
+
+            next = this.Contents[currentIndex + 1];
+            return true;
+        }
+
+        /// <summary>
+        /// 获取该节点的选项数据；当没有后续节点时返回false；只会返回有后续节点的选项
+        /// </summary>
+        /// <param name="choices"></param>
+        /// <returns></returns>
+        public bool TryGetChoices(out IEnumerable<SDSDialogueChoiceData> choices)
+        {
+            choices = null;
+            if (this.Choices.Count == 1 && this.Choices[0].NextDialogue == null)
+                return false;
+
+            choices = this.Choices.Where(choice => choice.NextDialogue != null);
+            return true;
+        }
+
+        #endregion
     }
 }

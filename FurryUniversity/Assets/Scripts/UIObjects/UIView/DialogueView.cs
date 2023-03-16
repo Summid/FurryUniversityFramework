@@ -8,5 +8,9 @@ namespace SFramework.Core.UI
     public partial class DialogueView : UIViewBase
     {
         
+        public void SetDialogueData()
+        {
+
+        }
     }
 }

@@ -228,7 +228,7 @@ namespace SFramework.Core.GameManagers
             {
                 view.BasedPage = this.navigateQueue[this.navigateQueue.Count - 1].Name;
             }
-            this.uiInstances[viewType].ViewInstance.gameObject.transform.SetAsFirstSibling();
+            this.uiInstances[viewType].ViewInstance.gameObject.transform.SetAsLastSibling();
             if (showImmediately)
                 view.Show();
 

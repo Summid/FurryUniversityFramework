@@ -28,6 +28,11 @@ MonoBehaviour:
     ViewType: 0
     ViewClassName: SFramework.Core.UI.MainView
     IsDisableNavigatePage: 0
+  - ViewAssetBundleName: messageboxview_uiview
+    ViewAssetName: MessageBoxView
+    ViewType: 1
+    ViewClassName: SFramework.Core.UI.MessageBoxView
+    IsDisableNavigatePage: 0
   UIItemInfo:
   - UIItemAssetBundleName: mainviewchapterbutton_uiitem
     UIItemAssetName: MainViewChapterButton

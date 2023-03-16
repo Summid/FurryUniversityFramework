@@ -2,6 +2,7 @@ using DG.Tweening;
 using DG.Tweening.Core;
 using DG.Tweening.Plugins.Options;
 using SDS;
+using SDS.ScriptableObjects;
 using SFramework.Adapter;
 using SFramework.Core.GameManagers;
 using SFramework.Core.UI.External.UnlimitedScroller;
@@ -68,22 +69,9 @@ namespace SFramework.Core.UI
 
         private void OnClickSelectChapter()
         {
-            //foreach (var dialogue in this.dialogueSystem.IncludedContainers)
-            //{
-            //    Debug.Log($"current included dialogue: {dialogue.FileName}");
-            //}
-
-            this.ChapterButtonsPool_UIItemPool.UpdateList<string, MainViewChapterButon>(this.dialogueSystem.IncludedContainers.Select(dialogue =>
-            {
-                return dialogue.FileName;
-            }).ToList());
+            this.ChapterButtonsPool_UIItemPool.UpdateList<SDSDialogueContainerSO, MainViewChapterButton>(this.dialogueSystem.GetAllDialogues());
             this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(true);
             this.MainButtons.SetActive(false);
-
-            this.Content.UpdateScrollCells<string, MainViewChapterButon>(this, this.dialogueSystem.IncludedContainers.Select(dialogue =>
-            {
-                return dialogue.FileName;
-            }).ToList());
         }
 
         protected override void OnHide()

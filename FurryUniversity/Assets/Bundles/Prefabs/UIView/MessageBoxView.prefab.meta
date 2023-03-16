@@ -1,7 +1,7 @@
 fileFormatVersion: 2
-guid: 7efe5ae5124a48344828b243ca587551
+guid: cd75e3dc4fc69d246a41e595aa2c034b
 PrefabImporter:
   externalObjects: {}
   userData: 
-  assetBundleName: dialogueview_uiview
+  assetBundleName: messageboxview_uiview
   assetBundleVariant: bundle

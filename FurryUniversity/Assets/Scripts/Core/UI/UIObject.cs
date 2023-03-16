@@ -294,8 +294,7 @@ namespace SFramework.Core.UI
             for (int i = 0; i < rootTransform.childCount; i++)
             {
                 var child = rootTransform.GetChild(i);
-                var selector = child.GetComponent<UIItemSelector>();
-                if (selector != null)
+                if (child.TryGetComponent<UIItemSelector>(out var selector))
                 {
                     Type type = Type.GetType(selector.SelectClass);
                     this.AddMissingItem(selector, type);
