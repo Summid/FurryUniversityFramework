@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -10,7 +9,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         void ScrollerSetData(T data);
     }
 
-    public static class UnlimtedScrollerExtensions
+    public static class UnlimitedScrollerExtensions
     {
         public static void UpdateScrollCells<TData, TUIItem>(this IUnlimitedScroller scroller, UIObject host, IList<TData> datas, Action<int> onGenerated = null)
             where TUIItem : UIItemBase, IUIScrollerCell<TData>, new()
@@ -38,7 +37,6 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 var item = host.AddUIItemOnGameObject<TUIItem>(iCell.GameObject);
                 item.Dispose();
             };
-            //TODO onDestroy
             scroller.Generate(scroller.CellPrefab, datas.Count, onGenerateHandler, onDestroyHandler);
         }
     }

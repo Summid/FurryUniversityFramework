@@ -325,7 +325,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.ContentWidth = this.cellX * this.CellPerRow + this.spacingX * (this.CellPerRow - 1) + this.offsetPadding.left + this.offsetPadding.right;
 
             Vector2 contentPositon;
-            switch (horizontalAlignment)
+            switch (this.horizontalAlignment)
             {
                 case Alignment.Left:
                     contentPositon = Vector2.zero;

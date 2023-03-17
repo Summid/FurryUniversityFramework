@@ -19,7 +19,7 @@ namespace SFramework.Core.GameManagers
             }
             catch(Exception ex)
             {
-                UnityEngine.Debug.LogException(ex);
+                Debug.LogException(ex);
             }
         }
 

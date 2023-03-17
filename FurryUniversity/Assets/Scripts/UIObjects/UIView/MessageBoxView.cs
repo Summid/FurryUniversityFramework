@@ -38,8 +38,8 @@ namespace SFramework.Core.UI
             this.CancelButton_Button.gameObject.SetActive((messageFlag & MessageFlag.Cancel) == MessageFlag.Cancel);
             this.onClickFlagButton = onClickFlagButton;
 
-            this.ConfirmButton_Button.onClick.AddListener(() => { this.onClickFlagButton?.Invoke(MessageFlag.Confirm); });
-            this.CancelButton_Button.onClick.AddListener(() => { this.onClickFlagButton?.Invoke(MessageFlag.Cancel); });
+            this.ConfirmButton_Button.onClick.AddListener(() => { this.onClickFlagButton?.Invoke(MessageFlag.Confirm); this.Hide();});
+            this.CancelButton_Button.onClick.AddListener(() => { this.onClickFlagButton?.Invoke(MessageFlag.Cancel); this.Hide();});
         }
 
         #region ExternalUse

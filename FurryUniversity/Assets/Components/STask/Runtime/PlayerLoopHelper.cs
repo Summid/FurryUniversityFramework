@@ -213,8 +213,8 @@ namespace SFramework.Threading.Tasks
 #if UNITY_EDITOR
             //解决编辑器关闭域重载的问题，需要 2019.3 以上的版本
             //当域重载关闭后，进入 play 前需要重新重新初始化，否则之前的 tasks 会停留在内存中导致内存泄漏
-            bool domainReloadDisabled = UnityEditor.EditorSettings.enterPlayModeOptionsEnabled &&
-                UnityEditor.EditorSettings.enterPlayModeOptions.HasFlag(UnityEditor.EnterPlayModeOptions.DisableDomainReload);
+            bool domainReloadDisabled = EditorSettings.enterPlayModeOptionsEnabled &&
+                EditorSettings.enterPlayModeOptions.HasFlag(EnterPlayModeOptions.DisableDomainReload);
             if (!domainReloadDisabled && runners != null)//没有关闭域重载，就当无事发生
                 return;
 #endif

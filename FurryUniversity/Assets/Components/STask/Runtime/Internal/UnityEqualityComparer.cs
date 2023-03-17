@@ -65,32 +65,32 @@ namespace SFramework.Threading.Tasks.Internal
             var t = type.TypeHandle;
 
             if (t.Equals(vector2Type))
-                return (object)UnityEqualityComparer.Vector2;
+                return (object)Vector2;
             if (t.Equals(vector3Type))
-                return (object)UnityEqualityComparer.Vector3;
+                return (object)Vector3;
             if (t.Equals(vector4Type))
-                return (object)UnityEqualityComparer.Vector4;
+                return (object)Vector4;
             if (t.Equals(colorType))
-                return (object)UnityEqualityComparer.Color;
+                return (object)Color;
             if (t.Equals(color32Type))
-                return (object)UnityEqualityComparer.Color32;
+                return (object)Color32;
             if (t.Equals(rectType))
-                return (object)UnityEqualityComparer.Rect;
+                return (object)Rect;
             if (t.Equals(boundsType))
-                return (object)UnityEqualityComparer.Bounds;
+                return (object)Bounds;
             if (t.Equals(quaternionType))
-                return (object)UnityEqualityComparer.Quaternion;
+                return (object)Quaternion;
 
             if (t.Equals(vector2IntType))
-                return (object)UnityEqualityComparer.Vector2Int;
+                return (object)Vector2Int;
             if (t.Equals(vector3IntType))
-                return (object)UnityEqualityComparer.Vector3Int;
+                return (object)Vector3Int;
             if (t.Equals(rangeIntType))
-                return (object)UnityEqualityComparer.RangeInt;
+                return (object)RangeInt;
             if (t.Equals(rectIntType))
-                return (object)UnityEqualityComparer.RectInt;
+                return (object)RectInt;
             if (t.Equals(boundsIntType))
-                return (object)UnityEqualityComparer.BoundsInt;
+                return (object)BoundsInt;
 
             return null;
         }

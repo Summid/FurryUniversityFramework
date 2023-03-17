@@ -104,12 +104,12 @@ namespace SFramework.Threading.Tasks
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool TryPush(T item)
         {
-            if (Interlocked.CompareExchange(ref gate, 1, 0) == 0)
+            if (Interlocked.CompareExchange(ref this.gate, 1, 0) == 0)
             {
                 if (this.size < TaskPool.MaxPoolSize)
                 {
-                    item.NextNode = root;
-                    root = item;
+                    item.NextNode = this.root;
+                    this.root = item;
                     this.size++;
                     Volatile.Write(ref this.gate, 0);
                     return true;

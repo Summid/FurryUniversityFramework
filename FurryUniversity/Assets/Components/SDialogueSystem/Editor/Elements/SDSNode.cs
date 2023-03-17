@@ -143,7 +143,7 @@ namespace SDS.Elements
                     continue;
                 }
 
-                graphView.DeleteElements(port.connections);
+                this.graphView.DeleteElements(port.connections);
             }
         }
 

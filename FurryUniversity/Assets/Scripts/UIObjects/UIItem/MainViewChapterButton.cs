@@ -1,4 +1,5 @@
 using SDS.ScriptableObjects;
+using SFramework.Core.GameManagers;
 using SFramework.Core.UI.External.UnlimitedScroller;
 using SFramework.Threading.Tasks;
 using System.Collections;
@@ -20,21 +21,28 @@ namespace SFramework.Core.UI
         {
             this.MainViewChapterButton_Button.onClick.AddListener(() =>
             {
-                MessageBoxView.ShowAsync($"进入章节 {this.dialogue.FileName}", MessageBoxView.MessageFlag.Both,
-                    (flag) =>
-                    {
-                        if (flag == MessageBoxView.MessageFlag.Confirm)
-                            Debug.Log("click message box view confirm button");
-                        else if(flag == MessageBoxView.MessageFlag.Cancel)
-                            Debug.Log("click message box view cancel button");
-                    }).Forget();
+                MessageBoxView.ShowAsync($"进入章节 {this.dialogue.FileName}", MessageBoxView.MessageFlag.Both, (flag) =>
+                {
+                    this.OnClickMessageBoxButton(flag).Forget();
+                }).Forget();
             });
         }
-
+ 
         public void PoolSetData(SDSDialogueContainerSO data)
         {
             this.dialogue = data;
+        }
 
+        private async STaskVoid OnClickMessageBoxButton(MessageBoxView.MessageFlag flag)
+        {
+            if (flag == MessageBoxView.MessageFlag.Confirm)
+            {
+                Debug.Log("click message box view confirm button");
+                var view =  await GameManager.Instance.UIManager.ShowUIAsync<DialogueView>();
+                view.SetNewDialogueContainer(this.dialogue);
+            }
+            else if(flag == MessageBoxView.MessageFlag.Cancel)
+                Debug.Log("click message box view cancel button");
         }
     }
 }

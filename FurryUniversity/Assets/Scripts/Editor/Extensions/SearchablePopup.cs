@@ -118,7 +118,7 @@ namespace SFramework.EditorExtensions
                 this.show.Clear();
                 for (int i = 0; i < this.names.Length; ++i)
                 {
-                    if (this.names[i].ToLower().Contains(searchString.ToLower()))
+                    if (this.names[i].ToLower().Contains(this.searchString.ToLower()))
                     {
                         this.show.Add(new Index()
                         {

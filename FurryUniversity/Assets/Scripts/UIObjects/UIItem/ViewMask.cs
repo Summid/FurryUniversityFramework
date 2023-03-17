@@ -8,9 +8,9 @@ namespace SFramework.Core.UI
     public class ViewMask : UIItemBase
     {
         [UIFieldInit("bgMask")]
-        public UnityEngine.UI.Image bgMask_Image;
+        public Image bgMask_Image;
         [UIFieldInit("bgMask")]
-        public UnityEngine.UI.Button bgMask_Button;
+        public Button bgMask_Button;
 
 
         public delegate void OnMaskClickHandle();

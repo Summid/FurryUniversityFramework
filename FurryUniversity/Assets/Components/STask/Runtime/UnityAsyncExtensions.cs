@@ -168,7 +168,7 @@ namespace SFramework.Threading.Tasks
                 this.core.Reset();
                 this.asyncOperation = default;
                 this.progress = default;
-                cancellationToken = default;
+                this.cancellationToken = default;
                 return pool.TryPush(this);
             }
         }

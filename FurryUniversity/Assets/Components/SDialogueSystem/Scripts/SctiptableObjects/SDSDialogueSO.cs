@@ -53,7 +53,7 @@ namespace SDS.ScriptableObjects
         /// <returns></returns>
         public bool TryGetNextDialogueContent(SDSDialogueContentData current, out SDSDialogueContentData next)
         {
-            next = null;
+            next = current;
             if (current == null)
                 return false;
 

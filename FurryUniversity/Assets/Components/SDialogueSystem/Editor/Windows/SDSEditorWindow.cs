@@ -17,7 +17,7 @@ namespace SDS.Windows
         private Button saveButton;
         private Button miniMapButton;
 
-        [MenuItem("Window/SDS/Dialogue Graph")]
+        [MenuItem("Window/SDS/Dialogue Graph &`")]
         public static void Open()
         {
             GetWindow<SDSEditorWindow>("Dialogue Graph");
@@ -84,8 +84,11 @@ namespace SDS.Windows
                 return;
             }
 
-            SDSIOUtility.Initialize(this.graphView, fileNameTextField.value);
-            SDSIOUtility.Save();
+            if (EditorUtility.DisplayDialog("提示", "确定保存对话文件吗？", "确定", "取消"))
+            {
+                SDSIOUtility.Initialize(this.graphView, fileNameTextField.value);
+                SDSIOUtility.Save();
+            }
         }
 
         private void Load()

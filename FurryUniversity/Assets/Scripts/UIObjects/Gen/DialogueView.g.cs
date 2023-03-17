@@ -15,6 +15,8 @@ namespace SFramework.Core.UI
         public TMPro.TextMeshProUGUI DialogueSpeakerText;
         [UIFieldInit("DialogueContentText")]
         public TMPro.TextMeshProUGUI DialogueContentText;
+        [UIFieldInit("BackgroundButton")]
+        public UnityEngine.UI.Button BackgroundButton;
 
     }
 }

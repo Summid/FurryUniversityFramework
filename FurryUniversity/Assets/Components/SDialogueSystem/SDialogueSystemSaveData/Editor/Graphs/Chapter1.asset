@@ -22,8 +22,14 @@ MonoBehaviour:
     <Name>k__BackingField: DialogueName-8c000a97-2673-4a00-a639-f2e8604d1b93
     <Text>k__BackingField: 
     <Contents>k__BackingField:
-    - <Text>k__BackingField: Dialogue Text
-      <Spokesman>k__BackingField: Spokesman
+    - <Text>k__BackingField: "\u5BC4\u8709\u8763\u4E8E\u5929\u5730\uFF0C\u6E3A\u6CA7\u6D77\u4E4B\u4E00\u7C9F\u3002"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u54C0\u543E\u751F\u4E4B\u987B\u81FE\uFF0C\u7FA1\u957F\u6C5F\u4E4B\u65E0\u7A77\u3002"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u631F\u98DE\u4ED9\u4EE5\u9068\u6E38\uFF0C\u62B1\u660E\u6708\u800C\u957F\u7EC8\u3002"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u77E5\u4E0D\u53EF\u5FFD\u9AA4\u5F97\uFF0C\u6258\u9057\u54CD\u4E8E\u60B2\u98CE\u3002"
+      <Spokesman>k__BackingField: "\u5BA2"
     <Choices>k__BackingField:
     - <Text>k__BackingField: Next Dialogue
       <NodeID>k__BackingField: bad73340-c154-4302-b05e-9065ef1dc6ce

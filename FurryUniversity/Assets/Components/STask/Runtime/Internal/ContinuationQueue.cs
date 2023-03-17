@@ -79,7 +79,7 @@ namespace SFramework.Threading.Tasks.Internal
                             newLength = MaxArrayLength;
 
                         Action[] newArray = new Action[newLength];
-                        Array.Copy(this.actionList, newArray, actionListCount);
+                        Array.Copy(this.actionList, newArray, this.actionListCount);
                     }
                     this.actionList[this.actionListCount] = continuation;
                     this.actionListCount++;

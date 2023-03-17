@@ -531,7 +531,7 @@ namespace SDS.Windows
             List<SDSGroup> groupsList = this.groups[groupName].Groups;
             groupsList.Add(group);
 
-            Color errorColor = groups[groupName].ErrorData.Color;
+            Color errorColor = this.groups[groupName].ErrorData.Color;
             group.SetErrorStyle(errorColor);
 
             if (groupsList.Count == 2)//第二个同名组出现，同样要设置第一个同名组error color
@@ -562,7 +562,7 @@ namespace SDS.Windows
 
             if (groupsList.Count == 0)
             {
-                groups.Remove(oldGroupName);
+                this.groups.Remove(oldGroupName);
             }
         }
 #endregion

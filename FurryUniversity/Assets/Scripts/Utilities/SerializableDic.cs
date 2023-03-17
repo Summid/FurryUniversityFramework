@@ -111,7 +111,7 @@ namespace SFramework.Utilities
             }
             else
             {
-                this.KeyPositions[key] = (uint)list.Count;
+                this.KeyPositions[key] = (uint)this.list.Count;
 
                 this.list.Add(new SerializableKeyValuePair(key, value));
             }

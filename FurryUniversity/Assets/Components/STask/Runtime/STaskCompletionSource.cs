@@ -199,7 +199,7 @@ namespace SFramework.Threading.Tasks
         /// <returns></returns>
         public bool TrySetCanceled(CancellationToken cancellationToken = default)
         {
-            if (Interlocked.Increment(ref completedCount) == 1)
+            if (Interlocked.Increment(ref this.completedCount) == 1)
             {
                 this.hasUnhandledError = true;
                 this.error = new OperationCanceledException(cancellationToken);

@@ -31,7 +31,7 @@ namespace SFramework.Threading.Tasks
             {
                 awaiter.SourceOnCompleted(state =>
                 {
-                    using (StateTuple<Awaiter> t = (StateTuple<STask.Awaiter>)state)//用完后自动调用 StateTuple.Dispose()
+                    using (StateTuple<Awaiter> t = (StateTuple<Awaiter>)state)//用完后自动调用 StateTuple.Dispose()
                     {
                         try
                         {
