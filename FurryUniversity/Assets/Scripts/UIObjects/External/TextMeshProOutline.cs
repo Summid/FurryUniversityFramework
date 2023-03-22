@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SFramework.Core.UI.External
 {
+    [DisallowMultipleComponent]
     public class TextMeshProOutline : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI tmp;
@@ -11,8 +12,14 @@ namespace SFramework.Core.UI.External
 
         private void Awake()
         {
-            if(this.tmp == null)
-                this.tmp = this.GetComponent<TextMeshProUGUI>();
+            if (this.tmp == null)
+            {
+                if (!this.TryGetComponent(out this.tmp))
+                {
+                    Debug.LogError($"GameObject {this.gameObject.name} doesn't find TMP script. (TextMeshProOutline)");
+                    return;
+                }
+            }
             
             this.tmp.outlineWidth = this.outlineWidth;
             this.tmp.outlineColor = this.outlineColor;
