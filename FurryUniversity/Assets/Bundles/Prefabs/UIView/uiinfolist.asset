@@ -35,13 +35,13 @@ MonoBehaviour:
     IsDisableNavigatePage: 0
   - ViewAssetBundleName: settingsview_uiview
     ViewAssetName: SettingsView
-    ViewType: 0
+    ViewType: 1
     ViewClassName: SFramework.Core.UI.SettingsView
     IsDisableNavigatePage: 0
   UIItemInfo:
   - UIItemAssetBundleName: mainviewchapterbutton_uiitem
     UIItemAssetName: MainViewChapterButton
-    UIItemClassName: SFramework.Core.UI.MainViewChapterButon
+    UIItemClassName: SFramework.Core.UI.MainViewChapterButton
   - UIItemAssetBundleName: viewmask_uiitem
     UIItemAssetName: ViewMask
     UIItemClassName: SFramework.Core.UI.ViewMask

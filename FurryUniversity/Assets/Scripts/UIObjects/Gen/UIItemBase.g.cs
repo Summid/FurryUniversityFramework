@@ -7,7 +7,7 @@ namespace SFramework.Core.UI
             /// </summary>
             public static class AssetList
             {
-                /// <summary> ab:[mainviewchapterbutton_uiitem]<para>class:[SFramework.Core.UI.MainViewChapterButon]</para> </summary>
+                /// <summary> ab:[mainviewchapterbutton_uiitem]<para>class:[SFramework.Core.UI.MainViewChapterButton]</para> </summary>
                 public static string MainViewChapterButton = "MainViewChapterButton";
                 /// <summary> ab:[viewmask_uiitem]<para>class:[SFramework.Core.UI.ViewMask]</para> </summary>
                 public static string ViewMask = "ViewMask";

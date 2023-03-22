@@ -1,5 +1,7 @@
 using SDS.Data;
 using SDS.ScriptableObjects;
+using SFramework.Core.GameManagers;
+using SFramework.Threading.Tasks;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,7 +17,8 @@ namespace SFramework.Core.UI
 
         protected override void OnAwake()
         {
-            this.BackgroundButton.onClick.AddListener(this.Roll2NextDialogueContent);
+            this.SettingsButton_Button.onClick.AddListener((() => GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget()));
+            this.BackgroundButton_Button.onClick.AddListener(this.Roll2NextDialogueContent);
         }
 
         public void SetNewDialogueContainer(SDSDialogueContainerSO dialogueContainer)

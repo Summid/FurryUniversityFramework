@@ -16,7 +16,9 @@ namespace SFramework.Core.UI
         [UIFieldInit("DialogueContentText")]
         public TMPro.TextMeshProUGUI DialogueContentText;
         [UIFieldInit("BackgroundButton")]
-        public UnityEngine.UI.Button BackgroundButton;
+        public UnityEngine.UI.Button BackgroundButton_Button;
+        [UIFieldInit("BackgroundButton")]
+        public SFramework.Core.UI.External.SimpleRaycast BackgroundButton_SimpleRaycast;
 
     }
 }

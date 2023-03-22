@@ -9,6 +9,10 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.Toggle EnvToggle;
         [UIFieldInit("AudioToggle")]
         public UnityEngine.UI.Toggle AudioToggle;
+        [UIFieldInit("EnvPanel")]
+        public SFramework.Core.UI.EnvironmentSettings EnvPanel;
+        [UIFieldInit("AudioPanel")]
+        public UnityEngine.GameObject AudioPanel;
 
     }
 }
