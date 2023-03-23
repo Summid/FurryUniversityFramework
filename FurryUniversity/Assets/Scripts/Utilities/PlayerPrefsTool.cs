@@ -7,10 +7,27 @@ namespace SFramework.Utilities
     public static class PlayerPrefsTool
     {
         #region Pref
+
         /// <summary> 背景音乐开关 </summary>
         public static readonly Pref<int> Music_On = new Pref<int>("musicon", 1);
+
+        /// <summary> 背景音乐音量 </summary>
+        public static readonly Pref<float> MusicVolume_Value = new Pref<float>("musicvolume", 1f);
+
         /// <summary> 音效开关 </summary>
         public static readonly Pref<int> SFX_On = new Pref<int>("sfxon", 1);
+
+        /// <summary> 音效音量开关 </summary>
+        public static readonly Pref<float> SFXVolume_Value = new Pref<float>("sfxvolume", 1f);
+
+        /// <summary> 自动存档开关 </summary>
+        public static readonly Pref<int> AutoSave_On = new Pref<int>("autosave", 1);
+
+        /// <summary> 长按对话加速 </summary>
+        public static readonly Pref<int> SpeedUpDialogue_On = new Pref<int>("speedupdialogue", 1);
+        
+        /// <summary> 异形屏适配参数 </summary>
+        public static readonly Pref<float> ScreenAdaptation_Value = new Pref<float>("screenadaptation", 0f);
         #endregion
 
         public abstract class PrefBase<T>

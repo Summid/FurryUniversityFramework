@@ -10,7 +10,7 @@ namespace SFramework.Core.UI
         [UIFieldInit("BG")]
         public UnityEngine.Video.VideoPlayer BG_VideoPlayer;
         [UIFieldInit("MainButtons")]
-        public UnityEngine.GameObject MainButtons;
+        public UnityEngine.UI.VerticalLayoutGroup MainButtons;
         [UIFieldInit("SelectChapterButton")]
         public UnityEngine.UI.Button SelectChapterButton_Button;
         [UIFieldInit("SelectChapterButton")]
@@ -19,6 +19,10 @@ namespace SFramework.Core.UI
         public SFramework.Core.UI.UIItemPool ChapterButtonsPool_UIItemPool;
         [UIFieldInit("ChapterButtonsPool")]
         public UnityEngine.UI.VerticalLayoutGroup ChapterButtonsPool_VerticalLayoutGroup;
+        [UIFieldInit("SettingsButton")]
+        public UnityEngine.UI.Button SettingsButton_Button;
+        [UIFieldInit("SettingsButton")]
+        public TMPro.TextMeshProUGUI SettingsButton_TextMeshProUGUI;
 
     }
 }

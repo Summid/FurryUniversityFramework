@@ -31,6 +31,8 @@ namespace SFramework.Core.UI
             Debug.Log("in MainView OnAwake");
 
             this.SelectChapterButton_Button.onClick.AddListener(this.OnClickSelectChapter);
+            this.SettingsButton_Button.onClick.AddListener((() =>
+                GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget()));
 
             this.dialogueSystem = GameManager.Instance.DialogueSystem;
         }
@@ -71,7 +73,7 @@ namespace SFramework.Core.UI
         {
             this.ChapterButtonsPool_UIItemPool.UpdateList<SDSDialogueContainerSO, MainViewChapterButton>(this.dialogueSystem.GetAllDialogues());
             this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(true);
-            this.MainButtons.SetActive(false);
+            this.MainButtons.gameObject.SetActive(false);
         }
 
         protected override void OnHide()

@@ -18,6 +18,9 @@ namespace SFramework.Core.GameManagers
         private float sfxVolume;
         private AudioSource musicAudio;
 
+        public float CurrentMusicVolume => (this.musicOn ? 1 : 0) * this.musicVolume;
+        public float CurrentSFXVolume => (this.sfxOn ? 1 : 0) * this.sfxVolume;
+
         protected override async void OnInitialized()
         {
             AudioAssetList.Init();//加载Audio清单
@@ -25,8 +28,11 @@ namespace SFramework.Core.GameManagers
             AudioManagerCore.Init(this.audioLoader);
 
             //根据设置初始化音量
-            this.SetBGMOn(PlayerPrefsTool.Music_On.GetValue() == 1);
-            this.SetSFXOn(PlayerPrefsTool.SFX_On.GetValue() == 1);
+            this.musicOn = PlayerPrefsTool.Music_On.GetValue() == 1;
+            this.sfxOn = PlayerPrefsTool.SFX_On.GetValue() == 1;
+            this.musicVolume = PlayerPrefsTool.MusicVolume_Value.GetValue();
+            this.sfxVolume = PlayerPrefsTool.SFXVolume_Value.GetValue();
+            this.ResetAllVolume();
 
             await this.audioLoader.Init();//加载常驻音效
             selfInstance = this;
@@ -34,18 +40,17 @@ namespace SFramework.Core.GameManagers
 
         public async STask<AudioSource> PlaySoundAsync(string audioName, bool loop = false)
         {
-            if (!this.musicOn || string.IsNullOrEmpty(audioName) || selfInstance == null)
+            if (!this.sfxOn || string.IsNullOrEmpty(audioName) || selfInstance == null)
                 return null;
 
-            float volume = 1f;//暂时默认已最大音量播放
-            string clip = audioName;//后期可能会考虑将audioName换成整型id，因此这里换一下
-            AudioSource audioSource = await AudioManagerCore.PlaySoundAsync(clip, loop);
+            string clip = audioName;//TODO 后期可能会考虑将audioName换成整型id，因此这里换一下
+            AudioSource audioSource = await clip.PlaySoundAsync(loop);
             if (audioSource == null)
             {
                 Debug.LogError($"Audio {audioName} not found");
                 return null;
             }
-            audioSource.volume = this.sfxVolume * volume;
+            audioSource.volume = this.CurrentSFXVolume;
             return audioSource;
         }
 
@@ -53,20 +58,19 @@ namespace SFramework.Core.GameManagers
         {
             while (selfInstance == null)
                 await STask.NextFrame();
-            float volume = 1f;//同上
             string clip = audioName;//同上
 
             //当正在播放的背景音乐与将要播放的相同，则跳过
             if (clip != null && !(this.musicAudio != null && this.musicAudio.isPlaying && this.musicAudio.clip.name == clip))
             {
-                this.musicAudio = await AudioManagerCore.PlayBGMAsync(clip);
+                this.musicAudio = await clip.PlayBGMAsync();
                 if (this.musicAudio == null)
                 {
                     Debug.LogError($"Audio {audioName} not found");
                     return null;
                 }
 
-                this.musicAudio.volume = this.musicVolume * volume;
+                this.musicAudio.volume = this.CurrentMusicVolume;
                 return this.musicAudio;
             }
             return null;
@@ -83,7 +87,7 @@ namespace SFramework.Core.GameManagers
         {
             this.musicOn = isOn;
             int value = isOn? 1 : 0;
-            this.SetBGMVolume(value);
+            AudioManagerCore.SetBGMVolume(this.CurrentMusicVolume);
             PlayerPrefsTool.Music_On.SetValue(value);//1代表开启，0代表关闭
         }
 
@@ -91,20 +95,28 @@ namespace SFramework.Core.GameManagers
         {
             this.sfxOn = isOn;
             int value = isOn ? 1 : 0;
-            this.SetSFXVolume(value);
+            AudioManagerCore.SetSFXVolume(this.CurrentSFXVolume);
             PlayerPrefsTool.SFX_On.SetValue(value);
         }
 
         public void SetBGMVolume(float volume)
         {
             this.musicVolume = volume;
-            AudioManagerCore.SetBGMVolume(volume);
+            AudioManagerCore.SetBGMVolume(this.CurrentMusicVolume);
+            PlayerPrefsTool.MusicVolume_Value.SetValue(Mathf.Clamp01(volume));
         }
 
         public void SetSFXVolume(float volume)
         {
             this.sfxVolume = volume;
-            AudioManagerCore.SetSFXVolume(volume);
+            AudioManagerCore.SetSFXVolume(this.CurrentSFXVolume);
+            PlayerPrefsTool.SFXVolume_Value.SetValue(Mathf.Clamp01(volume));
+        }
+
+        public void ResetAllVolume()
+        {
+            AudioManagerCore.SetBGMVolume(this.CurrentMusicVolume);
+            AudioManagerCore.SetSFXVolume(this.CurrentSFXVolume);
         }
 
         public void DisposeSFXGroupBunudles()
