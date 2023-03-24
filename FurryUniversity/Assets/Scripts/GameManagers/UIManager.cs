@@ -1,4 +1,5 @@
 using SFramework.Core.UI;
+using SFramework.Core.UI.External;
 using SFramework.Threading.Tasks;
 using SFramework.Utilities;
 using System;
@@ -212,6 +213,7 @@ namespace SFramework.Core.GameManagers
             {
                 this.screenCutOffRange = value;
                 PlayerPrefsTool.ScreenAdaptation_Value.SetValue(value);
+                ForceStretch.CutOffRange = value;
                 
                 //left
                 Vector2 temp = this.uiWindowRoot.offsetMin;//anchorMin到矩形左下角的距离
