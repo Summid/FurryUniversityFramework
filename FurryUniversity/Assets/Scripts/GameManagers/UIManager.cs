@@ -26,6 +26,7 @@ namespace SFramework.Core.GameManagers
         private CanvasGroup canvasGroup;
         private RectTransform uiWindowRoot;
         private RectTransform uiTopWindowRoot;
+        private float screenCutOffRange;//异形屏适配像素
 
         public Canvas UIRootCanvas { get; private set; }
         /// <summary> 当统一处理UI时，若涉及到修改uiInstances等成员，通过该标志位判断处理状态 </summary>
@@ -71,7 +72,9 @@ namespace SFramework.Core.GameManagers
             Debug.Log("UIManager Initialized");
 
             //TODO 刘海屏设备清单加载
-
+            //设置异形屏适配像素
+            this.ScreenCutOffRange = PlayerPrefsTool.ScreenAdaptation_Value.GetValue();
+            
             //默认显示界面
             this.ShowUIAsync<LoginView>().Forget();
         }
@@ -197,6 +200,37 @@ namespace SFramework.Core.GameManagers
 
             Type type = this.navigateQueue[navigateQueue.Count - 1];
             return type.Name;
+        }
+
+        /// <summary>
+        /// 异形屏适配像素
+        /// </summary>
+        public float ScreenCutOffRange
+        {
+            get => this.screenCutOffRange;
+            set
+            {
+                this.screenCutOffRange = value;
+                PlayerPrefsTool.ScreenAdaptation_Value.SetValue(value);
+                
+                //left
+                Vector2 temp = this.uiWindowRoot.offsetMin;//anchorMin到矩形左下角的距离
+                temp.x = value;
+                this.uiWindowRoot.offsetMin = temp;
+
+                temp = this.uiTopWindowRoot.offsetMin;
+                temp.x = value;
+                this.uiTopWindowRoot.offsetMin = temp;
+                
+                //right
+                temp = this.uiWindowRoot.offsetMax;//anchorMax到矩形右上角的距离
+                temp.x = -value;
+                this.uiWindowRoot.offsetMax = temp;
+
+                temp = this.uiTopWindowRoot.offsetMax;
+                temp.x = -value;
+                this.uiTopWindowRoot.offsetMax = temp;
+            }
         }
         #endregion
 

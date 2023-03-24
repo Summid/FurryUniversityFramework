@@ -1,3 +1,4 @@
+using SFramework.Core.GameManagers;
 using SFramework.Utilities;
 using System.Collections;
 using System.Collections.Generic;
@@ -30,9 +31,9 @@ namespace SFramework.Core.UI
             
             this.ScreenAdaptationSlider.onValueChanged.AddListener(value =>
             {
-                PlayerPrefsTool.ScreenAdaptation_Value.SetValue(value);
-                this.ScreenAdaptationValueText.text = $"{(int)(value * 100)}%";
-                //TODO 异形屏UI适配
+                this.ScreenAdaptationValueText.text = $"{(int)(value / this.ScreenAdaptationSlider.maxValue * 100)}%";
+
+                GameManager.Instance.UIManager.ScreenCutOffRange = value;
             });
         }
 
@@ -43,7 +44,8 @@ namespace SFramework.Core.UI
             
             float screenAdaptationValue = PlayerPrefsTool.ScreenAdaptation_Value.GetValue();
             this.ScreenAdaptationSlider.value = screenAdaptationValue;
-            this.ScreenAdaptationValueText.text = $"{(int)(screenAdaptationValue * 100)}%";
+            this.ScreenAdaptationValueText.text =
+                $"{(int)(screenAdaptationValue / this.ScreenAdaptationSlider.maxValue * 100)}%";
         }
     }
 }
