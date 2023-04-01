@@ -46,6 +46,22 @@ namespace SDS.ScriptableObjects
         }
 
         /// <summary>
+        /// 获取给定索引的对话
+        /// </summary>
+        /// <param name="content"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public bool TryGetDialogueContentByIndex(out SDSDialogueContentData content, int index)
+        {
+            content = null;
+            if (this.Contents.Count <= index)
+                return false;
+
+            content = this.Contents[index];
+            return true;
+        }
+
+        /// <summary>
         /// 获取该节点中，给定句子的下一句；若没有下一句则返回false
         /// </summary>
         /// <param name="current"></param>

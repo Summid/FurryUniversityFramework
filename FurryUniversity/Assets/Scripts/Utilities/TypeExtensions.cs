@@ -30,5 +30,16 @@ namespace SFramework.Utilities
             return GetSubTypesInAssemblies(self)
                 .Where(type => type.GetCustomAttribute<T>() != null);
         }
+
+        /// <summary>
+        /// 获取程序集中，实现了给定接口的子类
+        /// </summary>
+        /// <param name="selfInterface"></param>
+        /// <returns></returns>
+        public static IEnumerable<Type> GetInterfaceTypesInAssemblies(this Type selfInterface)
+        {
+            return Assembly.GetAssembly(selfInterface).GetTypes()
+                .Where(type => type.GetInterface(selfInterface.FullName) != null);
+        }
     }
 }

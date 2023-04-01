@@ -1,5 +1,6 @@
 using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
+using SFramework.Utilities.Archive;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -44,28 +45,28 @@ public class SandBoxMain : MonoBehaviour
         //    this.showImage.SetSpriteAsync(UISpriteManager.KingsFall.KingsFall1).Forget();
         //});
 
-        this.clearButton?.onClick.AddListener(() =>
-        {
-            this.showImage.UnloadSprite();
-        });
-
-        this.updateTestButton?.onClick.AddListener(() =>
-        {
-            if (this.cts == null)
-            {
-                this.cts = new CancellationTokenSource();
-                this.cts.CancelAfterSilm(3000);
-                STask.UpdateTask(() =>
-                {
-                    Debug.Log("Update");
-                }, PlayerLoopTiming.Update, this.cts.Token);
-            }
-            else
-            {
-                this.cts.Cancel();
-                this.cts = null;
-            }
-        });
+        // this.clearButton?.onClick.AddListener(() =>
+        // {
+        //     this.showImage.UnloadSprite();
+        // });
+        //
+        // this.updateTestButton?.onClick.AddListener(() =>
+        // {
+        //     if (this.cts == null)
+        //     {
+        //         this.cts = new CancellationTokenSource();
+        //         this.cts.CancelAfterSilm(3000);
+        //         STask.UpdateTask(() =>
+        //         {
+        //             Debug.Log("Update");
+        //         }, PlayerLoopTiming.Update, this.cts.Token);
+        //     }
+        //     else
+        //     {
+        //         this.cts.Cancel();
+        //         this.cts = null;
+        //     }
+        // });
 
         this.timerTestButton?.onClick.AddListener(() =>
         {
@@ -132,6 +133,11 @@ public class SandBoxMain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             AssetBundleManager.SweepAssetBundleVO();
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            SaveMaster.Save();
         }
     }
 }

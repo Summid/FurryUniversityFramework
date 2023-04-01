@@ -2,6 +2,7 @@ using SDS.Data;
 using SDS.ScriptableObjects;
 using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
+using SFramework.Utilities.Archive;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,7 +10,7 @@ using UnityEngine;
 namespace SFramework.Core.UI
 {
     [UIView("DialogueView", EnumUIType.Page)]
-    public partial class DialogueView : UIViewBase
+    public partial class DialogueView : UIViewBase, ISavable
     {
         private SDSDialogueContainerSO currentDialogueContainer;//章节
         private SDSDialogueSO currentDialogueNode;//对话节点
@@ -60,6 +61,15 @@ namespace SFramework.Core.UI
             
             this.DialogueSpeakerText.text = this.currentDialogueContent.Spokesman;
             this.DialogueContentText.text = this.currentDialogueContent.Text;
+        }
+
+        public ArchiveObject OnSave()
+        {
+            ArchiveObject archiveObject = new ArchiveObject();
+            archiveObject.ChapterName = "HelloChapterName";
+            archiveObject.DialogueName = "HelloDialogueName";
+            archiveObject.ContentIndex = 233;
+            return archiveObject;
         }
     }
 }

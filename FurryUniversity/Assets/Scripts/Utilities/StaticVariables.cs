@@ -75,7 +75,10 @@ namespace SFramework.Utilities
         public static readonly string AudioSFXGroupBundleExtension = "_sfxgroup";
         /// <summary> AudioAssetList.g保存目录 </summary>
         public static readonly string AudioGenerateCodeFileFullName = "Assets/Scripts/GameManagers/Gen/AudioAssetList.g.cs";
-
+        
+        /// <summary> 存档保存目录 </summary>
+        public static readonly string ArchivePath = $"{PersistentAssetsPath}/Archives";
+        
         public static RuntimePlatform Platform
         {
             get
@@ -107,6 +110,14 @@ namespace SFramework.Utilities
             }
         }
 
+        public static string PersistentAssetsPath
+        {
+            get
+            {
+                var t = Application.persistentDataPath;
+                return t;
+            }
+        }
 
     }
 }
