@@ -182,7 +182,7 @@ namespace SFramework.Core.UI
             }
             if (this.Mask.gameObject != null && this.UIState != EnumViewState.Shown)
                 this.Mask.gameObject.SetActive(false);
-            GameManager.Instance.UIManager.UpdateUIInsteanceLimit();
+            GameManager.Instance.UIManager.UpdateUIInstanceLimit();
         }
 
         public sealed override void Dispose()

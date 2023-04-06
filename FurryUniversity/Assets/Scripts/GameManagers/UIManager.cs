@@ -39,7 +39,7 @@ namespace SFramework.Core.GameManagers
             private set
             {
                 this.uiInstanceCacheLimitCount = value;
-                this.UpdateUIInsteanceLimit();
+                this.UpdateUIInstanceLimit();
             }
         }
 
@@ -163,7 +163,7 @@ namespace SFramework.Core.GameManagers
             return index == 0;
         }
 
-        public void UpdateUIInsteanceLimit()
+        public void UpdateUIInstanceLimit()
         {
             if (this.InternalHanding)
                 return;
@@ -233,6 +233,17 @@ namespace SFramework.Core.GameManagers
                 temp.x = -value;
                 this.uiTopWindowRoot.offsetMax = temp;
             }
+        }
+        
+        public UIInstanceInfo GetShowingUI<ViewInstance>() where ViewInstance : UIViewBase
+        {
+            Type type = typeof(ViewInstance);
+            return this.uiInstances.TryGetValue(type, out UIInstanceInfo info) ? info : null;
+        }
+
+        public UIInstanceInfo GetShowingUI(Type type)
+        {
+            return this.uiInstances.TryGetValue(type, out UIInstanceInfo info) ? info : null;
         }
         #endregion
 

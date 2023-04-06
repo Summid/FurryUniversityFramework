@@ -1,5 +1,6 @@
 using SDS;
 using SFramework.Utilities;
+using SFramework.Utilities.Archive;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace SFramework.Core.GameManagers
             {
                 Instance = new GameManager();
                 Instance.InitializeGameManagers();
+                Instance.InitializeComponents();
             }
             catch(Exception ex)
             {
@@ -37,6 +39,11 @@ namespace SFramework.Core.GameManagers
             }
         }
 
+        private void InitializeComponents()
+        {
+            SaveMaster.Init();
+        }
+
         public T GetManager<T>(Type type) where T : GameManagerBase
         {
             if (this.gameManagers.TryGetValue(type, out GameManagerBase manager))
@@ -47,6 +54,11 @@ namespace SFramework.Core.GameManagers
             {
                 return null;
             }
+        }
+
+        public GameManagerBase GetManager(Type type)
+        {
+            return this.gameManagers.TryGetValue(type, out GameManagerBase manager) ? manager : null;
         }
 
         private SDSDialogue dialogueSystem;

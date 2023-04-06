@@ -1,13 +1,14 @@
 using SFramework.Core.Audio;
 using SFramework.Threading.Tasks;
 using SFramework.Utilities;
+using SFramework.Utilities.Archive;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework.Core.GameManagers
 {
-    public class AudioManager : GameManagerBase
+    public class AudioManager : GameManagerBase,ISavable
     {
         private static AudioManager selfInstance;//当Mgr初始化方法执行完之后将其赋值，用于判断Mgr是否初始化完毕
 
@@ -122,6 +123,15 @@ namespace SFramework.Core.GameManagers
         public void DisposeSFXGroupBunudles()
         {
             this.audioLoader?.DisposeGroupSFXGroupBundlesAsync().Forget();
+        }
+
+        public ArchiveObject OnSave()
+        {
+            ArchiveObject archiveObject = new ArchiveObject();
+            archiveObject.ChapterName = "HelloAudioName";
+            archiveObject.DialogueName = "HelloAudioName";
+            archiveObject.ContentIndex = 23333;
+            return archiveObject;
         }
     }
 }
