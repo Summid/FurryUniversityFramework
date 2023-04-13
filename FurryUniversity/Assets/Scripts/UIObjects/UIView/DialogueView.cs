@@ -69,6 +69,7 @@ namespace SFramework.Core.UI
             archiveObject.ChapterName = "HelloChapterName";
             archiveObject.DialogueName = "HelloDialogueName";
             archiveObject.ContentIndex = 233;
+            Debug.Log("DialogueView OnSave");
             return archiveObject;
         }
     }

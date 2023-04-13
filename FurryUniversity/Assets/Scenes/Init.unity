@@ -267,6 +267,7 @@ GameObject:
   m_Component:
   - component: {fileID: 332557454}
   - component: {fileID: 332557453}
+  - component: {fileID: 332557455}
   m_Layer: 0
   m_Name: Global
   m_TagString: Untagged
@@ -303,6 +304,26 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &332557455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 332557452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ed83cafcaebab74409beafe007d2a6e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  showImage: {fileID: 0}
+  discipleshipButton: {fileID: 0}
+  dualityButton: {fileID: 0}
+  kingsFallButton: {fileID: 0}
+  clearButton: {fileID: 0}
+  updateTestButton: {fileID: 0}
+  timerTestButton: {fileID: 0}
+  loadSceneTestButton: {fileID: 0}
 --- !u!224 &355597298 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5961065437876862893, guid: 84899cab7fb425f4291b950b174a2bf8, type: 3}

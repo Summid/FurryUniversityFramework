@@ -1,5 +1,6 @@
 using SFramework.Core.GameManagers;
 using SFramework.Core.UI;
+using SFramework.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -71,7 +72,7 @@ namespace SFramework.Utilities.Archive
             {
                 caches.Add(iSavableType, new List<Type>());
             }
-
+            
             if (!caches.ContainsKey(iLoadableType))
             {
                 caches.Add(iLoadableType, new List<Type>());
@@ -90,27 +91,29 @@ namespace SFramework.Utilities.Archive
                 var list = caches[iLoadableType];
                 list.AddRange(loadableTypes);
             }
-            
+
             isInit = true;
         }
 
-        public static void Save()
+        public static async STask Save()
         {
-            //TODO 改成异步
             if (!caches.TryGetValue(iSavableType, out List<Type> list))
             {
                 return;
             }
 
+            ArchiveObject archiveObject = null;
             foreach (Type type in list)
             {
+                await STask.NextFrame();
+                object result = null;
                 if (type.IsSubclassOf(uiViewType))
                 {
                     UIManager.UIInstanceInfo uiInfo = GameManager.Instance.UIManager.GetShowingUI(type);
                     if (uiInfo != null)
                     {
                         //ui显示中
-                        type.GetMethod("OnSave")?.Invoke(uiInfo.ViewInstance, null);
+                        result = type.GetMethod("OnSave")?.Invoke(uiInfo.ViewInstance, null);
                     }
                 }
                 else if (type.IsSubclassOf(managerType))
@@ -118,8 +121,13 @@ namespace SFramework.Utilities.Archive
                     GameManagerBase manager = GameManager.Instance.GetManager(type);
                     if (manager != null)
                     {
-                        type.GetMethod("OnSave")?.Invoke(manager, null);
+                        result = type.GetMethod("OnSave")?.Invoke(manager, null);
                     }
+                }
+
+                if (result is ArchiveObject resultAO)
+                {
+                    archiveObject = archiveObject == null ? resultAO : archiveObject.Merge(resultAO);
                 }
             }
         }

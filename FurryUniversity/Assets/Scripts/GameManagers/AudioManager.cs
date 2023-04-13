@@ -131,6 +131,7 @@ namespace SFramework.Core.GameManagers
             archiveObject.ChapterName = "HelloAudioName";
             archiveObject.DialogueName = "HelloAudioName";
             archiveObject.ContentIndex = 23333;
+            Debug.Log("Audio manager OnSave");
             return archiveObject;
         }
     }
