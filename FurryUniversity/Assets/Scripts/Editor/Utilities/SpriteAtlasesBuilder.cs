@@ -33,7 +33,7 @@ namespace SFramework.Utilities.Editor
 
         private static void InitializeAtlases()
         {
-            DirectoryInfo atlasDirectoryInfo = new DirectoryInfo(EditorHelper.GetFullPath(StaticVariables.UISpriteAtalasesPath));
+            DirectoryInfo atlasDirectoryInfo = new DirectoryInfo(EditorHelper.GetFullPath(StaticVariables.UISpriteAtlasesPath));
             FileSystemInfo[] atlases = atlasDirectoryInfo.GetFileSystemInfos();
             foreach (FileSystemInfo atlas in atlases)
             {
@@ -87,7 +87,7 @@ namespace SFramework.Utilities.Editor
             {
                 bool alpha = !atlasName.Contains("_NA");
                 SpriteAtlas atlas = SetAtlasSettings(alpha);
-                string finalPath = StaticVariables.UISpriteAtalasesPath + $"/{directoryInfo.Name}" + ".spriteatlas";
+                string finalPath = StaticVariables.UISpriteAtlasesPath + $"/{directoryInfo.Name}" + ".spriteatlas";
                 AssetDatabase.CreateAsset(atlas, finalPath);
                 atlasInfos.Add(atlasName, atlas);
 

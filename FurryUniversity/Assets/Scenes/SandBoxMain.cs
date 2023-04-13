@@ -139,5 +139,9 @@ public class SandBoxMain : MonoBehaviour
         {
             SaveMaster.Save();
         }
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            SaveMaster.Load();
+        }
     }
 }

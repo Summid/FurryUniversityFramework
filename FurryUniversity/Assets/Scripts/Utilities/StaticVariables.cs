@@ -15,7 +15,7 @@ namespace SFramework.Utilities
 
         public static readonly string SpritesPath = $"{ResPath}/Sprites";
         public static readonly string UISpritesPath = $"{SpritesPath}/UI";
-        public static readonly string UISpriteAtalasesPath = $"{BundlesPath}/SpriteAtlases";
+        public static readonly string UISpriteAtlasesPath = $"{BundlesPath}/SpriteAtlases";
 
         public static readonly string Scripts = "Scripts";
         public static readonly string GameManagers = "GameManagers";
@@ -78,7 +78,9 @@ namespace SFramework.Utilities
         
         /// <summary> 存档保存目录 </summary>
         public static readonly string ArchivePath = $"{PersistentAssetsPath}/Archives";
-        
+        /// <summary> 存档命名 </summary>
+        public static readonly string ArchiveName = "Archive";
+
         public static RuntimePlatform Platform
         {
             get

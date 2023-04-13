@@ -2,9 +2,10 @@ using SFramework.Core.GameManagers;
 using SFramework.Core.UI;
 using SFramework.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
 
 namespace SFramework.Utilities.Archive
@@ -26,20 +27,45 @@ namespace SFramework.Utilities.Archive
     
     public interface IArchiveManager
     {
-        void SaveArchive();
-        void LoadArchive();
+        void SaveArchive(ArchiveObject archiveObject);
+        ArchiveObject LoadArchive();
     }
 
     public class BinaryArchiveManager : IArchiveManager
     {
-        public void SaveArchive()
+        public void SaveArchive(ArchiveObject archiveObject)
         {
-            throw new System.NotImplementedException();
+            if (archiveObject == null)
+                return;
+
+            if (!Directory.Exists(StaticVariables.ArchivePath))
+            {
+                Directory.CreateDirectory(StaticVariables.ArchivePath);
+            }
+            
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (FileStream fileStream = File.Create($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}.txt"))
+            {
+                binaryFormatter.Serialize(fileStream, archiveObject);
+            }
         }
 
-        public void LoadArchive()
+        public ArchiveObject LoadArchive()
         {
-            throw new System.NotImplementedException();
+            if (!File.Exists($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}.txt"))
+                return null;
+
+
+            ArchiveObject archiveObject = null;
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (FileStream fileStream = File.Open($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}.txt",
+                       FileMode.Open))
+            {
+                archiveObject = binaryFormatter.Deserialize(fileStream) as ArchiveObject;
+            }
+
+            // Debug.Log($"load archive: {archiveObject}");
+            return archiveObject;
         }
     }
     
@@ -130,11 +156,16 @@ namespace SFramework.Utilities.Archive
                     archiveObject = archiveObject == null ? resultAO : archiveObject.Merge(resultAO);
                 }
             }
+            
+            if (archiveObject != null)
+            {
+                CurrentArchiveManager.SaveArchive(archiveObject);
+            }
         }
 
         public static ArchiveObject Load()
         {
-            return null;
+            return CurrentArchiveManager.LoadArchive();
         } 
     }
 }

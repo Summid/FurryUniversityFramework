@@ -27,7 +27,7 @@ namespace SFramework.Utilities.Editor
         public static void UpdateAssetBundleTags()
         {
 
-            UpdateAssetBundleTagsHandler(StaticVariables.UISpriteAtalasesPath, StaticVariables.SpriteAtlasExtension, StaticVariables.SpriteAtlasBundleExtension);
+            UpdateAssetBundleTagsHandler(StaticVariables.UISpriteAtlasesPath, StaticVariables.SpriteAtlasExtension, StaticVariables.SpriteAtlasBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIViewPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIViewBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.UIItemPrefabsPath, StaticVariables.PrefabExtension, StaticVariables.UIItemBundleExtension);
 

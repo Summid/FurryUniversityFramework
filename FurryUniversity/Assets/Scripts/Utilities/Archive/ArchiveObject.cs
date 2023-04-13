@@ -1,9 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
 namespace SFramework.Utilities.Archive
 {
+    [Serializable]
     public class ArchiveObject
     {
         public string ChapterName; // file name
