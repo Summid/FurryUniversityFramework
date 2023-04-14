@@ -33,18 +33,21 @@ namespace SFramework.Utilities.Archive
 
     public class BinaryArchiveManager : IArchiveManager
     {
+        public const string Extension = ".txt";
+        
         public void SaveArchive(ArchiveObject archiveObject)
         {
             if (archiveObject == null)
                 return;
 
-            if (!Directory.Exists(StaticVariables.ArchivePath))
+            string archivePath = StaticVariables.ArchivePath;
+            if (!Directory.Exists(archivePath))
             {
-                Directory.CreateDirectory(StaticVariables.ArchivePath);
+                Directory.CreateDirectory(archivePath);
             }
             
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream fileStream = File.Create($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}.txt"))
+            using (FileStream fileStream = File.Create($"{archivePath}/{StaticVariables.ArchiveName}{Extension}"))
             {
                 binaryFormatter.Serialize(fileStream, archiveObject);
             }
@@ -52,19 +55,19 @@ namespace SFramework.Utilities.Archive
 
         public ArchiveObject LoadArchive()
         {
-            if (!File.Exists($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}.txt"))
+            if (!File.Exists($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}{Extension}"))
                 return null;
 
 
             ArchiveObject archiveObject = null;
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream fileStream = File.Open($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}.txt",
+            using (FileStream fileStream = File.Open($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}{Extension}",
                        FileMode.Open))
             {
                 archiveObject = binaryFormatter.Deserialize(fileStream) as ArchiveObject;
             }
 
-            // Debug.Log($"load archive: {archiveObject}");
+            Debug.Log($"load archive: {archiveObject}");
             return archiveObject;
         }
     }
