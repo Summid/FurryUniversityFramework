@@ -18,7 +18,8 @@ namespace SFramework.Core.UI
 
         protected override void OnAwake()
         {
-            this.SettingsButton_Button.onClick.AddListener((() => GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget()));
+            this.SettingsButton_Button.onClick.AddListener(() => GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget());
+            this.ArchiveButtons_Button.onClick.AddListener(() => { Debug.Log("Open archive view"); });
             this.BackgroundButton_Button.onClick.AddListener(this.Roll2NextDialogueContent);
         }
 
