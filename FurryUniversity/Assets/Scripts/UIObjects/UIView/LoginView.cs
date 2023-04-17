@@ -58,10 +58,10 @@ namespace SFramework.Core.UI
         private void ShowLoadedEffect()
         {
             this.sliderTweener?.Kill();
-            var sliderTween = this.ProgressSlider.DOValueByAdapter(1f, (1 - this.ProgressSlider.value) / this.sliderSpeed);
+            var sliderTween = this.ProgressSlider_Slider.DOValueByAdapter(1f, (1 - this.ProgressSlider_Slider.value) / this.sliderSpeed);
             sliderTween.onComplete = () =>
             {
-                this.ProgressSlider.gameObject.SetActive(false);
+                this.ProgressSlider_Slider.gameObject.SetActive(false);
                 this.TipsText.text = "点击任意键继续";
                 this.tweenerCores.ForEach(t => t.Kill());
                 this.LoadImages.ForEach(img => img.gameObject.SetActive(false));
@@ -73,7 +73,7 @@ namespace SFramework.Core.UI
         public void Report(float value)
         {
             this.sliderTweener?.Kill();
-            this.ProgressSlider.DOValueByAdapter(value, (value - this.ProgressSlider.value) / this.sliderSpeed);
+            this.ProgressSlider_Slider.DOValueByAdapter(value, (value - this.ProgressSlider_Slider.value) / this.sliderSpeed);
         }
 
         protected override void OnHide()

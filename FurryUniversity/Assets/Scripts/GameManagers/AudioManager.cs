@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SFramework.Core.GameManagers
 {
-    public class AudioManager : GameManagerBase,ISavable
+    public class AudioManager : GameManagerBase
     {
         private static AudioManager selfInstance;//当Mgr初始化方法执行完之后将其赋值，用于判断Mgr是否初始化完毕
 
@@ -123,16 +123,6 @@ namespace SFramework.Core.GameManagers
         public void DisposeSFXGroupBunudles()
         {
             this.audioLoader?.DisposeGroupSFXGroupBundlesAsync().Forget();
-        }
-
-        public ArchiveObject OnSave()
-        {
-            ArchiveObject archiveObject = new ArchiveObject();
-            archiveObject.ChapterName = "HelloAudioName";
-            archiveObject.DialogueName = "HelloAudioName";
-            archiveObject.ContentIndex = 23333;
-            Debug.Log("Audio manager OnSave");
-            return archiveObject;
         }
     }
 }

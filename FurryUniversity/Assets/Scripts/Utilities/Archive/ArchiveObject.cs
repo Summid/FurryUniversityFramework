@@ -1,10 +1,19 @@
 using System;
+using System.Collections.Generic;
 
 namespace SFramework.Utilities.Archive
 {
     [Serializable]
+    public class ArchiveList
+    {
+        public List<ArchiveObject> ArchiveObjects;
+    }
+    
+    [Serializable]
     public class ArchiveObject
     {
+        public int ArchiveIndex;
+        
         public string ChapterName; // file name
 
         public string DialogueName;

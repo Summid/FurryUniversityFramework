@@ -10,11 +10,15 @@ namespace SFramework.Core.UI
         [UIFieldInit("LoadImages")]
         public List<UnityEngine.UI.Image> LoadImages;
         [UIFieldInit("ProgressSlider")]
-        public UnityEngine.UI.Slider ProgressSlider;
+        public UnityEngine.UI.Slider ProgressSlider_Slider;
+        [UIFieldInit("ProgressSlider")]
+        public SFramework.Core.UI.External.ForceStretch ProgressSlider_ForceStretch;
         [UIFieldInit("BG")]
         public UnityEngine.UI.Image BG_Image;
         [UIFieldInit("BG")]
         public UnityEngine.UI.Button BG_Button;
+        [UIFieldInit("BG")]
+        public SFramework.Core.UI.External.ForceStretch BG_ForceStretch;
 
     }
 }

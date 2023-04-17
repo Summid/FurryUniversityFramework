@@ -13,6 +13,11 @@ MonoBehaviour:
   m_Name: uiinfolist
   m_EditorClassIdentifier: 
   UIList:
+  - ViewAssetBundleName: archiveview_uiview
+    ViewAssetName: ArchiveView
+    ViewType: 1
+    ViewClassName: SFramework.Core.UI.ArchiveView
+    IsDisableNavigatePage: 0
   - ViewAssetBundleName: dialogueview_uiview
     ViewAssetName: DialogueView
     ViewType: 0
@@ -39,6 +44,9 @@ MonoBehaviour:
     ViewClassName: SFramework.Core.UI.SettingsView
     IsDisableNavigatePage: 0
   UIItemInfo:
+  - UIItemAssetBundleName: archiveitem_uiitem
+    UIItemAssetName: ArchiveItem
+    UIItemClassName: SFramework.Core.UI.ArchiveItem
   - UIItemAssetBundleName: mainviewchapterbutton_uiitem
     UIItemAssetName: MainViewChapterButton
     UIItemClassName: SFramework.Core.UI.MainViewChapterButton

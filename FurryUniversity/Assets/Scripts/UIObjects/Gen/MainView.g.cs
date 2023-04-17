@@ -9,6 +9,8 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.RawImage BG_RawImage;
         [UIFieldInit("BG")]
         public UnityEngine.Video.VideoPlayer BG_VideoPlayer;
+        [UIFieldInit("BG")]
+        public SFramework.Core.UI.External.ForceStretch BG_ForceStretch;
         [UIFieldInit("MainButtons")]
         public UnityEngine.UI.VerticalLayoutGroup MainButtons;
         [UIFieldInit("SelectChapterButton")]

@@ -7,6 +7,8 @@ namespace SFramework.Core.UI
             /// </summary>
             public static class AssetList
             {
+                /// <summary> ab:[archiveitem_uiitem]<para>class:[SFramework.Core.UI.ArchiveItem]</para> </summary>
+                public static string ArchiveItem = "ArchiveItem";
                 /// <summary> ab:[mainviewchapterbutton_uiitem]<para>class:[SFramework.Core.UI.MainViewChapterButton]</para> </summary>
                 public static string MainViewChapterButton = "MainViewChapterButton";
                 /// <summary> ab:[viewmask_uiitem]<para>class:[SFramework.Core.UI.ViewMask]</para> </summary>

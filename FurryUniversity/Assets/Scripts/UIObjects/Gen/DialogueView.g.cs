@@ -6,7 +6,9 @@ namespace SFramework.Core.UI
     public partial class DialogueView
     {
         [UIFieldInit("BG")]
-        public UnityEngine.UI.Image BG;
+        public UnityEngine.UI.Image BG_Image;
+        [UIFieldInit("BG")]
+        public SFramework.Core.UI.External.ForceStretch BG_ForceStretch;
         [UIFieldInit("ExpandButton")]
         public UnityEngine.UI.Image ExpandButton_Image;
         [UIFieldInit("ExpandButton")]
@@ -27,6 +29,10 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.Image ArchiveButtons_Image;
         [UIFieldInit("ArchiveButtons")]
         public UnityEngine.UI.Button ArchiveButtons_Button;
+        [UIFieldInit("TopButtonsNode")]
+        public UnityEngine.UI.HorizontalLayoutGroup TopButtonsNode_HorizontalLayoutGroup;
+        [UIFieldInit("TopButtonsNode")]
+        public UnityEngine.UI.ContentSizeFitter TopButtonsNode_ContentSizeFitter;
 
     }
 }

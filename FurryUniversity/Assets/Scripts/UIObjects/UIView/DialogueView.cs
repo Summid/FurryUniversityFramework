@@ -1,5 +1,7 @@
+using DG.Tweening;
 using SDS.Data;
 using SDS.ScriptableObjects;
+using SFramework.Adapter;
 using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
 using SFramework.Utilities.Archive;
@@ -10,19 +12,28 @@ using UnityEngine;
 namespace SFramework.Core.UI
 {
     [UIView("DialogueView", EnumUIType.Page)]
-    public partial class DialogueView : UIViewBase, ISavable
+    public partial class DialogueView : UIViewBase
     {
         private SDSDialogueContainerSO currentDialogueContainer;//章节
         private SDSDialogueSO currentDialogueNode;//对话节点
         private SDSDialogueContentData currentDialogueContent;//对话句子
 
+        private float expandDuration = 0.5f;
+        private RectTransform topButtonsNodeRectTrans;
+        private RectTransform expandButtonRectTrans;
+
         protected override void OnAwake()
         {
+            this.topButtonsNodeRectTrans = this.TopButtonsNode_ContentSizeFitter.GetComponent<RectTransform>();
+            this.expandButtonRectTrans = this.ExpandButton_Button.GetComponent<RectTransform>();
+            
             this.SettingsButton_Button.onClick.AddListener(() => GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget());
-            this.ArchiveButtons_Button.onClick.AddListener(() => { Debug.Log("Open archive view"); });
+            this.ArchiveButtons_Button.onClick.AddListener(() => GameManager.Instance.UIManager.ShowUIAsync<ArchiveView>().Forget());
+            this.ExpandButton_Button.onClick.AddListener(this.OnClickExpandButton);
             this.BackgroundButton_Button.onClick.AddListener(this.Roll2NextDialogueContent);
         }
 
+        #region Dialogue
         public void SetNewDialogueContainer(SDSDialogueContainerSO dialogueContainer)
         {
             this.currentDialogueContainer = dialogueContainer;
@@ -63,15 +74,28 @@ namespace SFramework.Core.UI
             this.DialogueSpeakerText.text = this.currentDialogueContent.Spokesman;
             this.DialogueContentText.text = this.currentDialogueContent.Text;
         }
+        #endregion
 
-        public ArchiveObject OnSave()
+        private void OnClickExpandButton()
         {
-            ArchiveObject archiveObject = new ArchiveObject();
-            archiveObject.ChapterName = "HelloChapterName";
-            archiveObject.DialogueName = "HelloDialogueName";
-            archiveObject.ContentIndex = 233;
-            Debug.Log("DialogueView OnSave");
-            return archiveObject;
+            float rotateValue;
+            if (this.topButtonsNodeRectTrans.anchoredPosition.y > 0)
+            {
+                this.topButtonsNodeRectTrans.DOAnchorPosByAdapter(
+                    new Vector2(this.topButtonsNodeRectTrans.anchoredPosition.x, 0), this.expandDuration);
+                rotateValue = 180f;
+            }
+            else
+            {
+                this.topButtonsNodeRectTrans.DOAnchorPosByAdapter(
+                    new Vector2(
+                        this.topButtonsNodeRectTrans.anchoredPosition.x,
+                        this.topButtonsNodeRectTrans.rect.height), this.expandDuration);
+                rotateValue = 0f;
+            }
+
+            this.expandButtonRectTrans.DOLocalRotate(new Vector3(0f, 0f, rotateValue), this.expandDuration).SetEase(Ease.Linear)
+                .SetAutoKill();
         }
     }
 }

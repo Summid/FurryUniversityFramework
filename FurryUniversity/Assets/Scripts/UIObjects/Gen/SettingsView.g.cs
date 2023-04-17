@@ -12,7 +12,7 @@ namespace SFramework.Core.UI
         [UIFieldInit("EnvPanel")]
         public SFramework.Core.UI.EnvironmentSettings EnvPanel;
         [UIFieldInit("AudioPanel")]
-        public UnityEngine.GameObject AudioPanel;
+        public SFramework.Core.UI.AudioSettings AudioPanel;
 
     }
 }
