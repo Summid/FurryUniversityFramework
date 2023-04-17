@@ -18,7 +18,7 @@ namespace SFramework.Utilities.Archive
 
         public string DialogueName;
 
-        public int ContentIndex;
+        public int ContentIndex; // >= content count if at choice
 
         public ArchiveObject Merge(ArchiveObject archiveObject)
         {

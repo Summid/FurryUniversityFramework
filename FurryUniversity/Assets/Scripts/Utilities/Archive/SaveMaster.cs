@@ -124,7 +124,11 @@ namespace SFramework.Utilities.Archive
             isInit = true;
         }
 
-        public static async STask Save()
+        /// <summary>
+        /// 保存存档
+        /// </summary>
+        /// <param name="index">存档索引位置</param>
+        public static async STask Save(int index = 0)
         {
             if (!caches.TryGetValue(iSavableType, out List<Type> list))
             {

@@ -134,14 +134,5 @@ public class SandBoxMain : MonoBehaviour
         {
             AssetBundleManager.SweepAssetBundleVO();
         }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            SaveMaster.Save();
-        }
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            SaveMaster.Load();
-        }
     }
 }

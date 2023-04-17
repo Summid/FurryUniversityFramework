@@ -13,9 +13,10 @@ namespace SFramework.Utilities.Editor
         {
             if (Directory.Exists(StaticVariables.ArchivePath))
             {
-                EditorUtility.RevealInFinder(StaticVariables.ArchivePath);            
+                EditorUtility.RevealInFinder(StaticVariables.ArchivePath);
+                return;
             }
-            EditorUtility.RevealInFinder(StaticVariables.PersistentAssetsPath);
+            Debug.Log("存档目录不存在");
         }
     }
 }
