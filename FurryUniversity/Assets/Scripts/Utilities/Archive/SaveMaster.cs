@@ -27,51 +27,81 @@ namespace SFramework.Utilities.Archive
     
     public interface IArchiveManager
     {
-        void SaveArchive(ArchiveObject archiveObject);
-        ArchiveObject LoadArchive();
+        void SaveArchive(Archive archive);
+        Archive LoadArchive();
+        string Extension { get; }
     }
-
+    
     public class BinaryArchiveManager : IArchiveManager
     {
-        public const string Extension = ".txt";
+        public string Extension => ".binary";
         
-        public void SaveArchive(ArchiveObject archiveObject)
+        public void SaveArchive(Archive archive)
         {
-            if (archiveObject == null)
+            if (archive == null)
                 return;
 
             string archivePath = StaticVariables.ArchivePath;
-            if (!Directory.Exists(archivePath))
-            {
-                Directory.CreateDirectory(archivePath);
-            }
-            
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream fileStream = File.Create($"{archivePath}/{StaticVariables.ArchiveName}{Extension}"))
+            using (FileStream fileStream = File.Create($"{archivePath}/{StaticVariables.ArchiveName}{this.Extension}"))
             {
-                binaryFormatter.Serialize(fileStream, archiveObject);
+                binaryFormatter.Serialize(fileStream, archive);
             }
         }
 
-        public ArchiveObject LoadArchive()
+        public Archive LoadArchive()
         {
-            if (!File.Exists($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}{Extension}"))
+            string archiveFullPath = $"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}{this.Extension}";
+            if (!File.Exists(archiveFullPath))
                 return null;
-
-
-            ArchiveObject archiveObject = null;
+            
+            Archive archive = null;
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            using (FileStream fileStream = File.Open($"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}{Extension}",
-                       FileMode.Open))
+            using (FileStream fileStream = File.Open(archiveFullPath, FileMode.Open))
             {
-                archiveObject = binaryFormatter.Deserialize(fileStream) as ArchiveObject;
+                archive = binaryFormatter.Deserialize(fileStream) as Archive;
             }
-
-            Debug.Log($"load archive: {archiveObject}");
-            return archiveObject;
+            return archive;
         }
     }
-    
+
+    public class JSONArchiveManager : IArchiveManager
+    {
+        public string Extension => ".json";
+        //TODO 加密
+        public void SaveArchive(Archive archive)
+        {
+            if (archive == null)
+                return;
+
+            string archivePath = StaticVariables.ArchivePath;
+            using (StreamWriter streamWriter = new StreamWriter($"{archivePath}/{StaticVariables.ArchiveName}{this.Extension}"))
+            {
+                string jsonString = JsonUtility.ToJson(archive, true);
+                streamWriter.Write(jsonString);
+            }
+        }
+
+        public Archive LoadArchive()
+        {
+            string archiveFullPath = $"{StaticVariables.ArchivePath}/{StaticVariables.ArchiveName}{this.Extension}";
+            if (!File.Exists(archiveFullPath))
+                return null;
+
+            string jsonString = string.Empty;
+            using (StreamReader streamReader = new StreamReader(archiveFullPath))
+            {
+                jsonString = streamReader.ReadToEnd();
+            }
+
+            if (string.IsNullOrEmpty(jsonString))
+                return null;
+
+            Archive archive = JsonUtility.FromJson<Archive>(jsonString);
+            return archive;
+        }
+    }
+
     public static class SaveMaster
     {
         private static IArchiveManager currentArchiveManager;
@@ -79,7 +109,16 @@ namespace SFramework.Utilities.Archive
         {
             get
             {
-                return currentArchiveManager ??= new BinaryArchiveManager();//TODO 用配置决定使用的存档管理器
+                switch(GameManager.Instance.GameSettings.ArchiveType)
+                {
+                    case Core.GameManagers.Init.ArchiveTypeEnum.Binary:
+                        return currentArchiveManager ??= new BinaryArchiveManager();
+                    case Core.GameManagers.Init.ArchiveTypeEnum.JSON:
+                        return currentArchiveManager ??= new JSONArchiveManager();
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
             }
         }
 
@@ -92,6 +131,8 @@ namespace SFramework.Utilities.Archive
         private static readonly Type iLoadableType = typeof(ILoadable);
         private static readonly Type uiViewType = typeof(UIViewBase);
         private static readonly Type managerType = typeof(GameManagerBase);
+
+        private static Archive archive;
         
         public static void Init()
         {
@@ -121,6 +162,28 @@ namespace SFramework.Utilities.Archive
                 list.AddRange(loadableTypes);
             }
 
+            string archivePath = StaticVariables.ArchivePath;
+            if (!Directory.Exists(archivePath))
+            {
+                Directory.CreateDirectory(archivePath);
+            }
+
+            if (!File.Exists($"{archivePath}/{StaticVariables.ArchiveName}{CurrentArchiveManager.Extension}"))
+            {
+                Debug.LogWarning($"no archive file, init default one");
+                archive = new Archive();
+                archive.ArchiveObjects = new List<ArchiveObject>();
+                for (int i = 0; i < GameManager.Instance.GameSettings.ArchiveCount; ++i)
+                {
+                    archive.ArchiveObjects.Add(new ArchiveObject(i));
+                }
+                CurrentArchiveManager.SaveArchive(archive);
+            }
+            else
+            {
+                archive = CurrentArchiveManager.LoadArchive();
+            }
+            
             isInit = true;
         }
 
@@ -130,7 +193,7 @@ namespace SFramework.Utilities.Archive
         /// <param name="index">存档索引位置</param>
         public static async STask Save(int index = 0)
         {
-            if (!caches.TryGetValue(iSavableType, out List<Type> list))
+            if (!caches.TryGetValue(iSavableType, out List<Type> list) || index >= archive.ArchiveObjects.Count)
             {
                 return;
             }
@@ -166,13 +229,14 @@ namespace SFramework.Utilities.Archive
             
             if (archiveObject != null)
             {
-                CurrentArchiveManager.SaveArchive(archiveObject);
+                archive.ArchiveObjects[index] = archiveObject;
+                CurrentArchiveManager.SaveArchive(archive);
             }
         }
 
-        public static ArchiveObject Load()
+        public static ArchiveObject Load(int index)
         {
-            return CurrentArchiveManager.LoadArchive();
+            return index >= archive.ArchiveObjects.Count ? null : archive.ArchiveObjects[index];
         } 
     }
 }

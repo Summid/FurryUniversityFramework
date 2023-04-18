@@ -1,12 +1,25 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
 
 namespace SFramework.Utilities.Archive
 {
     [Serializable]
-    public class ArchiveList
+    public class Archive
     {
         public List<ArchiveObject> ArchiveObjects;
+
+        public override string ToString()
+        {
+            StringBuilder stringBuilder = new StringBuilder();
+            foreach (ArchiveObject archiveObject in this.ArchiveObjects)
+            {
+                stringBuilder.Append(archiveObject.ToString() + "\n");
+            }
+
+            return stringBuilder.ToString();
+        }
     }
     
     [Serializable]
@@ -20,6 +33,14 @@ namespace SFramework.Utilities.Archive
 
         public int ContentIndex; // >= content count if at choice
 
+        public ArchiveObject(int archiveIndex)
+        {
+            this.ArchiveIndex = archiveIndex;
+            this.ChapterName = string.Empty;
+            this.DialogueName = string.Empty;
+            this.ContentIndex = -1;
+        }
+        
         public ArchiveObject Merge(ArchiveObject archiveObject)
         {
             if (archiveObject == null)

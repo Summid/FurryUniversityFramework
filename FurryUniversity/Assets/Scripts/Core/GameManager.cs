@@ -10,12 +10,14 @@ namespace SFramework.Core.GameManagers
     public partial class GameManager
     {
         public static GameManager Instance { get; private set; }
+        public Init GameSettings;
         private GameManager() { }
         public static void InitializeGameManager()
         {
             try
             {
                 Instance = new GameManager();
+                Instance.GameSettings = GameObject.Find("Global").GetComponent<Init>();
                 Instance.InitializeGameManagers();
                 Instance.InitializeComponents();
             }
@@ -39,6 +41,7 @@ namespace SFramework.Core.GameManagers
             }
         }
 
+        //TODO 放到显示LoginView之后再加载，并显示加载进度
         private void InitializeComponents()
         {
             SaveMaster.Init();
