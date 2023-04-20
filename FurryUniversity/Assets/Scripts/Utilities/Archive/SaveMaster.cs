@@ -133,6 +133,7 @@ namespace SFramework.Utilities.Archive
         private static readonly Type managerType = typeof(GameManagerBase);
 
         private static Archive archive;
+        public static Archive Archive => archive;
         
         public static void Init()
         {

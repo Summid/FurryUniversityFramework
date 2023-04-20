@@ -180,7 +180,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         {
             if (this.Generated)
                 return;
-
+            //TODO 设置content锚点在左上角
             if(!this.Initialized)
                 this.Initialize();
             this.cellPrefab = newCell;
