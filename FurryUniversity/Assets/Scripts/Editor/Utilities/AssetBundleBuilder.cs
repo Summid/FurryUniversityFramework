@@ -34,6 +34,8 @@ namespace SFramework.Utilities.Editor
             UpdateAssetBundleTagsHandler(StaticVariables.VideoPath, StaticVariables.MP4Extension, StaticVariables.VideoBundleExtension);
             UpdateAssetBundleTagsHandler(StaticVariables.TexturePath, StaticVariables.RenderTextureExtension, StaticVariables.RenderTextureBundleExtension);
 
+            UpdateAssetBundleTagsHandler(StaticVariables.FontPath, StaticVariables.FontExtension, StaticVariables.FontBundleExtension);
+            
             UpdateSpritesAssetBundleTagsHandler();
         }
 

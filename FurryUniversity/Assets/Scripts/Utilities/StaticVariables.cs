@@ -55,6 +55,10 @@ namespace SFramework.Utilities
         public static readonly string RenderTextureBundleExtension = "_renderTexture";
         public static readonly string TexturePath = $"{BundlesPath}/Textures";
 
+        public static readonly string FontBundleExtension = "_font";
+        public static readonly string FontExtension = ".asset";
+        public static readonly string FontPath = $"{BundlesPath}/Font";
+
         /// <summary> UIList清单文件名称 </summary>
         public static readonly string UIListName = "uiinfolist.asset";
         /// <summary> UIList清单Bundle名称 </summary>
