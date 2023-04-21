@@ -17,5 +17,16 @@ namespace SFramework.Core.UI
         {
             this.ShowText.text = $"Archive {data.ArchiveIndex}";
         }
+
+        protected override void OnHide()
+        {
+            Debug.Log("Archive Item onhide");
+        }
+
+        protected override void OnDispose()
+        {
+            Debug.Log("Archive Item ondispose");
+            
+        }
     }
 }

@@ -1,3 +1,4 @@
+using SFramework.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -160,7 +161,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.totalCount <= 0)
                 return;
-            this.GenerateAllCells();
+            this.GenerateAllCells().Forget();
         }
 
         /// <inheritdoc cref="IUnlimitedScroller.JumpTo(uint, JumpToMethod)"/>
@@ -230,6 +231,11 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.layoutGroup = this.GetComponent<LayoutGroup>();
             this.viewportRectTransform = this.scrollRect.viewport;
             this.contentTrans = this.GetComponent<RectTransform>();
+            
+            Vector2 vector2 = new Vector2(0, 1);
+            this.contentTrans.anchorMin = vector2;
+            this.contentTrans.anchorMax = vector2;
+            this.contentTrans.pivot = vector2;
 
             this.offsetPadding = new Padding
             {
@@ -349,8 +355,9 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             }
         }
 
-        private void GenerateAllCells()
+        private async STaskVoid GenerateAllCells()
         {
+            await STask.NextFrame();//等待一帧，否则viewportRectTransform的宽高可能来不及刷新
             this.currentFirstCol = this.FirstColumn;
             this.currentLastCol = this.LastColumn;
             this.currentFirstRow = this.FirstRow;
@@ -479,7 +486,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 this.LastRow < this.currentFirstRow)
             {
                 this.DestroyAllCells();
-                this.GenerateAllCells();
+                this.GenerateAllCells().Forget();
                 return;
             }
 

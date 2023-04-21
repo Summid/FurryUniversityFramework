@@ -1,3 +1,4 @@
+using SFramework.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -90,13 +91,19 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         #endregion
 
         #region Public Fields
-
+        
         /// <summary>
         /// Match cell per row to the width of Content. If set, cellPerRow will be ignored.
         /// </summary>
         [Tooltip("Match cell per row to the width of Content. If set, cellPerRow will be ignored.")]
         public bool matchContentWidth;
 
+        /// <summary>
+        /// Match Average cells per row to the total cells. It will work only when constraint is set to Fixed Row Count. If set, cellPerRow will be ignored.
+        /// </summary>
+        [Tooltip("Match Average cells per row to the total cells. It will work only when constraint is set to Fixed Row Count. If set, cellPerRow will be ignored.")]
+        public bool matchAverageCellsPerRow;
+        
         /// <summary>
         /// Cell count per row if not match Content width.
         /// </summary>
@@ -180,9 +187,10 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
         {
             if (this.Generated)
                 return;
-            //TODO 设置content锚点在左上角
+            
             if(!this.Initialized)
                 this.Initialize();
+            
             this.cellPrefab = newCell;
             this.totalCount = newTotalCount;
             this.onCellGenerate = onGenerate;
@@ -192,7 +200,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
 
             if (this.totalCount <= 0)
                 return;
-            this.GenerateAllCells();
+            this.GenerateAllCells().Forget();
         }
 
         /// <inheritdoc cref="IUnlimitedScroller.JumpTo(uint, JumpToMethod)"/>
@@ -296,6 +304,11 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.layoutGroup = this.GetComponent<LayoutGroup>();
             this.viewportRectTransform = this.scrollRect.viewport;
             this.contentTrans = this.GetComponent<RectTransform>();
+            
+            Vector2 vector2 = new Vector2(0, 1);
+            this.contentTrans.anchorMin = vector2;
+            this.contentTrans.anchorMax = vector2;
+            this.contentTrans.pivot = vector2;
 
             this.offsetPadding = new Padding()
             {
@@ -317,38 +330,41 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             this.cellY = gridLayoutGroup.cellSize.y;
             this.spacingX = gridLayoutGroup.spacing.x;
             this.spacingY = gridLayoutGroup.spacing.y;
+
             this.cellPerRow = this.matchContentWidth
                 ? (int)((this.ContentWidth - this.offsetPadding.left - this.offsetPadding.right + this.spacingX) / (this.cellX + this.spacingX))
-                : this.cellPerRow;
+                : (this.matchAverageCellsPerRow
+                    ? (int)Math.Ceiling((double)this.totalCount / this.constraintCount)
+                    : this.cellPerRow);
 
             this.ContentHeight = this.cellY * this.RowCount + this.spacingY * (this.RowCount - 1) + this.offsetPadding.top + this.offsetPadding.bottom;
             this.ContentWidth = this.cellX * this.CellPerRow + this.spacingX * (this.CellPerRow - 1) + this.offsetPadding.left + this.offsetPadding.right;
 
-            Vector2 contentPositon;
+            Vector2 contentPosition;
             switch (this.horizontalAlignment)
             {
                 case Alignment.Left:
-                    contentPositon = Vector2.zero;
+                    contentPosition = Vector2.zero;
                     break;
                 case Alignment.Center:
                     if (this.ContentWidth < this.ViewportWidth)
                     {
                         this.scrollRect.horizontal = false;
                     }
-                    contentPositon = Vector2.right * (this.ViewportWidth - this.ContentWidth) / 2f; //Y坐标永远为0；anchor = (0,1) pivot = (0,1)，因此anchoredPosition.x不会大于0，
+                    contentPosition = Vector2.right * (this.ViewportWidth - this.ContentWidth) / 2f; //Y坐标永远为0；anchor = (0,1) pivot = (0,1)，因此anchoredPosition.x不会大于0，
                     break;
                 case Alignment.Right:
                     if (this.ContentWidth < this.ViewportWidth)
                     {
                         this.scrollRect.horizontal = false;
                     }
-                    contentPositon = Vector2.right * (this.ViewportWidth - this.ContentWidth);
+                    contentPosition = Vector2.right * (this.ViewportWidth - this.ContentWidth);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
 
-            this.contentTrans.anchoredPosition = contentPositon;
+            this.contentTrans.anchoredPosition = contentPosition;
             this.contentTrans.anchorMin = Vector2.up;
             this.contentTrans.anchorMax = Vector2.up;
 
@@ -417,8 +433,9 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             iCell.OnBecomeVisible(side);
         }
 
-        private void GenerateAllCells()
+        private async STaskVoid GenerateAllCells()
         {
+            await STask.NextFrame();
             this.currentFirstCol = this.FirstColumn;
             this.currentLastCol = this.LastColumn;
             this.currentFirstRow = this.FirstRow;
@@ -564,7 +581,7 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
             if (this.LastColumn < this.currentFirstCol || this.FirstColumn > this.currentLastCol || this.LastRow < this.currentFirstRow || this.FirstRow > this.currentLastRow)
             {
                 this.DestroyAllCells();
-                this.GenerateAllCells();
+                this.GenerateAllCells().Forget();
                 return;
             }
 
