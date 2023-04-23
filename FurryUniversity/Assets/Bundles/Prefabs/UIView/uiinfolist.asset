@@ -43,6 +43,11 @@ MonoBehaviour:
     ViewType: 1
     ViewClassName: SFramework.Core.UI.SettingsView
     IsDisableNavigatePage: 0
+  - ViewAssetBundleName: buttonsfloattipview_uiview
+    ViewAssetName: ButtonsFloatTipView
+    ViewType: 0
+    ViewClassName: SFramework.Core.UI.ButtonsFloatTipView
+    IsDisableNavigatePage: 0
   UIItemInfo:
   - UIItemAssetBundleName: archiveitem_uiitem
     UIItemAssetName: ArchiveItem

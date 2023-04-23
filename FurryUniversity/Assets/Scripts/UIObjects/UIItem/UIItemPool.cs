@@ -33,7 +33,7 @@ namespace SFramework.Core.UI
             if (this.prefab != null)
             {
                 this.prefab.SetActive(false);
-                this.startSiblingIndex = prefab.transform.GetSiblingIndex();
+                this.startSiblingIndex = this.prefab.transform.GetSiblingIndex();
             }
         }
 

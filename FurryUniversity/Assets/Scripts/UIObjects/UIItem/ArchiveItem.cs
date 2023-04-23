@@ -8,11 +8,12 @@ namespace SFramework.Core.UI
 {
     public class ArchiveItem : UIItemBase, IUIScrollerCell<ArchiveObject>
     {
-        [UIFieldInit("TinyImage")] public UnityEngine.UI.Image TinyImage_Image;
-        [UIFieldInit("TinyImage")] public UnityEngine.UI.Button TinyImage_Button;
-        [UIFieldInit("ShowText")] public TMPro.TextMeshProUGUI ShowText;
+        [UIFieldInit("TinyImage")]
+        public UnityEngine.UI.Image TinyImage;
+        [UIFieldInit("ShowText")]
+        public TMPro.TextMeshProUGUI ShowText;
         
-
+        
         public void ScrollerSetData(ArchiveObject data)
         {
             this.ShowText.text = $"Archive {data.ArchiveIndex}";
