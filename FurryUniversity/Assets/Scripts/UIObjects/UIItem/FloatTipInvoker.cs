@@ -14,26 +14,18 @@ namespace SFramework.Core.UI
     {
         public string title;
 
+        [Tooltip("The alignment of the Float Tip to the pointer position.")]
         public TextAnchor showAlignment;
         public FloatTipViewType floatTipViewType;
+
+        public List<object> Parameters;
         
-
-        private void OnClickInvoker()
-        {
-            switch (this.floatTipViewType)
-            {
-                case FloatTipViewType.ButtonsFloatTipView:
-                    
-                    break;
-            }
-        }
-
         public void OnPointerClick(PointerEventData eventData)
         {
             switch (this.floatTipViewType)
             {
                 case FloatTipViewType.ButtonsFloatTipView:
-                    ButtonsFloatTipView.Pop(eventData.position, this.showAlignment);
+                    ButtonsFloatTipView.Pop(eventData.position, this.showAlignment, this.Parameters, this.title).Forget();
                     break;
                 default:
                     Debug.LogError($"未实现 {this.floatTipViewType} 的逻辑");

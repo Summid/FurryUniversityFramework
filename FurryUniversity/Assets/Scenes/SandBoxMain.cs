@@ -1,5 +1,6 @@
 using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
+using SFramework.Utilities;
 using SFramework.Utilities.Archive;
 using System;
 using System.Collections;
@@ -27,6 +28,9 @@ public class SandBoxMain : MonoBehaviour
     private PlayerLoopTimer timer;
 
     public Button loadSceneTestButton;
+
+    public RectTransform ViewRectTransform;
+    public RectTransform RectTransform;
 
     private void Awake()
     {
@@ -133,6 +137,11 @@ public class SandBoxMain : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.S))
         {
             AssetBundleManager.SweepAssetBundleVO();
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            UIUtility.ClampToScreenRect(this.ViewRectTransform,this.RectTransform);
         }
     }
 }

@@ -11,6 +11,12 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.VerticalLayoutGroup ButtonsNode_VerticalLayoutGroup;
         [UIFieldInit("ButtonsNode")]
         public SFramework.Core.UI.UIItemPool ButtonsNode_UIItemPool;
+        [UIFieldInit("Content")]
+        public UnityEngine.UI.Image Content_Image;
+        [UIFieldInit("Content")]
+        public UnityEngine.UI.VerticalLayoutGroup Content_VerticalLayoutGroup;
+        [UIFieldInit("Content")]
+        public UnityEngine.UI.ContentSizeFitter Content_ContentSizeFitter;
 
     }
 }

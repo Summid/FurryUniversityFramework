@@ -383,7 +383,7 @@ GameObject:
   - component: {fileID: 2835906483146774742}
   - component: {fileID: 6925421163848633966}
   m_Layer: 5
-  m_Name: BG
+  m_Name: Content
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,6 +544,10 @@ MonoBehaviour:
     IsList: 0
   - key: ButtonsNode
     gameObject: {fileID: 2209446877992287814}
+    gameObjectList: []
+    IsList: 0
+  - key: Content
+    gameObject: {fileID: 9004662699554296116}
     gameObjectList: []
     IsList: 0
 --- !u!1001 &1037740392027961326
