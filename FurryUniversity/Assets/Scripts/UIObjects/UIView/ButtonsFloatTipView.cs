@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace SFramework.Core.UI
 {
-    [UIView("ButtonsFloatTipView", EnumUIType.Page)]
+    [UIView("ButtonsFloatTipView", EnumUIType.Window)]
     public partial class ButtonsFloatTipView : UIViewBase
     {
         public class ButtonsData
