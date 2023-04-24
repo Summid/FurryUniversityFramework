@@ -12,15 +12,15 @@ namespace SFramework.Core.UI
     {
         public enum MessageFlag { Confirm = 1, Cancel = 2, Both = 3 }
 
-        private Action<MessageFlag> onClickFlagButton;
+        private Action<MessageFlag, MessageBoxView> onClickFlagButton;
 
         protected override void OnAwake()
         {
             this.CloseButton_Button.onClick.AddListener(this.Hide);
         }
 
-        public void SetData(string message, MessageFlag messageFlag = MessageFlag.Confirm, Action<MessageFlag> onClickFlagButton = null
-            , string confirmText = null, string cancelText = null)
+        public void SetData(string message, MessageFlag messageFlag = MessageFlag.Confirm,
+            Action<MessageFlag, MessageBoxView> onClickFlagButton = null, string confirmText = null, string cancelText = null)
         {
             this.MessageText.text = message;
 
@@ -38,14 +38,20 @@ namespace SFramework.Core.UI
             this.CancelButton_Button.gameObject.SetActive((messageFlag & MessageFlag.Cancel) == MessageFlag.Cancel);
             this.onClickFlagButton = onClickFlagButton;
 
-            this.ConfirmButton_Button.onClick.AddListener(() => { this.onClickFlagButton?.Invoke(MessageFlag.Confirm); this.Hide();});
-            this.CancelButton_Button.onClick.AddListener(() => { this.onClickFlagButton?.Invoke(MessageFlag.Cancel); this.Hide();});
+            this.ConfirmButton_Button.onClick.AddListener(() =>
+            {
+                this.onClickFlagButton?.Invoke(MessageFlag.Confirm, this);
+            });
+            this.CancelButton_Button.onClick.AddListener(() =>
+            {
+                this.onClickFlagButton?.Invoke(MessageFlag.Cancel, this);
+            });
         }
 
         #region ExternalUse
 
-        public static async STask<MessageBoxView> ShowAsync(string message, MessageFlag messageFlag = MessageFlag.Confirm, Action<MessageFlag> onClickFlagButton = null
-            , string confirmText = null, string cancelText = null)
+        public static async STask<MessageBoxView> ShowAsync(string message, MessageFlag messageFlag = MessageFlag.Confirm, 
+            Action<MessageFlag, MessageBoxView> onClickFlagButton = null, string confirmText = null, string cancelText = null)
         {
             var view = await GameManager.Instance.UIManager.ShowUIAsync<MessageBoxView>();
 

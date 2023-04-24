@@ -21,9 +21,9 @@ namespace SFramework.Core.UI
         {
             this.MainViewChapterButton_Button.onClick.AddListener(() =>
             {
-                MessageBoxView.ShowAsync($"进入章节 {this.dialogue.FileName}", MessageBoxView.MessageFlag.Both, (flag) =>
+                MessageBoxView.ShowAsync($"进入章节 {this.dialogue.FileName}", MessageBoxView.MessageFlag.Both, (flag,view) =>
                 {
-                    this.OnClickMessageBoxButton(flag).Forget();
+                    this.OnClickMessageBoxButton(flag,view).Forget();
                 }).Forget();
             });
         }
@@ -33,16 +33,20 @@ namespace SFramework.Core.UI
             this.dialogue = data;
         }
 
-        private async STaskVoid OnClickMessageBoxButton(MessageBoxView.MessageFlag flag)
+        private async STaskVoid OnClickMessageBoxButton(MessageBoxView.MessageFlag flag, MessageBoxView messageBoxView)
         {
             if (flag == MessageBoxView.MessageFlag.Confirm)
             {
                 Debug.Log("click message box view confirm button");
                 var view =  await GameManager.Instance.UIManager.ShowUIAsync<DialogueView>();
                 view.SetNewDialogueContainer(this.dialogue);
+                messageBoxView.Hide();
             }
-            else if(flag == MessageBoxView.MessageFlag.Cancel)
+            else if (flag == MessageBoxView.MessageFlag.Cancel)
+            {
+                messageBoxView.Hide();
                 Debug.Log("click message box view cancel button");
+            }
         }
     }
 }
