@@ -25,6 +25,14 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.Button SettingsButton_Button;
         [UIFieldInit("SettingsButton")]
         public TMPro.TextMeshProUGUI SettingsButton_TextMeshProUGUI;
+        [UIFieldInit("ChaptersBackButton")]
+        public TMPro.TextMeshProUGUI ChaptersBackButton_TextMeshProUGUI;
+        [UIFieldInit("ChaptersBackButton")]
+        public UnityEngine.UI.Button ChaptersBackButton_Button;
+        [UIFieldInit("ArchiveButton")]
+        public UnityEngine.UI.Button ArchiveButton_Button;
+        [UIFieldInit("ArchiveButton")]
+        public TMPro.TextMeshProUGUI ArchiveButton_TextMeshProUGUI;
 
     }
 }

@@ -33,6 +33,10 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.HorizontalLayoutGroup TopButtonsNode_HorizontalLayoutGroup;
         [UIFieldInit("TopButtonsNode")]
         public UnityEngine.UI.ContentSizeFitter TopButtonsNode_ContentSizeFitter;
+        [UIFieldInit("BackButton")]
+        public UnityEngine.UI.Image BackButton_Image;
+        [UIFieldInit("BackButton")]
+        public UnityEngine.UI.Button BackButton_Button;
 
     }
 }

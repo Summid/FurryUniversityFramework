@@ -1,3 +1,4 @@
+using SFramework.Core.GameManagers;
 using SFramework.Core.UI.External.UnlimitedScroller;
 using SFramework.Utilities.Archive;
 using System.Collections;
@@ -33,6 +34,17 @@ namespace SFramework.Core.UI
                 buttonData.Index = i;
                 buttonData.ShowText = i == 0 ? "保存" : "读取";
                 buttonData.OnClick = this.OnClickFloatTipItem;
+
+                if (i == 0)
+                {
+                    buttonData.Interactable = GameManager.Instance.UIManager.GetShowingUI<DialogueView>() != null;
+                }
+                else
+                {
+                    var dialogueView = GameManager.Instance.UIManager.GetShowingUI<DialogueView>();
+                    var mainView = GameManager.Instance.UIManager.GetShowingUI<MainView>();
+                    buttonData.Interactable = dialogueView != null || mainView != null;
+                }
 
                 this.buttonDatas.Add(buttonData);
             }

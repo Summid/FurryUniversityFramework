@@ -20,6 +20,7 @@ namespace SFramework.Core.UI
 
             this.ShowText.text = this.data.ShowText;
             this.DivideImage.gameObject.SetActive(!this.data.DisableDivideLine);
+            this.Button_Button.interactable = this.data.Interactable;
             this.Button_Button.onClick.RemoveAllListeners();
             this.Button_Button.onClick.AddListener(() => this.data.OnClick?.Invoke(data.Index));
         }

@@ -25,16 +25,21 @@ namespace SFramework.Core.UI
         private TweenerCore<Vector2, Vector2, VectorOptions> buttonPanelPositionTweener;
 
         private SDSDialogue dialogueSystem;
+        private Vector2 mainButtonsAwakeAnchoredPosition;
 
         protected override void OnAwake()
         {
             Debug.Log("in MainView OnAwake");
 
             this.SelectChapterButton_Button.onClick.AddListener(this.OnClickSelectChapter);
+            this.ChaptersBackButton_Button.onClick.AddListener(this.OnClickChapterBack);
+            this.ArchiveButton_Button.onClick.AddListener(() =>
+                GameManager.Instance.UIManager.ShowUIAsync<ArchiveView>().Forget());
             this.SettingsButton_Button.onClick.AddListener((() =>
                 GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget()));
 
             this.dialogueSystem = GameManager.Instance.DialogueSystem;
+            this.mainButtonsAwakeAnchoredPosition = this.MainButtons.GetComponent<RectTransform>().anchoredPosition;
         }
 
         protected override void OnShow()
@@ -59,7 +64,8 @@ namespace SFramework.Core.UI
             this.bgPositionTweener.onComplete += this.ShowMainButtonsPanel;
 
             var bgmSource = await GameManager.Instance.AudioManager.PlayBGMAsync("TheLastCity");
-            this.bgmVolumeTweener = bgmSource.DOFadeByAdapter(0f,1.5f).From();
+            if(bgmSource != null)
+                this.bgmVolumeTweener = bgmSource.DOFadeByAdapter(0f,1.5f).From();
         }
 
         private void ShowMainButtonsPanel()
@@ -76,6 +82,12 @@ namespace SFramework.Core.UI
             this.MainButtons.gameObject.SetActive(false);
         }
 
+        private void OnClickChapterBack()
+        {
+            this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(false);
+            this.MainButtons.gameObject.SetActive(true);
+        }
+
         protected override void OnHide()
         {
             this.bgAlphaTweener?.Kill();
@@ -83,6 +95,9 @@ namespace SFramework.Core.UI
             this.bgPositionTweener?.Kill();
             this.bgmVolumeTweener?.Kill();
             this.buttonPanelPositionTweener?.Kill();
+            GameManager.Instance.AudioManager.PauseBGM().Forget();
+            this.MainButtons.GetComponent<RectTransform>().anchoredPosition = this.mainButtonsAwakeAnchoredPosition;
+            this.OnClickChapterBack();
         }
     }
 }

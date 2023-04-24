@@ -29,6 +29,7 @@ namespace SFramework.Core.UI
             
             this.SettingsButton_Button.onClick.AddListener(() => GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget());
             this.ArchiveButtons_Button.onClick.AddListener(() => GameManager.Instance.UIManager.ShowUIAsync<ArchiveView>().Forget());
+            this.BackButton_Button.onClick.AddListener(this.Hide);
             this.ExpandButton_Button.onClick.AddListener(this.OnClickExpandButton);
             this.BackgroundButton_Button.onClick.AddListener(this.Roll2NextDialogueContent);
         }

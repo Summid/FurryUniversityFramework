@@ -16,6 +16,7 @@ namespace SFramework.Core.UI
             public int Index;
             public string ShowText;
             public bool DisableDivideLine;
+            public bool Interactable;
             public Action<int> OnClick;
         }
 
