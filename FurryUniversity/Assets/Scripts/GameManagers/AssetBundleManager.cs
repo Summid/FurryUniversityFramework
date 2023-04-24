@@ -122,21 +122,20 @@ namespace SFramework.Core.GameManagers
                 throw new Exception($"AssetBundleVO::Unload failed, {this.BundleName}, {this.BundleState}");
             }
 
-            //处理依赖资源
-            if (handleDependentBundles)
-            {
-                foreach (var depVO in this.DependentVO)
-                {
-                    await depVO.UnLoadAsync(true, false);
-                }
-            }
-
             if (this.refCount <= 0)
             {
                 UnityEngine.Debug.Log($"unload ab {this.BundleName}");
                 this.Content.Unload(unloadAllLoadedObjects);
                 this.Content = null;//State == Unloaded
                 this.isLoading = false;
+                //处理依赖资源
+                if (handleDependentBundles)
+                {
+                    foreach (var depVO in this.DependentVO)
+                    {
+                        await depVO.UnLoadAsync(true, false);
+                    }
+                }
             }
         }
 

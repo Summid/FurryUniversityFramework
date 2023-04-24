@@ -33,6 +33,8 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.Button ArchiveButton_Button;
         [UIFieldInit("ArchiveButton")]
         public TMPro.TextMeshProUGUI ArchiveButton_TextMeshProUGUI;
+        [UIFieldInit("GameObject")]
+        public UnityEngine.UI.GridLayoutGroup GameObject;
 
     }
 }

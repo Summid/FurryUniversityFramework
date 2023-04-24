@@ -137,7 +137,7 @@ namespace SFramework.Core.UI
         /// <summary>
         /// 隐藏UI
         /// </summary>
-        public override void Hide()
+        public sealed override void Hide()
         {
             if (this.UIState == EnumViewState.Disposed)
             {

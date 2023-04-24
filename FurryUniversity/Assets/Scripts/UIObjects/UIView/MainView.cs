@@ -16,7 +16,7 @@ using UnityEngine;
 namespace SFramework.Core.UI
 {
     [UIView("MainView", EnumUIType.Page)]
-    public partial class MainView : UIViewBase
+    public partial class MainView : UIViewBase,IUIUpdator
     {
         private TweenerCore<Color, Color, ColorOptions> bgAlphaTweener;
         private TweenerCore<Vector3, Vector3, VectorOptions> bgScaleTweener;
@@ -46,7 +46,6 @@ namespace SFramework.Core.UI
         {
             Debug.Log("in MainView OnShow");
             this.ShowEnterViewEffect().Forget();
-
         }
 
         private async STaskVoid ShowEnterViewEffect()
@@ -98,6 +97,34 @@ namespace SFramework.Core.UI
             GameManager.Instance.AudioManager.PauseBGM().Forget();
             this.MainButtons.GetComponent<RectTransform>().anchoredPosition = this.mainButtonsAwakeAnchoredPosition;
             this.OnClickChapterBack();
+        }
+
+        private List<ArchiveItem> archiveItems = new List<ArchiveItem>();
+        public async void OnUpdate()
+        {
+            if (Input.GetKeyDown(KeyCode.A))
+            {
+                for (int i = 0; i < 20; ++i)
+                {
+                    var item = await this.CreateChildItemAsync<ArchiveItem>(UIItemBase.AssetList.ArchiveItem,
+                        this.GameObject.transform);
+                    this.archiveItems.Add(item);
+                }
+            }
+            
+            if (Input.GetKeyDown(KeyCode.B))
+            {
+                foreach (ArchiveItem archiveItem in this.archiveItems)
+                {
+                    archiveItem.Dispose();
+                }
+                this.archiveItems.Clear();
+            }
+            
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                AssetBundleManager.Dump();
+            }
         }
     }
 }
