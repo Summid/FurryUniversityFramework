@@ -11,16 +11,16 @@ namespace SFramework.Core.UI
     [UIView("ButtonsFloatTipView", EnumUIType.Window)]
     public partial class ButtonsFloatTipView : UIViewBase
     {
-        public class ButtonsData
+        public class ButtonData
         {
             public int Index;
             public string ShowText;
-            public bool IsLast;
+            public bool DisableDivideLine;
             public Action<int> OnClick;
         }
 
         private RectTransform contentRectTrans;
-        private List<ButtonsData> datas = new List<ButtonsData>();
+        private List<ButtonData> datas = new List<ButtonData>();
 
         protected override void OnAwake()
         {
@@ -52,10 +52,11 @@ namespace SFramework.Core.UI
             if (parameters == null)
                 return;
 
-            this.TitleText.text = title;
-            
             this.datas.Clear();
-            parameters.ForEach(param => this.datas.Add(param as ButtonsData));
+            parameters.ForEach(param => this.datas.Add(param as ButtonData));
+            
+            this.TitleText.text = title;
+            this.ButtonsNode_UIItemPool.UpdateList<ButtonData, ButtonsFloatTipItem>(this.datas);
         }
     }
 }
