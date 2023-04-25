@@ -83,5 +83,23 @@ namespace SFramework.Utilities
             rectAnchoredPos.y = Mathf.Clamp(rectAnchoredPos.y, minRect.y, maxRect.y);
             rectTransform.anchoredPosition = rectAnchoredPos;
         }
+
+        /// <summary>
+        /// 以拉伸填充的方式将rectTrans设置到一个父节点中
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <param name="parent"></param>
+        public static void SetRectTransformParentWithStretchRootCanvas(RectTransform rect, Transform parent)
+        {
+            rect.SetParent(parent);
+
+            rect.anchorMin = Vector2.zero;
+            rect.anchorMax = Vector2.one;
+            rect.anchoredPosition3D = Vector3.zero;
+            rect.offsetMin = Vector2.zero;
+            rect.offsetMax = Vector2.zero;
+
+            rect.localScale = Vector3.one;
+        }
     }
 }

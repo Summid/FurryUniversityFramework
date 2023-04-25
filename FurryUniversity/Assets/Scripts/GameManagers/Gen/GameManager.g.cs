@@ -22,5 +22,15 @@
                 return this.uimanager;
              }
         }
+        private UIManagerPro uimanagerpro;
+        public UIManagerPro UIManagerPro
+        {
+             get
+             {
+                if(this.uimanagerpro == null)
+                    this.uimanagerpro = this.GetManager<UIManagerPro>(typeof(UIManagerPro));
+                return this.uimanagerpro;
+             }
+        }
    }
 }

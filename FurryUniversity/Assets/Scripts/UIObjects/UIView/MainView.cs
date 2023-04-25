@@ -16,7 +16,7 @@ using UnityEngine;
 namespace SFramework.Core.UI
 {
     [UIView("MainView", EnumUIType.Page)]
-    public partial class MainView : UIViewBase,IUIUpdator
+    public partial class MainView : UIViewBase,IUIUpdater
     {
         private TweenerCore<Color, Color, ColorOptions> bgAlphaTweener;
         private TweenerCore<Vector3, Vector3, VectorOptions> bgScaleTweener;
@@ -100,15 +100,17 @@ namespace SFramework.Core.UI
         }
 
         private List<ArchiveItem> archiveItems = new List<ArchiveItem>();
+        private List<STask<ArchiveItem>> archiveTaskItems = new List<STask<ArchiveItem>>();
         public async void OnUpdate()
         {
             if (Input.GetKeyDown(KeyCode.A))
             {
                 for (int i = 0; i < 20; ++i)
                 {
-                    var item = await this.CreateChildItemAsync<ArchiveItem>(UIItemBase.AssetList.ArchiveItem,
+                    var item =  this.CreateChildItemAsync<ArchiveItem>(UIItemBase.AssetList.ArchiveItem,
                         this.GameObject.transform);
-                    this.archiveItems.Add(item);
+                    // this.archiveItems.Add(item);
+                    this.archiveTaskItems.Add(item);
                 }
             }
             
@@ -119,6 +121,22 @@ namespace SFramework.Core.UI
                     archiveItem.Dispose();
                 }
                 this.archiveItems.Clear();
+                
+                foreach (STask<ArchiveItem> archiveTaskItem in this.archiveTaskItems)
+                {
+                    if (archiveTaskItem.GetAwaiter().IsCompleted)
+                    {
+                        archiveTaskItem.GetAwaiter().GetResult();
+                    }
+                }
+                foreach (STask<ArchiveItem> archiveTaskItem in this.archiveTaskItems)
+                {
+                    if (archiveTaskItem.GetAwaiter().IsCompleted)
+                    {
+                        archiveTaskItem.GetAwaiter().GetResult();
+                    }
+                }
+                //this.archiveTaskItems.Clear();
             }
             
             if (Input.GetKeyDown(KeyCode.D))

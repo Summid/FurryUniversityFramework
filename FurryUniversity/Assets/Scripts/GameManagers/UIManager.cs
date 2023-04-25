@@ -147,7 +147,7 @@ namespace SFramework.Core.GameManagers
             rect.anchorMax = Vector2.one;
             rect.anchoredPosition3D = Vector3.zero;
             rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.one;
+            rect.offsetMax = Vector2.zero;
 
             rect.localScale = Vector3.one;
         }

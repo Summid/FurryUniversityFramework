@@ -351,7 +351,7 @@ namespace SFramework.Core.UI
         /// </summary>
         private void InitUpdateLogic()
         {
-            if (this is IUIUpdator updator)
+            if (this is IUIUpdater updator)
             {
                 if (this.updateCTS != null)
                 {
@@ -508,28 +508,28 @@ namespace SFramework.Core.UI
         }
     }
 
-    [AttributeUsage(AttributeTargets.Field)]
-    public class UIFieldInitAttribute : Attribute
-    {
-        public string RCKey { get; private set; }
-
-        public UIFieldInitAttribute(string rcKey)
-        {
-            this.RCKey = rcKey;
-        }
-    }
-
-    [AttributeUsage(AttributeTargets.Field)]
-    public class UISerializableAttribute : Attribute
-    {
-
-    }
-
-    /// <summary>
-    /// 实现该接口来实现类似Update的功能
-    /// </summary>
-    public interface IUIUpdator
-    {
-        void OnUpdate();
-    }
+    // [AttributeUsage(AttributeTargets.Field)]
+    // public class UIFieldInitAttribute : Attribute
+    // {
+    //     public string RCKey { get; private set; }
+    //
+    //     public UIFieldInitAttribute(string rcKey)
+    //     {
+    //         this.RCKey = rcKey;
+    //     }
+    // }
+    //
+    // [AttributeUsage(AttributeTargets.Field)]
+    // public class UISerializableAttribute : Attribute
+    // {
+    //
+    // }
+    //
+    // /// <summary>
+    // /// 实现该接口来实现类似Update的功能
+    // /// </summary>
+    // public interface IUIUpdator
+    // {
+    //     void OnUpdate();
+    // }
 }
