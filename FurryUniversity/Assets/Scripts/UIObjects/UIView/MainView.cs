@@ -139,10 +139,12 @@ namespace SFramework.Core.UI
                 //this.archiveTaskItems.Clear();
             }
             
+            #if UNITY_EDITOR
             if (Input.GetKeyDown(KeyCode.D))
             {
                 AssetBundleManager.Dump();
             }
+            #endif
         }
     }
 }

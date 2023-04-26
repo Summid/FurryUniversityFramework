@@ -1,6 +1,8 @@
+using SFramework.Threading.Tasks;
 using SFramework.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using UnityEngine;
 #if UNITY_EDITOR
 using UnityEditor;
@@ -155,12 +157,20 @@ namespace SFramework.Core.UI
                     {
                         this.dic.Add(referenceCollectorData.key, referenceCollectorData.gameObject);
                     }
+                    else
+                    {
+                        HandleException(referenceCollectorData, this);
+                    }
                 }
                 else
                 {
                     if (!this.dicList.ContainsKey(referenceCollectorData.key))
                     {
                         this.dicList.Add(referenceCollectorData.key, new List<UnityEngine.Object>(referenceCollectorData.gameObjectList));
+                    }
+                    else
+                    {
+                        HandleException(referenceCollectorData, this);
                     }
                 }
             }
@@ -170,5 +180,44 @@ namespace SFramework.Core.UI
         {
             
         }
+
+        #region 报告相同key情况
+
+        private static void HandleException(ReferenceCollectorData data, ReferenceCollector referenceCollector)
+        {
+            if (!PlayerLoopHelper.IsMainThread)
+            {
+                PlayerLoopHelper.UnitySynchronizationContext.Post(handleInvoke,
+                    new ExceptionObject(data, referenceCollector));
+            }
+            else
+            {
+                Debug.LogWarning($"GameObject {referenceCollector.gameObject.name}上 ReferenceCollector脚本有重复Key: {data.key}");
+            }
+        }
+        
+        private static void InvokeMethod(object state)
+        {
+            ExceptionObject eo = state as ExceptionObject;
+            Debug.LogWarning($"GameObject {eo.ReferenceCollector.gameObject.name}上 ReferenceCollector脚本有重复Key: {eo.ReferenceCollectorData.key}");
+        }
+
+        /// <summary>
+        /// 委托缓存
+        /// </summary>
+        private static readonly SendOrPostCallback handleInvoke = InvokeMethod;
+        
+        private class ExceptionObject
+        {
+            public ReferenceCollectorData ReferenceCollectorData;
+            public ReferenceCollector ReferenceCollector;
+
+            public ExceptionObject(ReferenceCollectorData data, ReferenceCollector referenceCollector)
+            {
+                this.ReferenceCollectorData = data;
+                this.ReferenceCollector = referenceCollector;
+            }
+        }
+        #endregion
     }
 }

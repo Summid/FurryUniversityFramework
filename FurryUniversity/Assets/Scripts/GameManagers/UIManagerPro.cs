@@ -200,7 +200,7 @@ namespace SFramework.Core.GameManagers
         }
         
         /// <summary>
-        /// 显示Page前，需要Mgr做的事 —— 隐藏上一个Page；若当前Page已处于显示状态，则不会调用
+        /// 显示Page前，需要Mgr做的事 —— 隐藏上一个Page，显示当前gameObject；若当前Page已处于显示状态，则不会调用
         /// </summary>
         /// <param name="viewType"></param>
         internal async STask SetPageShow(Type viewType)
@@ -248,6 +248,7 @@ namespace SFramework.Core.GameManagers
                 }
             }
             
+            //显示gameObject
             UIViewBasePro viewInstance = this.uiInstances[viewType].ViewInstance;
             viewInstance.gameObject.SetActive(true);
         }
