@@ -16,7 +16,7 @@ namespace SFramework.Core.UI
 
         protected override void OnAwake()
         {
-            this.CloseButton_Button.onClick.AddListener(this.Hide);
+            this.CloseButton_Button.onClick.AddListener(() => this.HideAsync().Forget());
         }
 
         public void SetData(string message, MessageFlag messageFlag = MessageFlag.Confirm,

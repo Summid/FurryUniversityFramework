@@ -3,32 +3,34 @@ using SFramework.Core.UI.External;
 using SFramework.Threading.Tasks;
 using SFramework.Utilities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
 namespace SFramework.Core.GameManagers
 {
-    public class UIManager : GameManagerBase
+    public partial class UIManager : GameManagerBase
     {
         public class UIInstanceInfo
         {
             public UIViewBase ViewInstance;
             public string ViewName;
         }
-
+        
         private bool isInited;
         private UIInfoList uiList;
-        private Dictionary<Type,UIInstanceInfo> uiInstances = new Dictionary<Type,UIInstanceInfo>();//加载后的View保存在这
-        private List<UIInstanceInfo> uiInstanceLoadOrderList = new List<UIInstanceInfo>();//根据View显示顺序排序，越后显示的排在越后
-        private List<Type> navigateQueue = new List<Type>();//Page页面跳转顺序记录
+        /// <summary> 加载后的View保存在这 </summary>
+        private Dictionary<Type, UIInstanceInfo> uiInstances = new Dictionary<Type, UIInstanceInfo>();
+        /// <summary> 根据View显示顺序排序，越后显示的排在越后 </summary>
+        private List<UIInstanceInfo> uiInstanceLoadOrderList = new List<UIInstanceInfo>();
+        /// <summary> Page页面跳转顺序记录，越后显示的排在越后，UI销毁不会将其移除出该数组 </summary>
+        private List<Type> navigateQueue = new List<Type>();
         private Transform uiRoot;
         private CanvasGroup canvasGroup;
         private RectTransform uiWindowRoot;
         private RectTransform uiTopWindowRoot;
         private float screenCutOffRange;//异形屏适配像素
-
+        
         public Canvas UIRootCanvas { get; private set; }
         /// <summary> 当统一处理UI时，若涉及到修改uiInstances等成员，通过该标志位判断处理状态 </summary>
         public bool InternalHanding { get; private set; }
@@ -39,39 +41,39 @@ namespace SFramework.Core.GameManagers
             private set
             {
                 this.uiInstanceCacheLimitCount = value;
-                this.UpdateUIInstanceLimit();
+                this.UpdateUIInstanceLimitAsync().Forget();
             }
         }
-
+        
         protected override async void OnInitialized()
         {
             if (this.isInited)
                 return;
-
+            
             //加载UI清单
             this.uiList = await AssetBundleManager.LoadAssetInAssetBundleAsync<UIInfoList>(StaticVariables.UIListName, StaticVariables.UIListBundleName);
             Debug.Log($"uiList in UIManager {this.uiList}");
             if (this.uiList == null)
                 return;
-
+            
             //初始化UI节点
             this.uiRoot = GameObject.Find("UIRoot").transform;
             this.UIRootCanvas = this.uiRoot.GetComponent<Canvas>();
             this.canvasGroup = this.uiRoot.GetComponent<CanvasGroup>();
             this.canvasGroup.blocksRaycasts = true;
             this.uiWindowRoot = new GameObject("[Window]").AddComponent<RectTransform>();
-            SetRectTransformParentWithStretchRootCanvas(this.uiWindowRoot, this.uiRoot);
-            this.uiTopWindowRoot = new GameObject("[TOPWINDOWROOT]").AddComponent<RectTransform>();
-            SetRectTransformParentWithStretchRootCanvas(this.uiTopWindowRoot, this.uiRoot);
+            UIUtility.SetRectTransformParentWithStretchRootCanvas(this.uiWindowRoot,this.uiRoot);
+            this.uiTopWindowRoot = new GameObject("[TopWindowRoot]").AddComponent<RectTransform>();
+            UIUtility.SetRectTransformParentWithStretchRootCanvas(this.uiTopWindowRoot,this.uiRoot);
 
             GameObject.DontDestroyOnLoad(this.uiRoot.gameObject);
 
             this.isInited = true;
-
+            
             this.UIInstanceCacheLimitCount = 0;//暂定这么多个缓存
 
             Debug.Log("UIManager Initialized");
-
+            
             //TODO 刘海屏设备清单加载
             //设置异形屏适配像素
             this.ScreenCutOffRange = PlayerPrefsTool.ScreenAdaptation_Value.GetValue();
@@ -81,35 +83,22 @@ namespace SFramework.Core.GameManagers
         }
 
         #region 外部接口
-        /// <summary>
-        /// 显示UI View
-        /// </summary>
-        /// <typeparam name="ViewInstance"></typeparam>
-        /// <param name="showImmediately">为false时，加载完毕资源后不会立即显示，会调用Awake但不会调用Show</param>
-        /// <param name="progress">加载完成后会调用Report(0.8)</param>
-        /// <returns></returns>
-        public async STask<ViewInstance> ShowUIAsync<ViewInstance>(bool showImmediately = true, IProgress<float> progress = null) where ViewInstance : UIViewBase, new()
+
+        public async STask<TViewInstance> ShowUIAsync<TViewInstance>(IProgress<float> progress = null)
+            where TViewInstance : UIViewBase, new()
         {
             if (!this.isInited)
                 return null;
 
-            Type viewType = typeof(ViewInstance);
-            return await this.ShowUIInternalAsync(viewType, showImmediately, progress) as ViewInstance;
+            Type viewType = typeof(TViewInstance);
+            return await this.ShowUIInternalAsync(viewType, progress) as TViewInstance;
         }
 
-        public UIViewInfo GetUIViewInfo(Type uiObjectType)
-        {
-            string targetTypeName = uiObjectType.FullName;
-            UIViewInfo targetUIInfo = this.uiList.GetUIViewInfoByTypeName(targetTypeName);
-            return targetUIInfo;
-        }
-
-        public UIItemInfo GetUIItemInfo(string itemAsset)
-        {
-            return this.uiList.GetUIItemInfoByAssetNameKey(itemAsset);
-        }
-
-        public void DisposeUIBundle(UIObject uiObj)
+        /// <summary>
+        /// 异步卸载AB包
+        /// </summary>
+        /// <param name="uiObj"></param>
+        public async STask DisposeUIBundleAsync(UIObject uiObj)
         {
             Type uiType = uiObj.GetType();
 
@@ -123,71 +112,37 @@ namespace SFramework.Core.GameManagers
                     this.uiInstanceLoadOrderList.Remove(uiInfo);
                 }
             }
-            else if (uiObj is UIItemBase itemBase)
+            else if (uiObj is UIItemBase itemBasePro)
             {
-                bundleName = itemBase.BundleName;
+                bundleName = itemBasePro.BundleName;
             }
 
             if (bundleName != null)
             {
-                AssetBundleManager.UnloadAssetBundleAsync(bundleName).Forget();
+                await AssetBundleManager.UnloadAssetBundleAsync(bundleName);
             }
         }
-
+        
         /// <summary>
-        /// 以拉伸填充的方式将rectTrans设置到一个父节点中
+        /// 根据Type获取UIViewInfo
         /// </summary>
-        /// <param name="rect"></param>
-        /// <param name="parent"></param>
-        public static void SetRectTransformParentWithStretchRootCanvas(RectTransform rect, Transform parent)
-        {
-            rect.SetParent(parent);
-
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.anchoredPosition3D = Vector3.zero;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-
-            rect.localScale = Vector3.one;
-        }
-
-        /// <summary>
-        /// Page导航队列是否已经无法后退（队列中不超过一个Page）
-        /// </summary>
-        /// <param name="page"></param>
+        /// <param name="uiObjectType"></param>
         /// <returns></returns>
-        public bool IsLastPage(UIViewBase page)
+        public UIViewInfo GetUIViewInfo(Type uiObjectType)
         {
-            int index = this.navigateQueue.IndexOf(page.ClassType);
-            return index == 0;
+            string targetTypeName = uiObjectType.FullName;
+            UIViewInfo targetUIInfo = this.uiList.GetUIViewInfoByTypeName(targetTypeName);
+            return targetUIInfo;
         }
 
-        public void UpdateUIInstanceLimit()
+        /// <summary>
+        /// 根据资源名获取UIItemInfo
+        /// </summary>
+        /// <param name="itemAsset"></param>
+        /// <returns></returns>
+        public UIItemInfo GetUIItemInfo(string itemAsset)
         {
-            if (this.InternalHanding)
-                return;
-
-            try
-            {
-                //拷贝一份处于Hidden状态的View
-                List<UIInstanceInfo> cacheList = this.uiInstanceLoadOrderList.Where(info => info.ViewInstance.UIState == UIObject.EnumViewState.Hidden).ToList();
-                int needRemoveCount = cacheList.Count - this.UIInstanceCacheLimitCount;
-                int index = 0;
-                this.InternalHanding = true;
-                while (needRemoveCount > 0)
-                {
-                    var uiInfoNeedRemove = cacheList[index];
-                    Debug.Log($"<color=#00ff00>超出UI缓存最大限制:{this.UIInstanceCacheLimitCount}，移除UI实例:[{uiInfoNeedRemove.ViewName}]</color>");
-                    uiInfoNeedRemove.ViewInstance.Dispose();
-                    needRemoveCount--;
-                    index++;
-                }
-            }
-            finally
-            {
-                this.InternalHanding = false;
-            }
+            return this.uiList.GetUIItemInfoByAssetNameKey(itemAsset);
         }
 
         /// <summary>
@@ -202,7 +157,7 @@ namespace SFramework.Core.GameManagers
             Type type = this.navigateQueue[this.navigateQueue.Count - 1];
             return type.Name;
         }
-
+        
         /// <summary>
         /// 异形屏适配像素
         /// </summary>
@@ -234,11 +189,53 @@ namespace SFramework.Core.GameManagers
                 this.uiTopWindowRoot.offsetMax = temp;
             }
         }
-        
-        public UIInstanceInfo GetShowingUI<ViewInstance>() where ViewInstance : UIViewBase
+
+        /// <summary>
+        /// Page导航队列是否已经无法后退（队列中不超过一个Page）
+        /// </summary>
+        /// <param name="page"></param>
+        /// <returns></returns>
+        public bool IsLastPage(UIViewBase page)
         {
-            Type type = typeof(ViewInstance);
-            return this.uiInstances.TryGetValue(type, out UIInstanceInfo info) ? info : null;
+            int index = this.navigateQueue.IndexOf(page.ClassType);
+            return index == 0;
+        }
+
+        /// <summary>
+        /// 清理多余UI缓存
+        /// </summary>
+        public async STask UpdateUIInstanceLimitAsync()
+        {
+            if (this.InternalHanding)
+                return;
+            
+            try
+            {
+                //拷贝一份处于Hidden状态的View
+                List<UIInstanceInfo> cacheList = this.uiInstanceLoadOrderList
+                    .Where(info => info.ViewInstance.UIState == UIObject.EnumViewState.Hidden).ToList();
+                int needRemoveCount = cacheList.Count - this.UIInstanceCacheLimitCount;
+                int index = 0;
+                this.InternalHanding = true;
+                while (needRemoveCount > 0)
+                {
+                    var uiInfoNeedRemove = cacheList[index];
+                    Debug.Log($"<color=#00ff00>超出UI缓存最大限制:{this.UIInstanceCacheLimitCount}，移除UI实例:[{uiInfoNeedRemove.ViewName}]</color>");
+                    await uiInfoNeedRemove.ViewInstance.DisposeAsync();
+                    needRemoveCount--;
+                    index++;
+                }
+            }
+            finally
+            {
+                this.InternalHanding = false;
+            }
+        }
+
+        public UIInstanceInfo GetShowingUI<TViewInstance>() where TViewInstance : UIViewBase
+        {
+            Type type = typeof(TViewInstance);
+            return this.uiInstances.TryGetValue(type, out var info) ? info : null;
         }
 
         public UIInstanceInfo GetShowingUI(Type type)
@@ -248,12 +245,20 @@ namespace SFramework.Core.GameManagers
         #endregion
 
         #region 内部方法
-        private async STask<UIViewBase> ShowUIInternalAsync(Type viewType, bool showImmediately = true, IProgress<float> progress = null)
+        /// <summary>
+        /// 从缓存或资源文件中获取View
+        /// </summary>
+        /// <param name="viewType"></param>
+        /// <param name="progress"></param>
+        /// <returns></returns>
+        private async STask<UIViewBase> ShowUIInternalAsync(Type viewType, IProgress<float> progress = null)
         {
             UIViewBase view = null;
 
             if (this.uiInstances.TryGetValue(viewType, out UIInstanceInfo uiInfo))
             {
+                //加载过，缓存中有
+
                 view = uiInfo.ViewInstance;
                 //当一个界面Show的时候，将该界面在队列中的顺序提高到最后
                 this.uiInstanceLoadOrderList.Remove(uiInfo);
@@ -261,65 +266,69 @@ namespace SFramework.Core.GameManagers
             }
             else
             {
+                //需要从文件中加载
                 UIViewInfo targetUIInfo = this.GetUIViewInfo(viewType);
-
                 if (targetUIInfo != null)
                 {
                     if (targetUIInfo.ViewAssetBundleName != null && targetUIInfo.ViewAssetName != null)
                     {
-                        view = await this.InitViewAsync(targetUIInfo.ViewAssetBundleName, targetUIInfo.ViewAssetName, viewType, targetUIInfo.ViewType, progress);
+                        view = await this.InitViewAsync(targetUIInfo.ViewAssetBundleName, targetUIInfo.ViewAssetName,
+                            viewType, targetUIInfo.ViewType, progress);
                     }
                 }
             }
+
             if (view.UIType == EnumUIType.Window && this.navigateQueue.Count > 0)
             {
                 view.BasedPage = this.navigateQueue[this.navigateQueue.Count - 1].Name;
             }
             this.uiInstances[viewType].ViewInstance.gameObject.transform.SetAsLastSibling();
-            if (showImmediately)
-                view.Show();
 
+            await view.ShowAsync();
             return view;
         }
 
-        private async STask<UIViewBase> InitViewAsync(string viewBundleName, string viewPrefabName, Type viewType, EnumUIType uiType, IProgress<float> progress = null)
+        /// <summary>
+        /// 从文件中加载View资源
+        /// </summary>
+        /// <param name="viewBundleName"></param>
+        /// <param name="viewPrefabName"></param>
+        /// <param name="viewType"></param>
+        /// <param name="uiType"></param>
+        /// <param name="progress"></param>
+        /// <returns></returns>
+        private async STask<UIViewBase> InitViewAsync(string viewBundleName, string viewPrefabName, Type viewType,
+            EnumUIType uiType, IProgress<float> progress = null)
         {
             progress?.Report(0.1f);
-            GameObject bundleGO = await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(viewPrefabName, viewBundleName);
+
+            GameObject bundleGO =
+                await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(viewPrefabName, viewBundleName);
+            
             progress?.Report(0.5f);
+
             GameObject gameObject = UnityEngine.Object.Instantiate(bundleGO);
             UIViewBase view = Activator.CreateInstance(viewType) as UIViewBase;
             view.UIType = uiType;
-            SetRectTransformParentWithStretchRootCanvas(gameObject.transform as RectTransform, view.Topmost ? this.uiTopWindowRoot : this.uiWindowRoot);
+            UIUtility.SetRectTransformParentWithStretchRootCanvas(gameObject.transform as RectTransform,
+                view.Topmost ? this.uiTopWindowRoot : this.uiWindowRoot);
 
             UIInstanceInfo uiInstanceInfo = new UIInstanceInfo { ViewInstance = view, ViewName = viewType.Name };
             this.uiInstances.Add(viewType, uiInstanceInfo);
             this.uiInstanceLoadOrderList.Add(uiInstanceInfo);
-
-            this.SetViewUtilityFunc(view);
-
             gameObject.SetActive(false);
             await view.AwakeAsync(gameObject);
+            
             progress?.Report(0.8f);
 
             return view;
         }
 
-        private void SetViewUtilityFunc(UIViewBase view)
-        {
-            view.SetPageEnable = this.SetPageEnable;
-            view.SetPageShow = this.SetPageShow;
-            view.SetPageHide = this.SetPageHide;
-            view.SetUIActive = this.SetUIActive;
-            view.SetUIDisactive = this.SetUIDisactive;
-            view.RemoveUI = this.RemoveUI;
-        }
-
         /// <summary>
-        /// 释放UI资源，并销毁相关GameObject（销毁相关逻辑在UIObject.Dispose中）
+        /// 释放UI资源时，需要Mgr做的事（销毁相关逻辑在UIObject.Dispose中）
         /// </summary>
         /// <param name="viewType"></param>
-        private void RemoveUI(Type viewType)
+        internal void RemoveUI(Type viewType)
         {
             if (this.uiInstances.TryGetValue(viewType, out UIInstanceInfo uiInfo))
             {
@@ -327,12 +336,12 @@ namespace SFramework.Core.GameManagers
                 this.uiInstanceLoadOrderList.Remove(uiInfo);
             }
         }
-
+        
         /// <summary>
-        /// set window view active false
+        /// 隐藏Window，需要Mgr做的事；若当前Window已处于隐藏状态，则不会调用
         /// </summary>
         /// <param name="viewType"></param>
-        private void SetUIDisactive(Type viewType)
+        internal void SetWindowInactive(Type viewType)
         {
             if (this.uiInstances.TryGetValue(viewType, out UIInstanceInfo uiInfo))
             {
@@ -341,10 +350,10 @@ namespace SFramework.Core.GameManagers
         }
 
         /// <summary>
-        /// set window view active true
+        /// 显示Window，需要Mgr做的事；若当前Window已处于显示状态，则不会调用
         /// </summary>
         /// <param name="viewType"></param>
-        private void SetUIActive(Type viewType)
+        internal void SetWindowActive(Type viewType)
         {
             if (this.uiInstances.TryGetValue(viewType, out UIInstanceInfo uiInfo))
             {
@@ -353,71 +362,62 @@ namespace SFramework.Core.GameManagers
         }
 
         /// <summary>
-        /// 设置Page View隐藏，上一个Page自动显示
+        /// 隐藏Page，需要Mgr做的事 —— 显示上一个Page（若有）；若当前Page已处于隐藏状态，则不会调用
         /// </summary>
         /// <param name="viewType"></param>
-        /// <returns></returns>
-        private bool SetPageHide(Type viewType)
+        internal async STask SetPageHide(Type viewType)
         {
-            if (this.InternalHanding)
+            while (this.InternalHanding)
             {
-                var willHidePage = this.uiInstances[viewType];
-                willHidePage.ViewInstance.gameObject.SetActive(false);
-                return true;
+                await STask.NextFrame();
             }
 
             //有上一个Page才设置
-            if (this.navigateQueue.Count >= 2)
+            if (this.navigateQueue.Count <= 1)
+                return;
+
+            UIInstanceInfo willHidePage = this.uiInstances[viewType];
+            willHidePage.ViewInstance.gameObject.SetActive(false);
+            willHidePage.ViewInstance.SetStateHide();
+
+            this.navigateQueue.RemoveAt(this.navigateQueue.Count - 1);
+
+            Type preType = this.navigateQueue[this.navigateQueue.Count - 1];
+            if (!this.uiInstances.ContainsKey(preType))
             {
-                var willHidePage = this.uiInstances[viewType];
-                willHidePage.ViewInstance.gameObject.SetActive(false);
-                willHidePage.ViewInstance.SetStateHide();
-
-                this.navigateQueue.RemoveAt(this.navigateQueue.Count - 1);
-
-                Type preType = this.navigateQueue[this.navigateQueue.Count - 1];
-                if (!this.uiInstances.ContainsKey(preType))
-                {
-                    //上一个Page被清理掉了，重新加载
-                    this.ShowUIInternalAsync(preType).Forget();
-                }
-                else
-                {
-                    //缓存中有上一个Page，直接显示
-                    var preUIInstance = this.uiInstances[this.navigateQueue[this.navigateQueue.Count - 1]];
-                    preUIInstance.ViewInstance.gameObject.SetActive(true);
-                    preUIInstance.ViewInstance.SetStateShow();
-                }
-
-                return true;
+                //上一个Page被清理掉了，重新加载
+                await this.ShowUIInternalAsync(preType);
             }
-
-            return false;
+            else
+            {
+                //缓存中有上一个Page，直接显示
+                UIInstanceInfo preUIInstance = this.uiInstances[this.navigateQueue[this.navigateQueue.Count - 1]];
+                preUIInstance.ViewInstance.gameObject.SetActive(true);
+                preUIInstance.ViewInstance.SetStateShow();
+            }
         }
-
+        
         /// <summary>
-        /// 设置Page View显示，上一个Page隐藏
+        /// 显示Page前，需要Mgr做的事 —— 隐藏上一个Page，显示当前gameObject；若当前Page已处于显示状态，则不会调用
         /// </summary>
         /// <param name="viewType"></param>
-        private void SetPageShow(Type viewType)
+        internal async STask SetPageShow(Type viewType)
         {
-            var viewInstance = this.uiInstances[viewType].ViewInstance;
-            if (this.InternalHanding)
+            while (this.InternalHanding)
             {
-                viewInstance.gameObject.SetActive(true);
-                return;
+                await STask.NextFrame();
             }
 
             //隐藏上一个Page
-            for (int i = 0, count = this.navigateQueue.Count; i < count; i++)
+            for (int i = 0, count = this.navigateQueue.Count; i < count; ++i)
             {
                 Type type = this.navigateQueue[i];
                 if (type == viewType)
                     continue;
-                if (this.uiInstances.TryGetValue(type, out UIInstanceInfo uIInstanceInfo))
+                if (this.uiInstances.TryGetValue(type, out UIInstanceInfo uiInstanceInfo))
                 {
-                    uIInstanceInfo.ViewInstance.gameObject.SetActive(false);
-                    uIInstanceInfo.ViewInstance.SetStateHide();
+                    uiInstanceInfo.ViewInstance.gameObject.SetActive(false);
+                    uiInstanceInfo.ViewInstance.SetStateHide();
                 }
             }
 
@@ -445,27 +445,33 @@ namespace SFramework.Core.GameManagers
                     this.navigateQueue.RemoveRange(targetIndex + 1, this.navigateQueue.Count - (targetIndex + 1));
                 }
             }
-
+            
+            //显示gameObject
+            UIViewBase viewInstance = this.uiInstances[viewType].ViewInstance;
             viewInstance.gameObject.SetActive(true);
         }
 
-        private void SetPageEnable(Type type)
+        /// <summary>
+        /// 显示Page前，需要Mgr做的事情；即使当前Page已处于显示状态，也会调用
+        /// </summary>
+        /// <param name="type"></param>
+        internal async STask SetPageEnable(Type type)
         {
-            this.HideDependencyWindow(type);
+            await this.HideDependencyWindowAsync(type);
         }
 
         /// <summary>
         /// 将依附于当前Page的View都隐藏掉
         /// </summary>
         /// <param name="viewType"></param>
-        private void HideDependencyWindow(Type viewType)
+        private async STask HideDependencyWindowAsync(Type viewType)
         {
-            var page = this.uiInstances[viewType];
+            UIInstanceInfo page = this.uiInstances[viewType];
 
             List<UIInstanceInfo> hideInfo = new List<UIInstanceInfo>();
             for (int i = 0, count = this.uiInstanceLoadOrderList.Count; i < count; ++i)
             {
-                var uiInfo = this.uiInstanceLoadOrderList[i];
+                UIInstanceInfo uiInfo = this.uiInstanceLoadOrderList[i];
                 if (uiInfo.ViewInstance.BasedPage == page.ViewName)
                 {
                     hideInfo.Add(uiInfo);
@@ -474,7 +480,7 @@ namespace SFramework.Core.GameManagers
 
             for (int i = 0, count = hideInfo.Count; i < count; ++i)
             {
-                hideInfo[i].ViewInstance.Hide();
+                await hideInfo[i].ViewInstance.HideAsync();
             }
         }
         #endregion

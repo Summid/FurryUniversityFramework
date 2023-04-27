@@ -1,7 +1,9 @@
+#pragma warning disable 1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
+// #pragma warning disable 4014 // Because this call is not awaited, execution of the current method continues before the call is completed.
+
 using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -11,66 +13,60 @@ namespace SFramework.Core.UI
 {
     public abstract class UIObject
     {
+        /// <summary> Type of List<> </summary>
         public static readonly Type ListType = typeof(List<>);
+
+        /// <summary> View State </summary>
+        public enum EnumViewState { Null, Shown, Hidden, Disposed, Hiding }
+
 
         /// <summary> UI所属的GameObject对象实例 </summary>
         public GameObject gameObject { get; private set; }
+
+        /// <summary> Null, Shown, Hidden, Disposed, Hiding </summary>
         public virtual EnumViewState UIState { get; protected set; }
 
+        /// <summary> RectTransform of the gameObject </summary>
         protected virtual RectTransform VisualRoot => this.gameObject.transform as RectTransform;
+        
+        /// <summary> The Type of the UIObject instance's script </summary>
         public Type ClassType { get; private set; }
 
         private ReferenceCollector rc;
         private Dictionary<UIObject, GameObject> childrenUIList = new Dictionary<UIObject, GameObject>();
-        public Dictionary<UIObject, GameObject> ChildrenUIList => this.childrenUIList;
-        private UIManager UIManager { get { return GameManager.Instance.UIManager; } }
-
-        private CancellationTokenSource updateCTS;
-
-        public virtual void Awake(GameObject gameObjectHost)
-        {
-            this.ClassType = this.GetType();
-            this.gameObject = gameObjectHost;
-            this.rc = this.gameObject.GetComponent<ReferenceCollector>();
-
-            this.InitItemSelector(this.gameObject.transform);
-            this.InitCustomAttribute();
-
-            this.OnAwake();
-        }
-
-#pragma warning disable CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
         /// <summary>
-        /// 因UIViewBase中Awake需要异步等待创建MaskView，这里提供异步版的Awake方法
+        /// 该UI下所有UIItem及其GameObject，包括自己声明的被UIFieldInit标记的UIItem成员，也包括子节点声明的；
+        /// 当自己Dispose后，它们会一起Dispose掉，子UIObject就不需要自己再Dispose了
         /// </summary>
-        /// <param name="gameObjectHost"></param>
-        /// <returns></returns>
-        public virtual async STask AwakeAsync(GameObject gameObjectHost) { }
-#pragma warning restore CS1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
-
+        public Dictionary<UIObject, GameObject> ChildrenUIList => this.childrenUIList;
+        protected UIManager UIManager { get { return GameManager.Instance.UIManager; } }
+        private CancellationTokenSource updaterCTS;
+        
+        
+        
         #region 内部方法
         /// <summary>
-        /// 设置UIFieldInitAttribute和UISerializableAttribute字段
+        /// 设置UIFieldInitAttribute和UISerializableAttribute标记的字段
         /// </summary>
         private void InitCustomAttribute()
         {
-            var selector = this.gameObject.GetComponent<UIItemSelector>();
-
-            var fields = this.ClassType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-            for (int i = 0, fieldsCount = fields.Length; i < fieldsCount; i++)
+            FieldInfo[] fields =
+                this.ClassType.GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+            for (int i = 0, fieldsCount = fields.Length; i < fieldsCount; ++i)
             {
-                var field = fields[i];
-                var atts = field.GetCustomAttributes(true);
-                for (int j = 0, attCount = atts.Length; j < attCount; j++)
+                FieldInfo field = fields[i];
+                object[] attributes = field.GetCustomAttributes(true);
+                for (int j = 0, count = attributes.Length; j < count; ++j)
                 {
-                    var att = atts[j];
-                    if (att is UIFieldInitAttribute uiFieldAtt)
+                    object attribute = attributes[j];
+                    if (attribute is UIFieldInitAttribute uiFieldInitAttribute)
                     {
-                        this.SetUIInitField(uiFieldAtt, field);
+                        this.SetUIFieldInit(uiFieldInitAttribute, field);
                     }
-                    else if (att is UISerializableAttribute uiSerAtt)
+                    else if (attribute is UISerializableAttribute uiSerializableAttribute)
                     {
-                        this.SetUISerialzation(selector, field);
+                        UIItemSelector selector = this.gameObject.GetComponent<UIItemSelector>();
+                        this.SetUISerialization(selector, field);
                     }
                 }
             }
@@ -81,7 +77,7 @@ namespace SFramework.Core.UI
         /// </summary>
         /// <param name="selector"></param>
         /// <param name="field"></param>
-        private void SetUISerialzation(UIItemSelector selector, FieldInfo field)
+        private void SetUISerialization(UIItemSelector selector, FieldInfo field)
         {
             var paramList = selector.UIConfigParam;
             int count = paramList.Count;
@@ -109,15 +105,15 @@ namespace SFramework.Core.UI
         }
 
         /// <summary>
-        /// 设置引用节点
+        /// 实例化引用节点
         /// </summary>
-        /// <param name="uiAtt"></param>
+        /// <param name="uiAtt"><see cref="UIFieldInitAttribute"/></param>
         /// <param name="field"></param>
-        private void SetUIInitField(UIFieldInitAttribute uiAtt, FieldInfo field)
+        private void SetUIFieldInit(UIFieldInitAttribute uiAtt, FieldInfo field)
         {
             if (field.FieldType.Name == ListType.Name)//数组
             {
-                Type type = field.FieldType.GetGenericArguments()[0];//泛型类型
+                Type type = field.FieldType.GetGenericArguments()[0];
                 List<object> values = this.GetUIElements(type, uiAtt.RCKey);
                 if (values == null)
                 {
@@ -132,6 +128,7 @@ namespace SFramework.Core.UI
                     object value = values[i];
                     addMethod.Invoke(listInstance, new object[] { value });
                 }
+
                 field.SetValue(this, listInstance);
             }
             else
@@ -142,7 +139,7 @@ namespace SFramework.Core.UI
         }
 
         /// <summary>
-        /// 获取ReferenceCollector中的引用
+        /// 获取ReferenceCollector脚本中引用的对象
         /// </summary>
         /// <param name="type"></param>
         /// <param name="key"></param>
@@ -156,54 +153,44 @@ namespace SFramework.Core.UI
             }
 
             GameObject go = this.rc.Get<GameObject>(key);
-            if (go != null)
+            if (go == null)
+                return null;
+
+            if (type.IsSubclassOf(typeof(UIItemBase)))//是UIItem类型
             {
-                if (type.IsSubclassOf(typeof(UIItemBase)))//UIItem类型
+                UIItemSelector selector = go.GetComponent<UIItemSelector>();
+                if (selector == null || string.IsNullOrEmpty(selector.SelectClass))
+                    return null;
+
+                Type itemType = Type.GetType(selector.SelectClass);
+                if (itemType == null)
                 {
-                    var selector = go.GetComponent<UIItemSelector>();
-                    if (selector == null || string.IsNullOrEmpty(selector.SelectClass))
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        Type itemType = Type.GetType(selector.SelectClass);
-                        if (itemType != null)
-                        {
-                            var itemObj = this.AddMissingItem(selector, itemType);
-                            if (itemObj != null)
-                            {
-                                return itemObj;
-                            }
-                        }
-                        else
-                        {
-                            Debug.LogWarning($"[{this}] 在初始化InitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}");
-                        }
-                        return null;
-                    }
+                    Debug.LogWarning($"[{this}] 在初始化UIInitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}，是否缺少了该脚本");
+                    return null;
                 }
                 else
                 {
-                    if (type == typeof(GameObject))
-                        return go;
-                    else
-                    {
-                        Component target = go.GetComponent(type);
-                        return target;
-                    }
+                    UIItemBase itemObj = this.AddUIItemToGameObject(selector, itemType);
+                    if (itemObj != null)
+                        return itemObj;
                 }
+
+                return null;
             }
             else
             {
-                return null;
+                //是Unity.Object类型
+                if (type == typeof(GameObject))
+                    return go;
+                Component target = go.GetComponent(type);
+                return target;
             }
         }
 
         /// <summary>
-        /// 获取ReferenceCollector中的引用
+        /// 获取ReferenceCollector脚本中引用的数组对象
         /// </summary>
-        /// <param name="type">List<T> 中T的类型</param>
+        /// <param name="type"></param>
         /// <param name="key"></param>
         /// <returns></returns>
         private List<object> GetUIElements(Type type, string key)
@@ -214,119 +201,75 @@ namespace SFramework.Core.UI
                 return null;
             }
 
-            List<object> uiObjectList = new List<object>();
             List<GameObject> goList = this.rc.GetList<GameObject>(key);
             if (goList == null)
             {
                 return null;
             }
+            
+            List<object> uiObjectList = new List<object>();
+            
+            if (goList.Count <= 0)
+                return null;
 
-            if (goList.Count > 0)
+            if (type.IsSubclassOf(typeof(UIItemBase)))//UIItem类型
             {
-                if (type.IsSubclassOf(typeof(UIItemBase)))//UIItem类型
+                for (int i = 0, count = goList.Count; i < count; ++i)
                 {
-                    for (int i = 0, count = goList.Count; i < count; i++)
-                    {
-                        GameObject go = goList[i];
-                        var selector = go.GetComponent<UIItemSelector>();
-                        if (selector == null || string.IsNullOrEmpty(selector.SelectClass))
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            Type itemType = Type.GetType(selector.SelectClass);
-                            if (itemType != null)
-                            {
-                                var itemObj = this.AddMissingItem(selector, itemType);
-                                if (itemObj != null)
-                                {
-                                    uiObjectList.Add(itemObj);
-                                }
-                            }
-                            else
-                            {
-                                Debug.LogWarning($"[{this}] 在初始化InitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}");
-                            }
-                            continue;
-                        }
-                    }
-                }
-                else
-                {
-                    if (type == typeof(GameObject))
-                    {
-                        return new List<object>(goList);
-                    }
+                    GameObject go = goList[i];
+                    UIItemSelector selector = go.GetComponent<UIItemSelector>();
+                    if (selector == null || string.IsNullOrEmpty(selector.SelectClass))
+                        continue;
+                    Type itemType = Type.GetType(selector.SelectClass);
+                    if (itemType == null)
+                        Debug.LogWarning($"[{this}] 在初始化UIInitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}，是否缺少了该脚本");
                     else
                     {
-                        for (int i = 0, count = goList.Count; i < count; ++i)
-                        {
-                            GameObject go = goList[i];
-                            if (go == null)
-                            {
-                                continue;
-                            }
-                            Component target = go.GetComponent(type);
-                            uiObjectList.Add(target);
-                        }
+                        UIItemBase itemObj = this.AddUIItemToGameObject(selector, itemType);
+                        if (itemObj != null)
+                            uiObjectList.Add(itemObj);
                     }
                 }
             }
             else
             {
-                return null;
+                //是Unity.Object类型
+                if (type == typeof(GameObject))
+                {
+                    return new List<object>(goList);
+                }
+                else
+                {
+                    for (int i = 0, count = goList.Count; i < count; ++i)
+                    {
+                        GameObject go = goList[i];
+                        if (go == null)
+                            continue;
+                        Component target = go.GetComponent(type);
+                        uiObjectList.Add(target);
+                    }
+                }
             }
-
+            
             return uiObjectList;
         }
 
         /// <summary>
-        /// 检查Prefab上的Selector组件，通过该组件初始化UIItem脚本
-        /// </summary>
-        /// <remarks>
-        /// 使用递归的方式，获取下一级所有挂载有Selector脚本的节点，创建UIObject对象
-        /// 但不再深入挂有Selector脚本的节点的子节点（它自己会检查自己的子节点）
-        /// </remarks>
-        /// <param name="rootTransform"></param>
-        private void InitItemSelector(Transform rootTransform)
-        {
-            for (int i = 0; i < rootTransform.childCount; i++)
-            {
-                var child = rootTransform.GetChild(i);
-                if (child.TryGetComponent<UIItemSelector>(out var selector))
-                {
-                    Type type = Type.GetType(selector.SelectClass);
-                    this.AddMissingItem(selector, type);
-                }
-                else
-                {
-                    this.InitItemSelector(child);
-                }
-            }
-        }
-
-        /// <summary>
-        /// 激活子UIItem对象脚本
+        /// 激活UIItemSelector上的UIItem脚本，若脚本已经被激活，则直接返回
         /// </summary>
         /// <param name="selector"></param>
         /// <param name="itemType"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
-        private UIItemBase AddMissingItem(UIItemSelector selector, Type itemType)
+        private UIItemBase AddUIItemToGameObject(UIItemSelector selector, Type itemType)
         {
             if (itemType == null)
-            {
                 throw new Exception($"[{this.GetType().FullName}]下的[{selector.gameObject.name}]配置上有错误");
-            }
 
             GameObject go = selector.gameObject;
             foreach (var pair in this.childrenUIList)
             {
                 if (pair.Value == go)
-                {
                     return pair.Key as UIItemBase;
-                }
             }
 
             UIItemBase itemObj = null;
@@ -338,79 +281,107 @@ namespace SFramework.Core.UI
             {
                 itemObj = Activator.CreateInstance(itemType) as UIItemBase;
                 selector.UIObject = itemObj;
-                itemObj.Awake(go);
+#pragma warning disable CS4014
+                itemObj.AwakeAsync(go);//这里以同步方式执行
+#pragma warning restore CS4014
             }
 
             this.childrenUIList.Add(itemObj, go);
-
             return itemObj;
         }
 
         /// <summary>
-        /// 初始化Update迭代逻辑
+        /// 检查子节点Prefab上的Selector组件，通过该组件初始化UIItem脚本
         /// </summary>
+        /// <remarks>
+        /// 使用递归的方式，获取下一级所有挂载有Selector脚本的节点，创建UIObject对象
+        /// 但不再深入挂有Selector脚本的节点的子节点（它自己会检查自己的子节点）
+        /// </remarks>
+        /// <param name="rootTransform"></param>
+        private void InitChildItemSelector(Transform rootTransform)
+        {
+            for (int i = 0; i < rootTransform.childCount; ++i)
+            {
+                Transform child = rootTransform.GetChild(i);
+                if (child.TryGetComponent<UIItemSelector>(out var selector))
+                {
+                    Type type = Type.GetType(selector.SelectClass);
+                    this.AddUIItemToGameObject(selector, type);
+                }
+                else
+                {
+                    this.InitChildItemSelector(child);
+                }
+            }
+        }
+
         private void InitUpdateLogic()
         {
-            if (this is IUIUpdater updator)
+            if (this is IUIUpdater updater)
             {
-                if (this.updateCTS != null)
+                if (this.updaterCTS != null)
                 {
-                    this.updateCTS.Cancel();
-                    this.updateCTS.Dispose();
-                    this.updateCTS = null;
+                    this.updaterCTS.Cancel();
+                    this.updaterCTS.Dispose();
+                    this.updaterCTS = null;
                 }
-                this.updateCTS = new CancellationTokenSource();
-                STask.UpdateTask(updator.OnUpdate, PlayerLoopTiming.Update, this.updateCTS.Token);
+
+                this.updaterCTS = new CancellationTokenSource();
+                STask.UpdateTask(updater.OnUpdate, PlayerLoopTiming.Update, this.updaterCTS.Token);
             }
         }
         #endregion
 
         #region 外部接口
-        protected async STask<UIItem> CreateChildItemAsync<UIItem>(string itemAssetName, Transform parent = null)
-            where UIItem : UIItemBase, new()
+        /// <summary>
+        /// 创建新Item及其GameObject
+        /// </summary>
+        /// <param name="itemAssetName"></param>
+        /// <param name="parent"></param>
+        /// <typeparam name="TUIItem"></typeparam>
+        /// <returns></returns>
+        protected async STask<TUIItem> CreateChildItemAsync<TUIItem>(string itemAssetName, Transform parent = null)
+            where TUIItem : UIItemBase, new()
         {
             UIItemInfo info = this.UIManager.GetUIItemInfo(itemAssetName);
-            if (info != null)
-            {
-                if (parent == null)
-                    parent = this.VisualRoot;
-                string assetName = itemAssetName;
-                string assetBundleName = info.UIItemAssetBundleName;
-                string className = info.UIItemClassName;
+            if (info == null)
+                return default;
+            if (this.gameObject == null)
+                return default;
 
-                if (this.gameObject == null)
-                {
-                    return default;
-                }
+            if (parent == null)
+                parent = this.VisualRoot;
+            string assetName = itemAssetName;
+            string assetBundleName = info.UIItemAssetBundleName;
+            string className = info.UIItemClassName;
 
-                GameObject prefabObj = await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(assetName, assetBundleName);
-                prefabObj = UnityEngine.Object.Instantiate(prefabObj, parent);
-                prefabObj.transform.localScale = Vector3.one;
-                prefabObj.transform.localPosition = Vector3.zero;
-                if (!prefabObj.TryGetComponent<UIItemSelector>(out var selector))
-                    selector = prefabObj.AddComponent<UIItemSelector>();
+            GameObject prefabObj =
+                await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(assetName, assetBundleName);
+            prefabObj = UnityEngine.Object.Instantiate(prefabObj, parent);
+            prefabObj.transform.localScale = Vector3.one;
+            prefabObj.transform.localPosition = Vector3.zero;
+            if (!prefabObj.TryGetComponent<UIItemSelector>(out var selector))
+                selector = prefabObj.AddComponent<UIItemSelector>();
 
-                selector.SelectClass = className;
-                var itemType = Type.GetType(selector.SelectClass);
-                if (itemType != null)
-                {
-                    var itemObj = Activator.CreateInstance<UIItem>();
-                    this.childrenUIList.Add(itemObj, prefabObj);
-                    itemObj.Awake(prefabObj);
-                    itemObj.BundleName = assetBundleName;
-                    return itemObj;
-                }
-            }
-            return default;
+            selector.SelectClass = className;
+            Type itemType = Type.GetType(selector.SelectClass);
+            if (itemType == null)
+                return default;
+
+            var itemObj = Activator.CreateInstance<TUIItem>();
+            this.childrenUIList.Add(itemObj, prefabObj);
+            await itemObj.AwakeAsync(prefabObj);
+            itemObj.BundleName = assetBundleName;
+            return itemObj;
         }
 
         /// <summary>
         /// 给GameObject添加UIItem脚本，若GameObject上已有需添加的脚本则直接返回
         /// </summary>
-        /// <typeparam name="TUIItem"></typeparam>
         /// <param name="go"></param>
+        /// <typeparam name="TUIItem"></typeparam>
         /// <returns></returns>
-        public TUIItem AddUIItemOnGameObject<TUIItem>(GameObject go) where TUIItem : UIItemBase, new()
+        public async STask<TUIItem> AddUIItemToGameObjectAsync<TUIItem>(GameObject go) where TUIItem : UIItemBase, new()
         {
             foreach (var pair in this.childrenUIList)
             {
@@ -420,16 +391,21 @@ namespace SFramework.Core.UI
 
             TUIItem itemObj = Activator.CreateInstance<TUIItem>();
             this.childrenUIList.Add(itemObj, go);
-            itemObj.Awake(go);
+            await itemObj.AwakeAsync(go);
             return itemObj;
         }
 
-        protected void DisposeChildItem<UIItem>(UIItem item) where UIItem : UIItemBase, new()
+        /// <summary>
+        /// 手动释放UIItem脚本及其GameObject
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="TUIItem"></typeparam>
+        protected async STask DisposeChildItemAsync<TUIItem>(TUIItem item) where TUIItem : UIItemBase, new()
         {
             this.RemoveChild(item);
-            item.Dispose();
+            await item.DisposeAsync();
         }
-
+        
         public bool RemoveChild(UIItemBase item)
         {
             return this.childrenUIList.Remove(item);
@@ -437,99 +413,113 @@ namespace SFramework.Core.UI
         #endregion
 
         #region 生命周期方法
-        public virtual void Dispose()
+        /// <summary>
+        /// 因UIViewBase中Awake需要异步等待创建MaskView，这里提供异步版的Awake方法供View重写，为了统一接口，全用异步版
+        /// </summary>
+        /// <param name="gameObjectHost"></param>
+        public virtual async STask AwakeAsync(GameObject gameObjectHost)
+        {
+            this.ClassType = this.GetType();
+            this.gameObject = gameObjectHost;
+            this.rc = this.gameObject.GetComponent<ReferenceCollector>();
+
+            this.InitChildItemSelector(this.gameObject.transform);
+            this.InitCustomAttribute();
+
+            this.OnAwake();
+        }
+
+        /// <summary>
+        /// 释放UI对象
+        /// </summary>
+        public virtual async STask DisposeAsync()
         {
             if (this.UIState == EnumViewState.Disposed)
                 return;
             this.UIState = EnumViewState.Disposed;
 
-            if (this.updateCTS != null)
+            if (this.updaterCTS != null)
             {
-                this.updateCTS.Cancel();
-                this.updateCTS.Dispose();
-                this.updateCTS = null;
+                this.updaterCTS.Cancel();
+                this.updaterCTS.Dispose();
+                this.updaterCTS = null;
             }
 
             if (this.gameObject != null && !this.gameObject.Equals(null))
                 GameObject.Destroy(this.gameObject);
 
-            this.UIManager.DisposeUIBundle(this);
+            await this.UIManager.DisposeUIBundleAsync(this);
 
-            //handle children
             foreach (var uiObj in this.childrenUIList.Keys)
             {
-                if (uiObj == this)
+                if(uiObj == this)
                     continue;
-                uiObj.Dispose();
+                await uiObj.DisposeAsync();
             }
-
+            
             this.OnDispose();
         }
 
-        public virtual void Show() { }
-        public virtual void Hide() { }
+        public virtual async STask ShowAsync() { }
 
-
-        /// <summary> 首次创建时触发 </summary>
+        public virtual async STask HideAsync() { }
+        
+        /// <summary> 首次创建时触发，用户可使用 </summary>
         protected virtual void OnAwake() { }
 
-        /// <summary> 调用<see cref="Show"/>后触发 </summary>
+        /// <summary> 每次显示后触发，用户可使用 </summary>
         protected virtual void OnShow() { }
-
-        /// <summary> 调用<see cref="Hide"/>后触发，用户使用 </summary>
+        
+        /// <summary> 每次隐藏后触发，用户可使用 </summary>
         protected virtual void OnHide() { }
 
-        /// <summary> 调用<see cref="Dispose"/>后触发 </summary>
+        /// <summary> 调用<see cref="DisposeAsync"/>后触发，用户可使用 </summary>
         protected virtual void OnDispose() { }
-
-        /// <summary> 调用<see cref="Show"/>后触发，底层使用，不暴露给用户 </summary>
+        
+        /// <summary> 每次显示后调用，可添加一些每次显示需要处理的内部逻辑，底层使用，不暴露给用户 </summary>
         protected virtual void OnEnable()
         {
             this.OnShow();
             this.InitUpdateLogic();
         }
-
-        /// <summary> 调用<see cref="Hide"/>后触发，底层使用，不暴露给用户 </summary>
+        
+        /// <summary> 每次隐藏后调用，可添加一些每次隐藏需要处理的内部逻辑,底层使用，不暴露给用户 </summary>
         protected virtual void OnDisable()
         {
             //Remove something here，协程、计时器等
-            this.updateCTS?.Cancel();
+            this.updaterCTS?.Cancel();
             this.OnHide();
         }
         #endregion
+    }
+    
+    [AttributeUsage(AttributeTargets.Field)]
+    public class UIFieldInitAttribute : Attribute
+    {
+        public string RCKey { get; private set; }
 
-        public enum EnumViewState
+        public UIFieldInitAttribute(string rcKey)
         {
-            NULL,
-            Shown,
-            Hidden,
-            Disposed,
-            Hidding
+            this.RCKey = rcKey;
         }
     }
 
-    // [AttributeUsage(AttributeTargets.Field)]
-    // public class UIFieldInitAttribute : Attribute
-    // {
-    //     public string RCKey { get; private set; }
-    //
-    //     public UIFieldInitAttribute(string rcKey)
-    //     {
-    //         this.RCKey = rcKey;
-    //     }
-    // }
-    //
-    // [AttributeUsage(AttributeTargets.Field)]
-    // public class UISerializableAttribute : Attribute
-    // {
-    //
-    // }
-    //
-    // /// <summary>
-    // /// 实现该接口来实现类似Update的功能
-    // /// </summary>
-    // public interface IUIUpdator
-    // {
-    //     void OnUpdate();
-    // }
+    [AttributeUsage(AttributeTargets.Field)]
+    public class UISerializableAttribute : Attribute
+    {
+
+    }
+
+    /// <summary>
+    /// 实现该接口来实现类似Update的功能
+    /// </summary>
+    public interface IUIUpdater
+    {
+        void OnUpdate();
+    }
+
+    public interface IUIPrepareShow
+    {
+        STask OnPrepareShow();
+    }
 }

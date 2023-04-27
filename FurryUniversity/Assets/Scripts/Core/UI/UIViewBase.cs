@@ -1,35 +1,23 @@
-using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework.Core.UI
 {
-    public abstract class UIViewBase : UIObject
+    public class UIViewBase : UIObject
     {
         public EnumUIType UIType { get; set; }
 
-        public delegate void PageHandleDelVoid(Type type);
-        public delegate bool PageHandleDelBool(Type type);
-
-        public PageHandleDelVoid SetPageEnable;
-        public PageHandleDelVoid SetPageShow;
-        public PageHandleDelVoid SetUIActive;
-        public PageHandleDelBool SetPageHide;
-        public PageHandleDelVoid SetUIDisactive;
-        public PageHandleDelVoid RemoveUI;
-
         private RectTransform visualRoot;
         private CanvasGroup rootCanvas;
-
+        
         protected ViewMask Mask { get; private set; }
         /// <summary> 是否是顶部windows </summary>
         public virtual bool Topmost => false;
 
         protected override RectTransform VisualRoot => this.visualRoot;
-
+        
         private string basedPage;
         /// <summary> 依附的Page的名称 </summary>
         public virtual string BasedPage
@@ -40,25 +28,17 @@ namespace SFramework.Core.UI
                 if (this.basedPage == value)
                     return;
                 this.basedPage = value;
-                this.CalWindowShow();//判断下自己是否应该显示
+                this.CalWindowShow();
             }
-        }
-
-        public sealed override async STask AwakeAsync(GameObject gameObjectHost)
-        {
-            base.Awake(gameObjectHost);
-            this.CreateVisualRoot(gameObjectHost);
-            await this.CreateMask(gameObjectHost);
-            this.rootCanvas = this.gameObject.AddComponent<CanvasGroup>();
         }
 
         #region 内部方法
         private void CreateVisualRoot(GameObject gameObjectHost)
         {
-            List<Transform> allChildrens = new List<Transform>();
-            for (int i = 0; i < gameObjectHost.transform.childCount; i++)
+            List<Transform> allChildren = new List<Transform>();
+            for (int i = 0; i < gameObjectHost.transform.childCount; ++i)
             {
-                allChildrens.Add(gameObjectHost.transform.GetChild(i));
+                allChildren.Add(gameObjectHost.transform.GetChild(i));
             }
 
             GameObject visualRootGO = new GameObject("[VisualRoot]");
@@ -71,16 +51,17 @@ namespace SFramework.Core.UI
             this.visualRoot.offsetMin = Vector3.zero;
             this.visualRoot.offsetMax = Vector3.zero;
 
-            for (int i = 0, count = allChildrens.Count; i < count; i++)
+            for (int i = 0, count = allChildren.Count; i < count; ++i)
             {
-                Transform child = allChildrens[i];
+                Transform child = allChildren[i];
                 child.SetParent(this.VisualRoot);
             }
         }
 
         private async STask CreateMask(GameObject gameObjectHost)
         {
-            this.Mask = await this.CreateChildItemAsync<ViewMask>(UIItemBase.AssetList.ViewMask, gameObjectHost.transform);
+            this.Mask = await this.CreateChildItemAsync<ViewMask>(UIItemBase.AssetList.ViewMask,
+                gameObjectHost.transform);
             RectTransform maskRect = this.Mask.gameObject.transform as RectTransform;
             //伸展运动
             maskRect.anchorMin = Vector2.zero;
@@ -98,69 +79,55 @@ namespace SFramework.Core.UI
         {
             this.OnClickMask();
         }
+
         #endregion
 
         #region 外部接口
-        protected virtual void OnClickMask()
+        /// <summary> 显示View </summary>
+        public override async STask ShowAsync()
         {
-            if (this.UIType == EnumUIType.Window)
-                this.Hide();
-        }
-
-        /// <summary>
-        /// 显示UI
-        /// </summary>
-        public sealed override void Show()
-        {
-            if (this.UIType == EnumUIType.Page)
-                this.SetPageEnable?.Invoke(this.ClassType);
+            if(this.UIType == EnumUIType.Page)
+                await this.UIManager.SetPageEnable(this.ClassType);
 
             if (this.UIState == EnumViewState.Shown)
                 return;
-            if(this.UIState == EnumViewState.Hidding)
-                this.OnDisable();
 
             this.Mask.gameObject.SetActive(true);
             this.Mask.EnableRaycast = false;
+
+            if (this is IUIPrepareShow uiPrepareShow)
+            {
+                await uiPrepareShow.OnPrepareShow();
+                this.rootCanvas.alpha = 1;
+                this.rootCanvas.blocksRaycasts = true;
+            }
+            
             this.UIState = EnumViewState.Shown;
             if (this.UIType == EnumUIType.Page)
-                this.SetPageShow?.Invoke(this.ClassType);
+                await this.UIManager.SetPageShow(this.ClassType);
             else
-            {
-                this.SetUIActive?.Invoke(this.ClassType);
-            }
-            this.OnWillShow();
+                this.UIManager.SetWindowActive(this.ClassType);
+
             this.Mask.EnableRaycast = true;
             this.OnEnable();
         }
-
-        /// <summary>
-        /// 隐藏UI
-        /// </summary>
-        public sealed override void Hide()
+        
+        public override async STask HideAsync()
         {
             if (this.UIState == EnumViewState.Disposed)
             {
                 Debug.LogWarning($"{this} Hide请求失败，物体已被销毁");
                 return;
             }
+
             if (this.UIState == EnumViewState.Hidden)
                 return;
 
             if (this.UIType == EnumUIType.Page)
             {
-                if (!GameManager.Instance.UIManager.IsLastPage(this))
+                if (!this.UIManager.IsLastPage(this))
                 {
-                    this.UIState = EnumViewState.Hidding;
-
-                    if (!GameManager.Instance.UIManager.InternalHanding)
-                        this.OnWillHide();
-
-                    //Hide流程被取消
-                    if (this.UIState != EnumViewState.Hidding)
-                        return;
-
-                    this.SetPageHide?.Invoke(this.ClassType);
+                    await this.UIManager.SetPageHide(this.ClassType);//这里会调用OnDisable
                 }
                 else
                 {
@@ -169,58 +136,42 @@ namespace SFramework.Core.UI
             }
             else
             {
-                this.UIState = EnumViewState.Hidding;
-                if (!GameManager.Instance.UIManager.InternalHanding)
-                    this.OnWillHide();
-
-                if (this.UIState != EnumViewState.Hidding)
-                    return;
-
-                this.SetUIDisactive?.Invoke(this.ClassType);
+                this.UIManager.SetWindowInactive(this.ClassType);
                 this.UIState = EnumViewState.Hidden;
                 this.OnDisable();
             }
-            if (this.Mask.gameObject != null && this.UIState != EnumViewState.Shown)
+            
+            if(this.Mask.gameObject != null && this.UIState != EnumViewState.Shown)
                 this.Mask.gameObject.SetActive(false);
-            GameManager.Instance.UIManager.UpdateUIInstanceLimit();
+            await this.UIManager.UpdateUIInstanceLimitAsync();
         }
 
-        public sealed override void Dispose()
+        public sealed override async STask DisposeAsync()
         {
             try
             {
                 if (this.UIType == EnumUIType.Page && this.UIState == EnumViewState.Shown)
-                    this.SetPageHide?.Invoke(this.ClassType);
-
-                this.RemoveUI?.Invoke(this.ClassType);
-
-                if(this.UIState != EnumViewState.Hidden)
+                    await this.UIManager.SetPageHide(this.ClassType);//不要忘了显示上一个Page
+                
+                this.UIManager.RemoveUI(this.ClassType);
+                
+                if(this.UIState != EnumViewState.Hidden) // Window View
                     this.OnDisable();
 
-                base.Dispose();
+                await base.DisposeAsync();
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Debug.LogError(ex);
+                Debug.LogError(e);
             }
         }
 
-        /// <summary>
-        /// 调用 <see cref="Show"/> 时触发，可在此处理View弹出动画等逻辑
-        /// </summary>
-        protected virtual void OnWillShow()
+        protected virtual void OnClickMask()
         {
-
+            if (this.UIType == EnumUIType.Window)
+                this.HideAsync().Forget();
         }
-
-        /// <summary>
-        /// 调用 <see cref="Hide"/> 时触发，可再此处理View关闭动画等逻辑
-        /// </summary>
-        protected virtual void OnWillHide()
-        {
-
-        }
-
+        
         /// <summary>
         /// 若当前依附的Page没有显示时，自己也要隐藏
         /// </summary>
@@ -232,7 +183,7 @@ namespace SFramework.Core.UI
             if (string.IsNullOrEmpty(this.BasedPage))
                 return;
 
-            if (this.BasedPage != GameManager.Instance.UIManager.GetCurrentPageName())
+            if (this.BasedPage != this.UIManager.GetCurrentPageName())
             {
                 this.rootCanvas.alpha = 0;
                 this.rootCanvas.blocksRaycasts = false;
@@ -245,44 +196,47 @@ namespace SFramework.Core.UI
         }
         #endregion
         
+        public sealed override async STask AwakeAsync(GameObject gameObjectHost)
+        {
+            await base.AwakeAsync(gameObjectHost);
+            this.CreateVisualRoot(gameObjectHost);
+            await this.CreateMask(gameObjectHost);
+            this.rootCanvas = this.gameObject.AddComponent<CanvasGroup>();
+
+            if (this is IUIPrepareShow)
+            {
+                this.rootCanvas.alpha = 0;
+                this.rootCanvas.blocksRaycasts = false;
+            }
+        }
+
         /// <summary>
-        /// just set state show state without external logic
+        /// just set state shown without external logic，显示上一个Page时会调用
         /// </summary>
         internal void SetStateShow()
         {
-            if(this.UIState != EnumViewState.Shown)
+            if (this.UIState != EnumViewState.Shown)
                 this.UIState = EnumViewState.Shown;
             this.OnEnable();
         }
 
         /// <summary>
-        /// just set state hide state without external logic
+        /// just set state hidden without external logic
         /// </summary>
         internal void SetStateHide()
         {
             if (this.UIState == EnumViewState.Hidden)
                 return;
 
-            this.UIState = EnumViewState.Hidding;
-            this.OnWillHide();
-
-            if (this.UIState != EnumViewState.Hidding)
-                return;
             this.UIState = EnumViewState.Hidden;
             this.OnDisable();
         }
 
-        /// <summary>
-        /// 调用Show后触发，底层使用不暴露给用户
-        /// </summary>
         protected sealed override void OnEnable()
         {
             base.OnEnable();
         }
 
-        /// <summary>
-        /// 调用Hide后触发，底层使用不暴露给用户
-        /// </summary>
         protected sealed override void OnDisable()
         {
             base.OnDisable();

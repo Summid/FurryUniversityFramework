@@ -25,9 +25,10 @@ namespace SFramework.Core.UI
         {
             this.BG_Button.onClick.AddListener(() =>
             {
-                if (this.mainView == null)
-                    return;
-                this.mainView.Show();
+                if (this.mainView != null)
+                {
+                    this.mainView.Prepared = true;
+                }
             });
         }
 
@@ -35,7 +36,8 @@ namespace SFramework.Core.UI
         {
             this.ShowLoadingEffect();
 
-            this.mainView = await GameManager.Instance.UIManager.ShowUIAsync<MainView>(false, this);
+            this.mainView = await GameManager.Instance.UIManager.ShowUIAsync<MainView>(this);
+            this.mainView.NeedPrepared = true;
             await STask.Delay(2000);
             this.ShowLoadedEffect();
         }

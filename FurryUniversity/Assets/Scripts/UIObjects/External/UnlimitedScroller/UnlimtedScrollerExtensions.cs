@@ -1,3 +1,4 @@
+using SFramework.Threading.Tasks;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,19 +26,20 @@ namespace SFramework.Core.UI.External.UnlimitedScroller
                 itemGO.AddComponent<RegularCell>();
             }
 
-            Action<int, ICell> onGenerateHandler = (index, iCell) =>
+            async void OnGenerateHandler(int index, ICell iCell)
             {
-                var item = host.AddUIItemOnGameObject<TUIItem>(iCell.GameObject);
+                var item = await host.AddUIItemToGameObjectAsync<TUIItem>(iCell.GameObject);
                 item.ScrollerSetData(datas[index]);
                 onGenerated?.Invoke(index);
-            };
-
-            Action<ICell> onDestroyHandler = (iCell) =>
+            }
+            
+            async void OnDestroyHandler(ICell iCell)
             {
-                var item = host.AddUIItemOnGameObject<TUIItem>(iCell.GameObject);
-                item.Dispose();
-            };
-            scroller.Generate(scroller.CellPrefab, datas.Count, onGenerateHandler, onDestroyHandler);
+                var item = await host.AddUIItemToGameObjectAsync<TUIItem>(iCell.GameObject);
+                item.DisposeAsync().Forget();
+            }
+
+            scroller.Generate(scroller.CellPrefab, datas.Count, OnGenerateHandler, (Action<ICell>)OnDestroyHandler);
         }
     }
 }

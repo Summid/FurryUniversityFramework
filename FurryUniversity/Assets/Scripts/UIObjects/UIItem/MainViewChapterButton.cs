@@ -40,11 +40,11 @@ namespace SFramework.Core.UI
                 Debug.Log("click message box view confirm button");
                 var view =  await GameManager.Instance.UIManager.ShowUIAsync<DialogueView>();
                 view.SetNewDialogueContainer(this.dialogue);
-                messageBoxView.Hide();
+                messageBoxView.HideAsync().Forget();
             }
             else if (flag == MessageBoxView.MessageFlag.Cancel)
             {
-                messageBoxView.Hide();
+                messageBoxView.HideAsync().Forget();
                 Debug.Log("click message box view cancel button");
             }
         }

@@ -16,7 +16,7 @@ using UnityEngine;
 namespace SFramework.Core.UI
 {
     [UIView("MainView", EnumUIType.Page)]
-    public partial class MainView : UIViewBase,IUIUpdater
+    public partial class MainView : UIViewBase, IUIUpdater, IUIPrepareShow
     {
         private TweenerCore<Color, Color, ColorOptions> bgAlphaTweener;
         private TweenerCore<Vector3, Vector3, VectorOptions> bgScaleTweener;
@@ -26,6 +26,9 @@ namespace SFramework.Core.UI
 
         private SDSDialogue dialogueSystem;
         private Vector2 mainButtonsAwakeAnchoredPosition;
+
+        public bool NeedPrepared;
+        public bool Prepared;
 
         protected override void OnAwake()
         {
@@ -76,7 +79,7 @@ namespace SFramework.Core.UI
 
         private void OnClickSelectChapter()
         {
-            this.ChapterButtonsPool_UIItemPool.UpdateList<SDSDialogueContainerSO, MainViewChapterButton>(this.dialogueSystem.GetAllDialogues());
+            this.ChapterButtonsPool_UIItemPool.UpdateList<SDSDialogueContainerSO, MainViewChapterButton>(this.dialogueSystem.GetAllDialogues()).Forget();
             this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(true);
             this.MainButtons.gameObject.SetActive(false);
         }
@@ -107,10 +110,10 @@ namespace SFramework.Core.UI
             {
                 for (int i = 0; i < 20; ++i)
                 {
-                    var item =  this.CreateChildItemAsync<ArchiveItem>(UIItemBase.AssetList.ArchiveItem,
+                    var item = await this.CreateChildItemAsync<ArchiveItem>(UIItemBase.AssetList.ArchiveItem,
                         this.GameObject.transform);
-                    // this.archiveItems.Add(item);
-                    this.archiveTaskItems.Add(item);
+                    this.archiveItems.Add(item);
+                    // this.archiveTaskItems.Add(item);
                 }
             }
             
@@ -118,7 +121,7 @@ namespace SFramework.Core.UI
             {
                 foreach (ArchiveItem archiveItem in this.archiveItems)
                 {
-                    archiveItem.Dispose();
+                    archiveItem.DisposeAsync().Forget();
                 }
                 this.archiveItems.Clear();
                 
@@ -145,6 +148,16 @@ namespace SFramework.Core.UI
                 AssetBundleManager.Dump();
             }
             #endif
+        }
+        
+        public async STask OnPrepareShow()
+        {
+            while (this.NeedPrepared && !this.Prepared)
+            {
+                await STask.NextFrame();
+            }
+
+            this.NeedPrepared = false;
         }
     }
 }

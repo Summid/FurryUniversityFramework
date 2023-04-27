@@ -1,39 +1,34 @@
+using SFramework.Threading.Tasks;
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace SFramework.Core.UI
 {
-    public abstract partial class UIItemBase : UIObject
+    public partial class UIItemBase : UIObject
     {
         private UIItemSelector selector;
 
-        public override EnumViewState UIState 
+        public override EnumViewState UIState
         {
             get
             {
                 if (this.gameObject == null || this.gameObject.Equals(null))
                     return EnumViewState.Disposed;
-                else
-                {
-                    if (base.UIState == EnumViewState.Disposed)
-                        return base.UIState;
-                    else
-                        return this.gameObject.activeInHierarchy ? EnumViewState.Shown : EnumViewState.Hidden;
-                }
+                if (base.UIState == EnumViewState.Disposed)
+                    return base.UIState;
+                return this.gameObject.activeInHierarchy ? EnumViewState.Shown : EnumViewState.Hidden;
             }
-            protected set => base.UIState = value; 
+            protected set => base.UIState = value;
         }
 
         /// <summary>
-        /// BundleName不为空时才会在Dispose时卸载AB，目前在 <see cref="UIObject.CreateChildItemAsync{UIItem}(string, Transform)"/> 方法中会设置改变量
+        /// BundleName不为空时才会在Dispose时卸载AB，目前在 <see cref="UIObject.CreateChildItemAsync{UIItem}(string, Transform)"/> 方法中会设置该变量
         /// </summary>
         public string BundleName { get; set; }
 
-        public sealed override void Awake(GameObject gameObjectHost)
+        public sealed override async STask AwakeAsync(GameObject gameObjectHost)
         {
-            base.Awake(gameObjectHost);
+            await base.AwakeAsync(gameObjectHost);
 
             this.selector = gameObjectHost.GetComponent<UIItemSelector>();
             if (this.selector == null)
@@ -51,34 +46,34 @@ namespace SFramework.Core.UI
             }
         }
 
-        public sealed override void Dispose()
+        public sealed override async STask DisposeAsync()
         {
             try
             {
                 if(this.UIState == EnumViewState.Shown)
                     this.OnDisable();
-
-                base.Dispose();
+                await base.DisposeAsync();
             }
-            catch (Exception ex)
+            catch (Exception exception)
             {
-                Debug.LogError(ex);
+                Debug.LogError(exception);
             }
         }
 
-        public sealed override void Show()
+#pragma warning disable 1998
+        public sealed override async STask ShowAsync()
         {
-            if (this.gameObject == null)
-                return;
-            this.gameObject.SetActive(true);
+            if (this.gameObject != null)
+                this.gameObject.SetActive(true);
         }
 
-        public sealed override void Hide()
+        public sealed override async STask HideAsync()
         {
-            if (this.gameObject == null)
-                return;
-            this.gameObject.SetActive(false);
+            if(this.gameObject != null)
+                this.gameObject.SetActive(false);
         }
+#pragma warning restore 1998
+        
 
         private void OnGameObjectEnable()
         {
@@ -89,7 +84,7 @@ namespace SFramework.Core.UI
         {
             this.OnDisable();
         }
-
+        
         /// <summary>
         /// 调用Show后触发，底层使用不暴露给用户
         /// </summary>

@@ -57,7 +57,7 @@ namespace SFramework.Core.UI
             parameters.ForEach(param => this.datas.Add(param as ButtonData));
             
             this.TitleText.text = title;
-            this.ButtonsNode_UIItemPool.UpdateList<ButtonData, ButtonsFloatTipItem>(this.datas);
+            this.ButtonsNode_UIItemPool.UpdateList<ButtonData, ButtonsFloatTipItem>(this.datas).Forget();
         }
     }
 }

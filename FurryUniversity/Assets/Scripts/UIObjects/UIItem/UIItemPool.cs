@@ -1,3 +1,4 @@
+using SFramework.Threading.Tasks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -59,7 +60,7 @@ namespace SFramework.Core.UI
             this.activtyGOPool.Clear();
         }
 
-        public void UpdateList<TData, TItem>(IList<TData> list, Action<TItem> action = null) where TItem : UIItemBase, IUIPool<TData>, new()
+        public async STask UpdateList<TData, TItem>(IList<TData> list, Action<TItem> action = null) where TItem : UIItemBase, IUIPool<TData>, new()
         {
             this.Init();
             if (list == null)
@@ -67,7 +68,7 @@ namespace SFramework.Core.UI
             for (int i = 0; i < list.Count; ++i)
             {
                 TData data = list[i];
-                TItem item = this.GetItem<TItem>();
+                TItem item = await this.GetItem<TItem>();
                 int siblingIndex = this.startSiblingIndex + i;
                 item.gameObject.transform.SetSiblingIndex(siblingIndex);
                 item.PoolSetData(data);
@@ -78,7 +79,7 @@ namespace SFramework.Core.UI
         #endregion
 
         #region 私有宝贝
-        private TItem GetItem<TItem>() where TItem : UIItemBase, new()
+        private async STask<TItem> GetItem<TItem>() where TItem : UIItemBase, new()
         {
             if (this.prefab == null)
             {
@@ -101,8 +102,8 @@ namespace SFramework.Core.UI
             this.freeGOPool.RemoveAt(0);
             this.activtyGOPool.Add(go);
 
-            item = this.TryGetItemForGO<TItem>(go);
-            item.Show();
+            item = await this.TryGetItemForGO<TItem>(go);
+            await item.ShowAsync();
             return item;
         }
 
@@ -112,14 +113,14 @@ namespace SFramework.Core.UI
         /// <typeparam name="TItem"></typeparam>
         /// <param name="prefabInstance"></param>
         /// <returns></returns>
-        private TItem TryGetItemForGO<TItem>(GameObject prefabInstance) where TItem : UIItemBase, new()
+        private async STask<TItem> TryGetItemForGO<TItem>(GameObject prefabInstance) where TItem : UIItemBase, new()
         {
-            if (this.uiItemsCache.ContainsKey(prefabInstance))
+            if (this.uiItemsCache.TryGetValue(prefabInstance, out UIItemBase value))
             {
-                return this.uiItemsCache[prefabInstance] as TItem;
+                return value as TItem;
             }
-
-            TItem item = this.AddUIItemOnGameObject<TItem>(prefabInstance);
+            
+            TItem item = await this.AddUIItemToGameObjectAsync<TItem>(prefabInstance);
             this.uiItemsCache.Add(prefabInstance, item);
             return item;
         }
