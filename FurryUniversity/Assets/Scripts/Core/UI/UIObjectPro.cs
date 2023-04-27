@@ -1,10 +1,9 @@
 #pragma warning disable 1998 // 异步方法缺少 "await" 运算符，将以同步方式运行
-#pragma warning disable 4014 // Because this call is not awaited, execution of the current method continues before the call is completed.
+// #pragma warning disable 4014 // Because this call is not awaited, execution of the current method continues before the call is completed.
 
 using SFramework.Core.GameManagers;
 using SFramework.Threading.Tasks;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Threading;
@@ -40,7 +39,7 @@ namespace SFramework.Core.UI
         /// 当自己Dispose后，它们会一起Dispose掉，子UIObject就不需要自己再Dispose了
         /// </summary>
         public Dictionary<UIObjectPro, GameObject> ChildrenUIList => this.childrenUIList;
-        private UIManagerPro UIManager { get { return GameManager.Instance.UIManagerPro; } }
+        protected UIManagerPro UIManager { get { return GameManager.Instance.UIManagerPro; } }
         private CancellationTokenSource updaterCTS;
         
         
@@ -171,7 +170,7 @@ namespace SFramework.Core.UI
                 }
                 else
                 {
-                    UIItemBasePro itemObj = this.AddItemToGameObject(selector, itemType);
+                    UIItemBasePro itemObj = this.AddUIItemToGameObject(selector, itemType);
                     if (itemObj != null)
                         return itemObj;
                 }
@@ -226,7 +225,7 @@ namespace SFramework.Core.UI
                         Debug.LogWarning($"[{this}] 在初始化UIInitField标签字段时没有在程序集中找到字段类型 {selector.SelectClass}，是否缺少了该脚本");
                     else
                     {
-                        UIItemBasePro itemObj = this.AddItemToGameObject(selector, itemType);
+                        UIItemBasePro itemObj = this.AddUIItemToGameObject(selector, itemType);
                         if (itemObj != null)
                             uiObjectList.Add(itemObj);
                     }
@@ -261,7 +260,7 @@ namespace SFramework.Core.UI
         /// <param name="selector"></param>
         /// <param name="itemType"></param>
         /// <returns></returns>
-        private UIItemBasePro AddItemToGameObject(UIItemSelector selector, Type itemType)
+        private UIItemBasePro AddUIItemToGameObject(UIItemSelector selector, Type itemType)
         {
             if (itemType == null)
                 throw new Exception($"[{this.GetType().FullName}]下的[{selector.gameObject.name}]配置上有错误");
@@ -282,7 +281,9 @@ namespace SFramework.Core.UI
             {
                 itemObj = Activator.CreateInstance(itemType) as UIItemBasePro;
                 selector.UIObject = itemObj;
+#pragma warning disable CS4014
                 itemObj.AwakeAsync(go);//这里以同步方式执行
+#pragma warning restore CS4014
             }
 
             this.childrenUIList.Add(itemObj, go);
@@ -305,13 +306,109 @@ namespace SFramework.Core.UI
                 if (child.TryGetComponent<UIItemSelector>(out var selector))
                 {
                     Type type = Type.GetType(selector.SelectClass);
-                    this.AddItemToGameObject(selector, type);
+                    this.AddUIItemToGameObject(selector, type);
                 }
                 else
                 {
                     this.InitChildItemSelector(child);
                 }
             }
+        }
+
+        private void InitUpdateLogic()
+        {
+            if (this is IUIUpdater updater)
+            {
+                if (this.updaterCTS != null)
+                {
+                    this.updaterCTS.Cancel();
+                    this.updaterCTS.Dispose();
+                    this.updaterCTS = null;
+                }
+
+                this.updaterCTS = new CancellationTokenSource();
+                STask.UpdateTask(updater.OnUpdate, PlayerLoopTiming.Update, this.updaterCTS.Token);
+            }
+        }
+        #endregion
+
+        #region 外部接口
+        /// <summary>
+        /// 创建新Item及其GameObject
+        /// </summary>
+        /// <param name="itemAssetName"></param>
+        /// <param name="parent"></param>
+        /// <typeparam name="TUIItem"></typeparam>
+        /// <returns></returns>
+        protected async STask<TUIItem> CreateChildItemAsync<TUIItem>(string itemAssetName, Transform parent = null)
+            where TUIItem : UIItemBasePro, new()
+        {
+            UIItemInfo info = this.UIManager.GetUIItemInfo(itemAssetName);
+            if (info == null)
+                return default;
+            if (this.gameObject == null)
+                return default;
+
+            if (parent == null)
+                parent = this.VisualRoot;
+            string assetName = itemAssetName;
+            string assetBundleName = info.UIItemAssetBundleName;
+            string className = info.UIItemClassName;
+
+            GameObject prefabObj =
+                await AssetBundleManager.LoadAssetInAssetBundleAsync<GameObject>(assetName, assetBundleName);
+            prefabObj = UnityEngine.Object.Instantiate(prefabObj, parent);
+            prefabObj.transform.localScale = Vector3.one;
+            prefabObj.transform.localPosition = Vector3.zero;
+            if (!prefabObj.TryGetComponent<UIItemSelector>(out var selector))
+                selector = prefabObj.AddComponent<UIItemSelector>();
+
+            selector.SelectClass = className;
+            Type itemType = Type.GetType(selector.SelectClass);
+            if (itemType == null)
+                return default;
+
+            var itemObj = Activator.CreateInstance<TUIItem>();
+            this.childrenUIList.Add(itemObj, prefabObj);
+            await itemObj.AwakeAsync(prefabObj);
+            itemObj.BundleName = assetBundleName;
+            return itemObj;
+        }
+
+        /// <summary>
+        /// 给GameObject添加UIItem脚本，若GameObject上已有需添加的脚本则直接返回
+        /// </summary>
+        /// <param name="go"></param>
+        /// <typeparam name="TUIItem"></typeparam>
+        /// <returns></returns>
+        public async STask<TUIItem> AddUIItemToGameObjectAsync<TUIItem>(GameObject go) where TUIItem : UIItemBasePro, new()
+        {
+            foreach (var pair in this.childrenUIList)
+            {
+                if (pair.Value == go)
+                    return pair.Key as TUIItem;
+            }
+
+            TUIItem itemObj = Activator.CreateInstance<TUIItem>();
+            this.childrenUIList.Add(itemObj, go);
+            await itemObj.AwakeAsync(go);
+            return itemObj;
+        }
+
+        /// <summary>
+        /// 手动释放UIItem脚本及其GameObject
+        /// </summary>
+        /// <param name="item"></param>
+        /// <typeparam name="TUIItem"></typeparam>
+        protected async STask DisposeChildItemAsync<TUIItem>(TUIItem item) where TUIItem : UIItemBasePro, new()
+        {
+            this.RemoveChild(item);
+            await item.DisposeAsync();
+        }
+        
+        public bool RemoveChild(UIItemBasePro item)
+        {
+            return this.childrenUIList.Remove(item);
         }
         #endregion
 
@@ -332,11 +429,40 @@ namespace SFramework.Core.UI
             this.OnAwake();
         }
 
-        public virtual STask Dispose()
+        /// <summary>
+        /// 释放UI对象
+        /// </summary>
+        public virtual async STask DisposeAsync()
         {
-            //TODO Dispose
-            return STask.CompletedTask;
+            if (this.UIState == EnumViewState.Disposed)
+                return;
+            this.UIState = EnumViewState.Disposed;
+
+            if (this.updaterCTS != null)
+            {
+                this.updaterCTS.Cancel();
+                this.updaterCTS.Dispose();
+                this.updaterCTS = null;
+            }
+
+            if (this.gameObject != null && !this.gameObject.Equals(null))
+                GameObject.Destroy(this.gameObject);
+
+            await this.UIManager.DisposeUIBundleAsync(this);
+
+            foreach (var uiObj in this.childrenUIList.Keys)
+            {
+                if(uiObj == this)
+                    continue;
+                await uiObj.DisposeAsync();
+            }
+            
+            this.OnDispose();
         }
+
+        public virtual async STask ShowAsync() { }
+
+        public virtual async STask HideAsync() { }
         
         /// <summary> 首次创建时触发，用户可使用 </summary>
         protected virtual void OnAwake() { }
@@ -347,14 +473,14 @@ namespace SFramework.Core.UI
         /// <summary> 每次隐藏后触发，用户可使用 </summary>
         protected virtual void OnHide() { }
 
-        /// <summary> 调用<see cref="Dispose"/>后触发，用户可使用 </summary>
+        /// <summary> 调用<see cref="DisposeAsync"/>后触发，用户可使用 </summary>
         protected virtual void OnDispose() { }
         
         /// <summary> 每次显示后调用，可添加一些每次显示需要处理的内部逻辑，底层使用，不暴露给用户 </summary>
         protected virtual void OnEnable()
         {
             this.OnShow();
-            //todo this.InitUpdateLogic();
+            this.InitUpdateLogic();
         }
         
         /// <summary> 每次隐藏后调用，可添加一些每次隐藏需要处理的内部逻辑,底层使用，不暴露给用户 </summary>

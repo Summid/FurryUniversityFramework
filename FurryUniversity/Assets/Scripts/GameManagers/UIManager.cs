@@ -199,7 +199,7 @@ namespace SFramework.Core.GameManagers
             if (this.navigateQueue.Count == 0)
                 return null;
 
-            Type type = this.navigateQueue[navigateQueue.Count - 1];
+            Type type = this.navigateQueue[this.navigateQueue.Count - 1];
             return type.Name;
         }
 
