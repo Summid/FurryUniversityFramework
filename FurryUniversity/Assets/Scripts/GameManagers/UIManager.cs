@@ -70,7 +70,7 @@ namespace SFramework.Core.GameManagers
 
             this.isInited = true;
             
-            this.UIInstanceCacheLimitCount = 0;//暂定这么多个缓存
+            this.UIInstanceCacheLimitCount = 1;//暂定这么多个缓存
 
             Debug.Log("UIManager Initialized");
             
@@ -372,14 +372,10 @@ namespace SFramework.Core.GameManagers
                 await STask.NextFrame();
             }
 
-            //有上一个Page才设置
+            //有上一个Page才能设置隐藏
             if (this.navigateQueue.Count <= 1)
                 return;
-
-            UIInstanceInfo willHidePage = this.uiInstances[viewType];
-            willHidePage.ViewInstance.gameObject.SetActive(false);
-            willHidePage.ViewInstance.SetStateHide();
-
+            
             this.navigateQueue.RemoveAt(this.navigateQueue.Count - 1);
 
             Type preType = this.navigateQueue[this.navigateQueue.Count - 1];
@@ -395,6 +391,10 @@ namespace SFramework.Core.GameManagers
                 preUIInstance.ViewInstance.gameObject.SetActive(true);
                 preUIInstance.ViewInstance.SetStateShow();
             }
+            
+            UIInstanceInfo willHidePage = this.uiInstances[viewType];
+            willHidePage.ViewInstance.gameObject.SetActive(false);
+            willHidePage.ViewInstance.SetStateHide();
         }
         
         /// <summary>
@@ -482,6 +482,18 @@ namespace SFramework.Core.GameManagers
             {
                 await hideInfo[i].ViewInstance.HideAsync();
             }
+        }
+
+        internal void BlockUI()
+        {
+            if (this.canvasGroup == null) return;
+            this.canvasGroup.blocksRaycasts = false;
+        }
+
+        internal void UnblockUI()
+        {
+            if (this.canvasGroup == null) return;
+            this.canvasGroup.blocksRaycasts = true;
         }
         #endregion
     }

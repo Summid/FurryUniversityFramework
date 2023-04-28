@@ -13,10 +13,9 @@ using UnityEngine.EventSystems;
 namespace SFramework.Core.UI
 {
     [UIView("LoginView", EnumUIType.Page)]
-    public partial class LoginView : UIViewBase, IProgress<float>
+    public partial class LoginView : UIViewBase
     {
         private List<TweenerCore<Color, Color, ColorOptions>> tweenerCores = new List<TweenerCore<Color, Color, ColorOptions>>();
-        private MainView mainView;
         private readonly float sliderSpeed = 0.5f;
         private TweenerCore<Color, Color, ColorOptions> infoTextTweener;
         private TweenerCore<float, float, FloatOptions> sliderTweener;
@@ -25,19 +24,13 @@ namespace SFramework.Core.UI
         {
             this.BG_Button.onClick.AddListener(() =>
             {
-                if (this.mainView != null)
-                {
-                    this.mainView.Prepared = true;
-                }
+                GameManager.Instance.UIManager.ShowUIAsync<MainView>().Forget();
             });
         }
 
         protected override async void OnShow()
         {
             this.ShowLoadingEffect();
-
-            this.mainView = await GameManager.Instance.UIManager.ShowUIAsync<MainView>(this);
-            this.mainView.NeedPrepared = true;
             await STask.Delay(2000);
             this.ShowLoadedEffect();
         }
@@ -70,12 +63,6 @@ namespace SFramework.Core.UI
             };
             this.TipsText.DOFadeByAdapter(0f, 2f).SetEase(Ease.Linear).SetLoops(-1, LoopType.Yoyo);
             this.BG_Button.enabled = true;
-        }
-
-        public void Report(float value)
-        {
-            this.sliderTweener?.Kill();
-            this.ProgressSlider_Slider.DOValueByAdapter(value, (value - this.ProgressSlider_Slider.value) / this.sliderSpeed);
         }
 
         protected override void OnHide()

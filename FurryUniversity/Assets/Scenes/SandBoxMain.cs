@@ -117,7 +117,7 @@ public class SandBoxMain : MonoBehaviour
         //this.showImage.SetNativeSize();
     }
 
-    private async void Update()
+    private void Update()
     {
         //if (Input.GetKeyDown(KeyCode.U))
         //{
@@ -144,21 +144,5 @@ public class SandBoxMain : MonoBehaviour
             UIUtility.ClampToScreenRect(this.ViewRectTransform,this.RectTransform);
         }
         
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("before await");
-            await this.Delay();
-            Debug.Log("after await");
-        }
-        if (Input.GetKeyDown(KeyCode.L))
-        {
-            this.pass = true;
-        }
-    }
-
-    private bool pass;
-    private async STask Delay()
-    {
-        await STask.CompletedTask;
     }
 }

@@ -100,6 +100,8 @@ namespace SFramework.Core.UI
                 await uiPrepareShow.OnPrepareShow();
                 this.rootCanvas.alpha = 1;
                 this.rootCanvas.blocksRaycasts = true;
+                
+                this.UIManager.UnblockUI();
             }
             
             this.UIState = EnumViewState.Shown;
@@ -207,6 +209,8 @@ namespace SFramework.Core.UI
             {
                 this.rootCanvas.alpha = 0;
                 this.rootCanvas.blocksRaycasts = false;
+                
+                this.UIManager.BlockUI();
             }
         }
 

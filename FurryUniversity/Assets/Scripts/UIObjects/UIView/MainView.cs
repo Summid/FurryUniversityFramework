@@ -16,7 +16,7 @@ using UnityEngine;
 namespace SFramework.Core.UI
 {
     [UIView("MainView", EnumUIType.Page)]
-    public partial class MainView : UIViewBase, IUIUpdater, IUIPrepareShow
+    public partial class MainView : UIViewBase
     {
         private TweenerCore<Color, Color, ColorOptions> bgAlphaTweener;
         private TweenerCore<Vector3, Vector3, VectorOptions> bgScaleTweener;
@@ -27,7 +27,6 @@ namespace SFramework.Core.UI
         private SDSDialogue dialogueSystem;
         private Vector2 mainButtonsAwakeAnchoredPosition;
 
-        public bool NeedPrepared;
         public bool Prepared;
 
         protected override void OnAwake()
@@ -100,64 +99,6 @@ namespace SFramework.Core.UI
             GameManager.Instance.AudioManager.PauseBGM().Forget();
             this.MainButtons.GetComponent<RectTransform>().anchoredPosition = this.mainButtonsAwakeAnchoredPosition;
             this.OnClickChapterBack();
-        }
-
-        private List<ArchiveItem> archiveItems = new List<ArchiveItem>();
-        private List<STask<ArchiveItem>> archiveTaskItems = new List<STask<ArchiveItem>>();
-        public async void OnUpdate()
-        {
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                for (int i = 0; i < 20; ++i)
-                {
-                    var item = await this.CreateChildItemAsync<ArchiveItem>(UIItemBase.AssetList.ArchiveItem,
-                        this.GameObject.transform);
-                    this.archiveItems.Add(item);
-                    // this.archiveTaskItems.Add(item);
-                }
-            }
-            
-            if (Input.GetKeyDown(KeyCode.B))
-            {
-                foreach (ArchiveItem archiveItem in this.archiveItems)
-                {
-                    archiveItem.DisposeAsync().Forget();
-                }
-                this.archiveItems.Clear();
-                
-                foreach (STask<ArchiveItem> archiveTaskItem in this.archiveTaskItems)
-                {
-                    if (archiveTaskItem.GetAwaiter().IsCompleted)
-                    {
-                        archiveTaskItem.GetAwaiter().GetResult();
-                    }
-                }
-                foreach (STask<ArchiveItem> archiveTaskItem in this.archiveTaskItems)
-                {
-                    if (archiveTaskItem.GetAwaiter().IsCompleted)
-                    {
-                        archiveTaskItem.GetAwaiter().GetResult();
-                    }
-                }
-                //this.archiveTaskItems.Clear();
-            }
-            
-            #if UNITY_EDITOR
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                AssetBundleManager.Dump();
-            }
-            #endif
-        }
-        
-        public async STask OnPrepareShow()
-        {
-            while (this.NeedPrepared && !this.Prepared)
-            {
-                await STask.NextFrame();
-            }
-
-            this.NeedPrepared = false;
         }
     }
 }

@@ -52,6 +52,11 @@ namespace SFramework.Core.UI
             this.FloatTipInvoker_FloatTipInvoker.Parameters = this.buttonDatas;
         }
 
+        protected override void OnDispose()
+        {
+            Debug.Log($"ArchiveItem {this.archiveObject.ArchiveIndex} disposed");
+        }
+
         private void OnClickFloatTipItem(int index)
         {
             switch (index)

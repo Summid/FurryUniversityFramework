@@ -518,6 +518,9 @@ namespace SFramework.Core.UI
         void OnUpdate();
     }
 
+    /// <summary>
+    /// 你会等待还是离开💔
+    /// </summary>
     public interface IUIPrepareShow
     {
         STask OnPrepareShow();
