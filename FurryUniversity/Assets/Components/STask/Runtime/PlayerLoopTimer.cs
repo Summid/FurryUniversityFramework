@@ -38,7 +38,7 @@ namespace SFramework.Threading.Tasks
 
             switch (delayType)
             {
-                case DelayType.UnsacledDeltaTime:
+                case DelayType.UnscaledDeltaTime:
                     return new IgnoreTimeScalePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken, timerCallback, state);
                 case DelayType.RealTime:
                     return new RealtimePlayerLoopTimer(interval, periodic, playerLoopTiming, cancellationToken, timerCallback, state);

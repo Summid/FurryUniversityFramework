@@ -10,7 +10,7 @@ namespace SFramework.Threading.Tasks
         /// <summary>use Time.DeltaTime</summary>
         DeltaTime,
         /// <summary>Ignore timescale, use Time.unscaledDeltaTime</summary>
-        UnsacledDeltaTime,
+        UnscaledDeltaTime,
         /// <summary>use Stopwatch.GetTimestamp()</summary>
         RealTime
     }
@@ -138,7 +138,7 @@ namespace SFramework.Threading.Tasks
 
         public static STask Delay(TimeSpan delayTimeSpan, bool ignoreTimeScale, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, CancellationToken cancellationToken = default(CancellationToken))
         {
-            DelayType delayType = ignoreTimeScale ? DelayType.UnsacledDeltaTime : DelayType.DeltaTime;
+            DelayType delayType = ignoreTimeScale ? DelayType.UnscaledDeltaTime : DelayType.DeltaTime;
             return Delay(delayTimeSpan, delayType, delayTiming, cancellationToken);
         }
 
@@ -165,7 +165,7 @@ namespace SFramework.Threading.Tasks
 
             switch (delayType)
             {
-                case DelayType.UnsacledDeltaTime:
+                case DelayType.UnscaledDeltaTime:
                     {
                         return new STask(DelayIgnoreTimeScalePromise.Create(delayTimeSpan, delayTiming, cancellationToken, out short token), token);
                     }
