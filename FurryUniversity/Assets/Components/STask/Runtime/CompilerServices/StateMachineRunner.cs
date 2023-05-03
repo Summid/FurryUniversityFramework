@@ -252,7 +252,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
             pool.TryPush(this);
         }
 
-        private bool TryRetuen()
+        private bool TryReturn()
         {
             this.core.Reset();
             this.stateMachine = default;
@@ -290,7 +290,7 @@ namespace SFramework.Threading.Tasks.CompilerServices
             }
             finally
             {
-                this.TryRetuen();
+                this.TryReturn();
             }
         }
 
