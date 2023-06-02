@@ -282,6 +282,21 @@ namespace SDS.Elements
                     this.RefreshFloatValueElements(eventVO, currentMoveTime, "移动时间（秒）", moveParamIndex);
                     break;
             }
+
+            int useAliasEventIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.UseAlias;
+            bool useAliasValue = (bool)eventVO.eventData.GetParsedParameterByIndex<bool>(useAliasEventIndex);
+            this.RefreshToggleElements(eventVO, useAliasValue.ToString(), "使用别名", useAliasEventIndex, newValue =>
+            {
+                this.RefreshImageOperationSubEventElements(eventVO);
+            });
+            if (useAliasValue)
+            {
+                int aliasIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.Alias;
+                string alias = eventVO.eventData.GetParsedParameterByIndex<string>(aliasIndex) as string;
+                this.RefreshStringValueElements(eventVO, alias, "别名：", aliasIndex);
+                this.RefreshEventArea();
+            }
+            
             this.RefreshEventArea();
 
             void RefreshPresetOrCustomPosElements(EventVO eventVO, int presetParamIndex, int xPosIndex, int yPosIndex)
@@ -470,6 +485,25 @@ namespace SDS.Elements
                 }
             });
             eventVO.parameterElements.Add(textField);
+        }
+
+        private void RefreshStringValueElements(EventVO eventVO, string currentValue, string label, int paramIndex)
+        {
+            var textField = SDSElementUtility.CreateTextField(currentValue, label, callback =>
+            {
+                eventVO.eventData.SetParameterByIndex(paramIndex, callback.newValue);
+            });
+            eventVO.parameterElements.Add(textField);
+        }
+
+        private void RefreshToggleElements(EventVO eventVO, string currentValue, string label, int paramIndex, Action<bool> onValueChanged = null)
+        {
+            var toggle = SDSElementUtility.CreateToggle(label, bool.Parse(currentValue), callback =>
+            {
+                eventVO.eventData.SetParameterByIndex(paramIndex,callback.newValue.ToString());
+                onValueChanged?.Invoke(callback.newValue);
+            });
+            eventVO.parameterElements.Add(toggle);
         }
 
         private void RefreshSliderElements(EventVO eventVO, float startValue, float endValue, float currentValue, string formatLabelValue, int paramIndex)

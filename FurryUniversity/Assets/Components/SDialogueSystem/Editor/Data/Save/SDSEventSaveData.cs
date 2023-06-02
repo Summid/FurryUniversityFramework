@@ -58,6 +58,10 @@ namespace SDS.Data.Save
                     return result;
                 }
             }
+            else if (type == typeof(string))
+            {
+                return parameter;
+            }
 
             return default(T);
         }
@@ -94,21 +98,25 @@ namespace SDS.Data.Save
         {
             ///<see cref="SDSDialogueEventType.ImageOperations"/> 图片事件 参数：
             ///0: <see cref="SDSDialogueImageEventOperations"/> 子事件类型枚举索引
-            ///1~5 <see cref="SDSDialogueImageEventOperations.Show"/> 占用，1：<see cref="SDSSpritePresetPosition"/> 枚举字符串；2：自定义X坐标；3：自定义Y坐标
-            ///6~10 <see cref="SDSDialogueImageEventOperations.Hide"/> 占用，6：隐藏背景时所花时间
-            ///11~15 <see cref="SDSDialogueImageEventOperations.Move"/> 占用，11：<see cref="SDSSpritePresetPosition"/> 枚举字符串；12：目标X坐标；13：目标Y坐标；14：移动时间
             OperationType = 0,
 
+            ///1~5 <see cref="SDSDialogueImageEventOperations.Show"/> 占用，1：<see cref="SDSSpritePresetPosition"/> 枚举字符串；2：自定义X坐标；3：自定义Y坐标
             ShowImagePresetPositionType = 1,
             ShowImageXPosition = 2,
             ShowImageYPosition = 3,
 
+            ///6~10 <see cref="SDSDialogueImageEventOperations.Hide"/> 占用，6：隐藏背景时所花时间
             HideImageTransitionTime = 6,
 
+            ///11~15 <see cref="SDSDialogueImageEventOperations.Move"/> 占用，11：<see cref="SDSSpritePresetPosition"/> 枚举字符串；12：目标X坐标；13：目标Y坐标；14：移动时间
             MoveImagePresetPositionType = 11,
             MoveImageXPosition = 12,
             MoveImageYPosition = 13,
             MoveImageConsumeTime = 14,
+            
+            /// <summary> 20~25 是否使用别名，用于同时显示多张同名图 </summary>
+            UseAlias = 20,
+            Alias = 21,
         }
 
         /// <summary>

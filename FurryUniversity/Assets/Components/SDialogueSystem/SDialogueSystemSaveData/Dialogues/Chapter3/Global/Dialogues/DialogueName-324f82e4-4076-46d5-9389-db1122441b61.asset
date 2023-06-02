@@ -10,15 +10,42 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0de8b546c47dd440a8714a5515b0957, type: 3}
-  m_Name: DialogueName-8c000a97-2673-4a00-a639-f2e8604d1b93
+  m_Name: DialogueName-324f82e4-4076-46d5-9389-db1122441b61
   m_EditorClassIdentifier: 
-  <DialogueName>k__BackingField: DialogueName-8c000a97-2673-4a00-a639-f2e8604d1b93
+  <DialogueName>k__BackingField: DialogueName-324f82e4-4076-46d5-9389-db1122441b61
   <Contents>k__BackingField:
   - <Text>k__BackingField: Dialogue Text
     <Spokesman>k__BackingField: Spokesman
   <Choices>k__BackingField:
   - <Text>k__BackingField: Next Dialogue
-    <NextDialogue>k__BackingField: {fileID: 11400000, guid: 209af4b0462f22c4c921b5d3f2ff9d83, type: 2}
+    <NextDialogue>k__BackingField: {fileID: 0}
   <DialogueType>k__BackingField: 0
   <IsStartDialogue>k__BackingField: 1
-  <Events>k__BackingField: []
+  <Events>k__BackingField:
+  - <EventType>k__BackingField: 1
+    <AssetName>k__BackingField: 
+    <Parameters>k__BackingField:
+    - 0
+    - CustomizedPosition
+    - 0
+    - 0
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - False
+    - thisIsAlias
+    <IsEventOnExit>k__BackingField: 0
+    <DelayTime>k__BackingField: 0

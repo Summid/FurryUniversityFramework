@@ -13,26 +13,10 @@ MonoBehaviour:
   m_Name: Chapter3
   m_EditorClassIdentifier: 
   <FileName>k__BackingField: Chapter3
-  <Groups>k__BackingField:
-  - <ID>k__BackingField: a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
-    <Name>k__BackingField: DialogueGroup-a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
-    <Position>k__BackingField: {x: 48, y: 62}
+  <Groups>k__BackingField: []
   <Nodes>k__BackingField:
-  - <ID>k__BackingField: 8c000a97-2673-4a00-a639-f2e8604d1b93
-    <Name>k__BackingField: DialogueName-8c000a97-2673-4a00-a639-f2e8604d1b93
-    <Text>k__BackingField: 
-    <Contents>k__BackingField:
-    - <Text>k__BackingField: Dialogue Text
-      <Spokesman>k__BackingField: Spokesman
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: bad73340-c154-4302-b05e-9065ef1dc6ce
-    <GroupID>k__BackingField: a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 73, y: 121}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: bad73340-c154-4302-b05e-9065ef1dc6ce
-    <Name>k__BackingField: DialogueName-bad73340-c154-4302-b05e-9065ef1dc6ce
+  - <ID>k__BackingField: 324f82e4-4076-46d5-9389-db1122441b61
+    <Name>k__BackingField: DialogueName-324f82e4-4076-46d5-9389-db1122441b61
     <Text>k__BackingField: 
     <Contents>k__BackingField:
     - <Text>k__BackingField: Dialogue Text
@@ -40,16 +24,40 @@ MonoBehaviour:
     <Choices>k__BackingField:
     - <Text>k__BackingField: Next Dialogue
       <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
+    <GroupID>k__BackingField: 
     <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 570, y: 121}
-    <Events>k__BackingField: []
-  <OldGroupNames>k__BackingField:
-  - DialogueGroup-a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
-  <OldUngroupedNodeNames>k__BackingField: []
+    <Position>k__BackingField: {x: 388, y: 117}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 1
+      <AssetObject>k__BackingField: {fileID: 0}
+      <Parameters>k__BackingField:
+      - 0
+      - CustomizedPosition
+      - 0
+      - 0
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - False
+      - thisIsAlias
+      <Description>k__BackingField: Image Operations
+      <IsEventOnExit>k__BackingField: 0
+      <DelayTime>k__BackingField: 0
+  <OldGroupNames>k__BackingField: []
+  <OldUngroupedNodeNames>k__BackingField:
+  - DialogueName-324f82e4-4076-46d5-9389-db1122441b61
   <OldGroupedNodeNames>k__BackingField:
-    list:
-    - Key: DialogueGroup-a6a0b0eb-bbae-4fb6-bb6f-fd0d9497a826
-      Value:
-      - DialogueName-8c000a97-2673-4a00-a639-f2e8604d1b93
-      - DialogueName-bad73340-c154-4302-b05e-9065ef1dc6ce
+    list: []
