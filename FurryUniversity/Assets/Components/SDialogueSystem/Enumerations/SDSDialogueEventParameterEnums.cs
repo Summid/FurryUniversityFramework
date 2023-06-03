@@ -7,7 +7,7 @@ namespace SDS.Enumerations
     {
         Show = 0,
         Hide,
-        Move
+        Move,
     }
 
     /// <summary>
@@ -45,5 +45,15 @@ namespace SDS.Enumerations
     {
         //SFX有哪些子事件，小编也不知道捏
         Play = 0,
+    }
+
+    /// <summary>
+    /// <see cref="SDSDialogueEventType.CharacterOperations"/> 的子事件类型
+    /// </summary>
+    public enum SDSDialogueCharacterEventOperations
+    {
+        Show = 0,
+        Hide,
+        Move,
     }
 }

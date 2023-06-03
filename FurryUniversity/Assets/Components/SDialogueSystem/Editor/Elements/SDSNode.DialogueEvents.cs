@@ -1,3 +1,4 @@
+using SDS.CustomizedData;
 using SDS.Data.Save;
 using SDS.Enumerations;
 using SDS.Utilities;
@@ -64,7 +65,7 @@ namespace SDS.Elements
                     case SDSDialogueEventType.NullEvent:
                         continue;
                     case SDSDialogueEventType.ImageOperations:
-                        eventVO.defaultDescription = "Image Operations";
+                        eventVO.defaultDescription = "Image Operation";
                         eventVO.objectField = SDSElementUtility.CreateObjectField<Sprite>(null, callback =>
                         {
                             eventData.AssetObject = callback.newValue;
@@ -82,7 +83,7 @@ namespace SDS.Elements
                         RefreshSubEventPopupField<SDSDialogueBackgroundImageEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.BGImageOperations.OperationType, this.RefreshBGImageOperationSubEventElements);
                         break;
                     case SDSDialogueEventType.BGMOperations:
-                        eventVO.defaultDescription = "BGM Operations";
+                        eventVO.defaultDescription = "BGM Operation";
                         eventVO.objectField = SDSElementUtility.CreateObjectField<AudioClip>(null, callback =>
                         {
                             eventData.AssetObject = callback.newValue;
@@ -98,6 +99,16 @@ namespace SDS.Elements
                         });
 
                         RefreshSubEventPopupField<SDSDialogueSFXEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.SFXOperation.OperationType, this.RefreshSFXOperationSubEventElements);
+                        break;
+                    case SDSDialogueEventType.CharacterOperations:
+                        eventVO.defaultDescription = "Character Operation";
+                        eventVO.objectField = SDSElementUtility.CreateObjectField<Character>(null, callback =>
+                        {
+                            eventData.AssetObject = callback.newValue;
+                        });
+
+                        RefreshSubEventPopupField<SDSDialogueCharacterEventOperations>(eventVO, (int)SDSDialogueEventParameterEnum.CharacterOperation.OperationType,
+                            this.RefreshCharacterOperationSubEventElements);
                         break;
                 }
                 this.eventVOs.Add(eventVO);
@@ -230,6 +241,7 @@ namespace SDS.Elements
                 case SDSDialogueEventType.BackgroundImageOperations:
                 case SDSDialogueEventType.BGMOperations:
                 case SDSDialogueEventType.SFXOperations:
+                case SDSDialogueEventType.CharacterOperations:
                     this.Events.Add(new SDSEventSaveData() { EventType = eventType });
                     added = true;
                     break;
@@ -266,6 +278,9 @@ namespace SDS.Elements
                     int yPosParamIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.ShowImageYPosition;
                     RefreshPresetOrCustomPosElements(eventVO, presetParamIndex, xPosParamIndex, yPosParamIndex);
 
+                    int showTransitionTimeParamIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.ShowImageTransitionTime;
+                    var currentTime = eventVO.eventData.GetParameterByIndex(showTransitionTimeParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentTime, "显示所花费时间（秒）", showTransitionTimeParamIndex);
                     break;
                 case SDSDialogueImageEventOperations.Hide:
                     int hideParamIndex = (int)SDSDialogueEventParameterEnum.ImageOperations.HideImageTransitionTime;
@@ -453,6 +468,109 @@ namespace SDS.Elements
             this.RefreshEventArea();
         }
 
+        /// <summary>
+        /// 绘制 Character Operation 子事件元素
+        /// </summary>
+        /// <param name="eventVO"></param>
+        private void RefreshCharacterOperationSubEventElements(EventVO eventVO)
+        {
+            if (eventVO.parameterElements.Count > 1)
+                eventVO.parameterElements.RemoveRange(1, eventVO.parameterElements.Count - 1);
+
+            SDSDialogueCharacterEventOperations currentOperation =
+                (SDSDialogueCharacterEventOperations)eventVO.eventData.GetParsedParameterByIndex<int>((int)SDSDialogueEventParameterEnum.CharacterOperation
+                    .OperationType);
+            switch (currentOperation)
+            {
+
+                case SDSDialogueCharacterEventOperations.Show:
+                    //显示角色
+                    int presetParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterPresetPositionType;
+                    int xPosParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterXPosition;
+                    int yPosParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterYPosition;
+                    RefreshPresetOrCustomPosElements(eventVO, presetParamIndex, xPosParamIndex, yPosParamIndex);
+                    
+                    int showTransitionTimeParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterTransitionTime;
+                    var currentTime = eventVO.eventData.GetParameterByIndex(showTransitionTimeParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentTime, "显示所花费时间（秒）", showTransitionTimeParamIndex);
+                    break;
+                case SDSDialogueCharacterEventOperations.Hide:
+                    int hideParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.HideCharacterTransitionTime;
+                    var currentHideTime = eventVO.eventData.GetParameterByIndex(hideParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentHideTime, "隐藏所花时间（秒）", hideParamIndex);
+                    break;
+                case SDSDialogueCharacterEventOperations.Move:
+                    //移动角色
+                    RefreshPresetOrCustomPosElements(eventVO, (int)SDSDialogueEventParameterEnum.CharacterOperation.MoveCharacterPresetPositionType,
+                        (int)SDSDialogueEventParameterEnum.CharacterOperation.MoveCharacterXPosition, (int)SDSDialogueEventParameterEnum.CharacterOperation.MoveCharacterYPosition);
+
+                    int moveParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.MoveCharacterConsumeTime;
+                    var currentMoveTime = eventVO.eventData.GetParameterByIndex(moveParamIndex);
+                    this.RefreshFloatValueElements(eventVO, currentMoveTime, "移动时间（秒）", moveParamIndex);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            int useAliasEventIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.UseAlias;
+            bool useAliasValue = (bool)eventVO.eventData.GetParsedParameterByIndex<bool>(useAliasEventIndex);
+            this.RefreshToggleElements(eventVO, useAliasValue.ToString(), "使用别名", useAliasEventIndex, newValue =>
+            {
+                this.RefreshCharacterOperationSubEventElements(eventVO);
+            });
+            if (useAliasValue)
+            {
+                int aliasIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.Alias;
+                string alias = eventVO.eventData.GetParsedParameterByIndex<string>(aliasIndex) as string;
+                this.RefreshStringValueElements(eventVO, alias, "别名：", aliasIndex);
+                this.RefreshEventArea();
+            }
+
+            this.RefreshEventArea();
+
+            void RefreshPresetOrCustomPosElements(EventVO eventVO, int presetParamIndex, int xPosIndex, int yPosIndex)
+            {
+                //预设坐标选项
+                List<object> presetPosNames = Enum.GetValues(typeof(SDSSpritePresetPosition)).Cast<object>().ToList();
+                var currentPresetPos = presetPosNames.FirstOrDefault(preset => preset.ToString() == eventVO.eventData.GetParameterByIndex(presetParamIndex));
+                if (currentPresetPos == null)//默认为自定义坐标
+                {
+                    eventVO.eventData.SetParameterByIndex(presetParamIndex,SDSSpritePresetPosition.CustomizedPosition.ToString());
+                }
+
+                Vector2Field showVector2Field = null;
+                var presetPopupField = SDSElementUtility.CreatePopupField<object>(presetPosNames, currentPresetPos ?? SDSSpritePresetPosition.CustomizedPosition,
+                    null,
+                    selectedObj =>
+                    {
+                        //自定义坐标
+                        if (eventVO.eventData.GetParameterByIndex(presetParamIndex) == SDSSpritePresetPosition.CustomizedPosition.ToString())
+                        {
+                            Vector2 currentCustomPos = new Vector2((float)eventVO.eventData.GetParsedParameterByIndex<float>(xPosIndex),
+                                (float)eventVO.eventData.GetParsedParameterByIndex<float>(yPosIndex));
+                            eventVO.eventData.SetParameterByIndex(xPosIndex,currentCustomPos.x.ToString());
+                            eventVO.eventData.SetParameterByIndex(yPosIndex,currentCustomPos.y.ToString());
+                            showVector2Field = SDSElementUtility.CreateVector2Field(currentCustomPos, string.Empty, callback =>
+                            {
+                                eventVO.eventData.SetParameterByIndex(xPosIndex,callback.newValue.x.ToString());
+                                eventVO.eventData.SetParameterByIndex(yPosIndex,callback.newValue.y.ToString());
+                            });
+                        }
+
+                        string selectedName = selectedObj.ToString();
+                        if (selectedName == eventVO.eventData.GetParameterByIndex(presetParamIndex))
+                            return selectedName;
+                        eventVO.eventData.SetParameterByIndex(presetParamIndex, selectedName);
+                        
+                        this.RefreshCharacterOperationSubEventElements(eventVO);
+                        return selectedName;
+                    });
+                eventVO.parameterElements.Add(presetPopupField);
+                if (showVector2Field != null)
+                    eventVO.parameterElements.Add(showVector2Field);
+            }
+        }
+        
         private void RefreshFloatValueElements(EventVO eventVO, string currentValue, string label, int paramIndex)
         {
             var textField = SDSElementUtility.CreateTextField(currentValue, label, callback =>

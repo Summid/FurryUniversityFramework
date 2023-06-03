@@ -23,7 +23,7 @@ MonoBehaviour:
       <Spokesman>k__BackingField: Spokesman
     <Choices>k__BackingField:
     - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
+      <NodeID>k__BackingField: af94dc2f-66d7-4ec9-8194-4484eb778261
     <GroupID>k__BackingField: 
     <DialogueType>k__BackingField: 0
     <Position>k__BackingField: {x: 388, y: 117}
@@ -35,7 +35,7 @@ MonoBehaviour:
       - CustomizedPosition
       - 0
       - 0
-      - 
+      - 1.5
       - 
       - 
       - 
@@ -56,8 +56,59 @@ MonoBehaviour:
       <Description>k__BackingField: Image Operations
       <IsEventOnExit>k__BackingField: 0
       <DelayTime>k__BackingField: 0
+    - <EventType>k__BackingField: 5
+      <AssetObject>k__BackingField: {fileID: 11400000, guid: 43c9b51de730d4846a1aeb64846351a6, type: 2}
+      <Parameters>k__BackingField:
+      - 0
+      - CustomizedPosition
+      - 100
+      - 200
+      - 1.7
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - CustomizedPosition
+      - 0
+      - 0
+      - 
+      - 
+      - 
+      - 
+      - 
+      - 
+      - True
+      - characterAlias
+      <Description>k__BackingField: Character Operation
+      <IsEventOnExit>k__BackingField: 0
+      <DelayTime>k__BackingField: 3.5
+  - <ID>k__BackingField: af94dc2f-66d7-4ec9-8194-4484eb778261
+    <Name>k__BackingField: DialogueName-af94dc2f-66d7-4ec9-8194-4484eb778261
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 898, y: 103}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 3
+      <AssetObject>k__BackingField: {fileID: 8300000, guid: 7c2e62466bdcc3c4aa0066bdfe38d60e, type: 3}
+      <Parameters>k__BackingField:
+      - 0
+      - 1
+      - 0
+      <Description>k__BackingField: BGM Operation
+      <IsEventOnExit>k__BackingField: 0
+      <DelayTime>k__BackingField: 0
   <OldGroupNames>k__BackingField: []
   <OldUngroupedNodeNames>k__BackingField:
   - DialogueName-324f82e4-4076-46d5-9389-db1122441b61
+  - DialogueName-af94dc2f-66d7-4ec9-8194-4484eb778261
   <OldGroupedNodeNames>k__BackingField:
     list: []

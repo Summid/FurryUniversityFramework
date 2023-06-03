@@ -7,5 +7,6 @@ namespace SDS.Enumerations
         BackgroundImageOperations,
         BGMOperations,
         SFXOperations,
+        CharacterOperations,
     }
 }

@@ -18,7 +18,7 @@ MonoBehaviour:
     <Spokesman>k__BackingField: Spokesman
   <Choices>k__BackingField:
   - <Text>k__BackingField: Next Dialogue
-    <NextDialogue>k__BackingField: {fileID: 0}
+    <NextDialogue>k__BackingField: {fileID: 11400000, guid: a852d3f60b4e45449b3b1095dffaca8d, type: 2}
   <DialogueType>k__BackingField: 0
   <IsStartDialogue>k__BackingField: 1
   <Events>k__BackingField:
@@ -29,7 +29,7 @@ MonoBehaviour:
     - CustomizedPosition
     - 0
     - 0
-    - 
+    - 1.5
     - 
     - 
     - 
@@ -49,3 +49,30 @@ MonoBehaviour:
     - thisIsAlias
     <IsEventOnExit>k__BackingField: 0
     <DelayTime>k__BackingField: 0
+  - <EventType>k__BackingField: 5
+    <AssetName>k__BackingField: Person1
+    <Parameters>k__BackingField:
+    - 0
+    - CustomizedPosition
+    - 100
+    - 200
+    - 1.7
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - CustomizedPosition
+    - 0
+    - 0
+    - 
+    - 
+    - 
+    - 
+    - 
+    - 
+    - True
+    - characterAlias
+    <IsEventOnExit>k__BackingField: 0
+    <DelayTime>k__BackingField: 3.5

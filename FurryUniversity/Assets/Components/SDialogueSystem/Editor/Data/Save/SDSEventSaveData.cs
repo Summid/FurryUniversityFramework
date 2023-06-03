@@ -104,8 +104,9 @@ namespace SDS.Data.Save
             ShowImagePresetPositionType = 1,
             ShowImageXPosition = 2,
             ShowImageYPosition = 3,
+            ShowImageTransitionTime = 4,
 
-            ///6~10 <see cref="SDSDialogueImageEventOperations.Hide"/> 占用，6：隐藏背景时所花时间
+            ///6~10 <see cref="SDSDialogueImageEventOperations.Hide"/> 占用，6：隐藏时所花时间
             HideImageTransitionTime = 6,
 
             ///11~15 <see cref="SDSDialogueImageEventOperations.Move"/> 占用，11：<see cref="SDSSpritePresetPosition"/> 枚举字符串；12：目标X坐标；13：目标Y坐标；14：移动时间
@@ -155,6 +156,34 @@ namespace SDS.Data.Save
 
             Volume = 1,
             LoopTimes = 2,
+        }
+
+        /// <summary>
+        /// <see cref="SDSDialogueEventType.CharacterOperations"/>
+        /// </summary>
+        public enum CharacterOperation
+        {
+            /// <summary> <see cref="SDSDialogueCharacterEventOperations"/> 索引 </summary>
+            OperationType = 0,
+            
+            ///1~5 <see cref="SDSDialogueCharacterEventOperations.Show"/> 占用，1：<see cref="SDSSpritePresetPosition"/> 枚举字符串；2：自定义X坐标；3：自定义Y坐标
+            ShowCharacterPresetPositionType = 1,
+            ShowCharacterXPosition = 2,
+            ShowCharacterYPosition = 3,
+            ShowCharacterTransitionTime = 4,
+            
+            ///6~10 <see cref="SDSDialogueCharacterEventOperations.Hide"/> 占用，6：隐藏时所花时间
+            HideCharacterTransitionTime = 6,
+
+            ///11~15 <see cref="SDSDialogueCharacterEventOperations.Move"/> 占用，11：<see cref="SDSSpritePresetPosition"/> 枚举字符串；12：目标X坐标；13：目标Y坐标；14：移动时间
+            MoveCharacterPresetPositionType = 11,
+            MoveCharacterXPosition = 12,
+            MoveCharacterYPosition = 13,
+            MoveCharacterConsumeTime = 14,
+            
+            /// <summary> 20~25 是否使用别名，用于同时显示多张同名图 </summary>
+            UseAlias = 20,
+            Alias = 21,
         }
     }
 }
