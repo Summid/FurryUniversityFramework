@@ -35,6 +35,8 @@ namespace SFramework.Utilities.Editor
             UpdateAssetBundleTagsHandler(StaticVariables.TexturePath, StaticVariables.RenderTextureExtension, StaticVariables.RenderTextureBundleExtension);
 
             UpdateAssetBundleTagsHandler(StaticVariables.FontPath, StaticVariables.FontExtension, StaticVariables.FontBundleExtension);
+
+            UpdateAssetBundleTagsHandler(StaticVariables.CharacterSOPath, StaticVariables.CharacterSOExtension, StaticVariables.CharacterSOBundleExtension);
             
             UpdateSpritesAssetBundleTagsHandler();
         }

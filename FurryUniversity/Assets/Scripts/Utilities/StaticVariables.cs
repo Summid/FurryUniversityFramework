@@ -59,6 +59,10 @@ namespace SFramework.Utilities
         public static readonly string FontExtension = ".asset";
         public static readonly string FontPath = $"{BundlesPath}/Font";
 
+        public static readonly string CharacterSOBundleExtension = "_characterso";
+        public static readonly string CharacterSOExtension = ".asset";
+        public static readonly string CharacterSOPath = $"{BundlesPath}/ScriptableObjects/Character";
+
         /// <summary> UIList清单文件名称 </summary>
         public static readonly string UIListName = "uiinfolist.asset";
         /// <summary> UIList清单Bundle名称 </summary>
