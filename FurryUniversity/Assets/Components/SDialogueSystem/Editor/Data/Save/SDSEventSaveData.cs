@@ -171,6 +171,7 @@ namespace SDS.Data.Save
             ShowCharacterXPosition = 2,
             ShowCharacterYPosition = 3,
             ShowCharacterTransitionTime = 4,
+            ShowCharacterSpriteDifference = 5,
             
             ///6~10 <see cref="SDSDialogueCharacterEventOperations.Hide"/> 占用，6：隐藏时所花时间
             HideCharacterTransitionTime = 6,

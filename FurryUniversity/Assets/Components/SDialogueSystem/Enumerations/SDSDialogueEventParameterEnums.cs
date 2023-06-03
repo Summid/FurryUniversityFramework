@@ -56,4 +56,14 @@ namespace SDS.Enumerations
         Hide,
         Move,
     }
+
+    public enum SDSDialogueCharacterSpriteDifference
+    {
+        Idle = 0,
+        Happy,
+        Sad,
+        Angry,
+        Surprised,
+        Puzzled,
+    }
 }

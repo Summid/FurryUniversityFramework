@@ -488,6 +488,23 @@ namespace SDS.Elements
                     int presetParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterPresetPositionType;
                     int xPosParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterXPosition;
                     int yPosParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterYPosition;
+
+                    //立绘差分
+                    int spriteDiffParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterSpriteDifference;
+                    List<object> allDiff = Enum.GetValues(typeof(SDSDialogueCharacterSpriteDifference)).Cast<object>().ToList();
+                    var currentSpriteDiff = allDiff.FirstOrDefault(diff => diff.ToString() == eventVO.eventData.GetParameterByIndex(spriteDiffParamIndex));
+                    if (currentSpriteDiff == null)
+                    {
+                        eventVO.eventData.SetParameterByIndex(spriteDiffParamIndex, SDSDialogueCharacterSpriteDifference.Idle.ToString());
+                        currentSpriteDiff = SDSDialogueCharacterSpriteDifference.Idle;
+                    }
+                    var spriteDiffPopupField = SDSElementUtility.CreatePopupField(allDiff, currentSpriteDiff, null, selectedItem =>
+                    {
+                        eventVO.eventData.SetParameterByIndex(spriteDiffParamIndex, selectedItem.ToString());
+                        return selectedItem.ToString();
+                    });
+                    eventVO.parameterElements.Add(spriteDiffPopupField);
+
                     RefreshPresetOrCustomPosElements(eventVO, presetParamIndex, xPosParamIndex, yPosParamIndex);
                     
                     int showTransitionTimeParamIndex = (int)SDSDialogueEventParameterEnum.CharacterOperation.ShowCharacterTransitionTime;
