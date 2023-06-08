@@ -292,7 +292,7 @@ namespace SFramework.Core.GameManagers
             return AssetDatabase.LoadAssetAtPath<T>(GetAssetPath<T>(assetName));
 #else
 
-            AssetBundleVO vo = GetAssetBundleVO(bundleName);
+            AssetBundleVO vo = GetAssetBundleVO(bundleName.ToLower());
 
             await vo.LoadAsync();
 
