@@ -29,12 +29,18 @@ namespace SFramework.Core.UI
         public TMPro.TextMeshProUGUI ChaptersBackButton_TextMeshProUGUI;
         [UIFieldInit("ChaptersBackButton")]
         public UnityEngine.UI.Button ChaptersBackButton_Button;
-        [UIFieldInit("ArchiveButton")]
-        public UnityEngine.UI.Button ArchiveButton_Button;
-        [UIFieldInit("ArchiveButton")]
-        public TMPro.TextMeshProUGUI ArchiveButton_TextMeshProUGUI;
-        [UIFieldInit("GameObject")]
-        public UnityEngine.UI.GridLayoutGroup GameObject;
+        [UIFieldInit("SealButton")]
+        public UnityEngine.UI.Button SealButton_Button;
+        [UIFieldInit("SealButton")]
+        public TMPro.TextMeshProUGUI SealButton_TextMeshProUGUI;
+        [UIFieldInit("IllustrationButton")]
+        public UnityEngine.UI.Button IllustrationButton_Button;
+        [UIFieldInit("IllustrationButton")]
+        public TMPro.TextMeshProUGUI IllustrationButton_TextMeshProUGUI;
+        [UIFieldInit("ExtraStoryButton")]
+        public UnityEngine.UI.Button ExtraStoryButton_Button;
+        [UIFieldInit("ExtraStoryButton")]
+        public TMPro.TextMeshProUGUI ExtraStoryButton_TextMeshProUGUI;
 
     }
 }

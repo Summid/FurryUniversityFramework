@@ -31,12 +31,9 @@ namespace SFramework.Core.UI
 
         protected override void OnAwake()
         {
-            Debug.Log("in MainView OnAwake");
 
             this.SelectChapterButton_Button.onClick.AddListener(this.OnClickSelectChapter);
             this.ChaptersBackButton_Button.onClick.AddListener(this.OnClickChapterBack);
-            this.ArchiveButton_Button.onClick.AddListener(() =>
-                GameManager.Instance.UIManager.ShowUIAsync<ArchiveView>().Forget());
             this.SettingsButton_Button.onClick.AddListener((() =>
                 GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget()));
 
@@ -46,7 +43,6 @@ namespace SFramework.Core.UI
 
         protected override void OnShow()
         {
-            Debug.Log("in MainView OnShow");
             this.ShowEnterViewEffect().Forget();
         }
 

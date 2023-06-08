@@ -58,10 +58,14 @@ namespace SFramework.Utilities
         public static readonly string FontBundleExtension = "_font";
         public static readonly string FontExtension = ".asset";
         public static readonly string FontPath = $"{BundlesPath}/Font";
+        public static readonly string DefaultFontName = "LXGWBlackSCNFontSDF";
 
         public static readonly string CharacterSOBundleExtension = "_characterso";
         public static readonly string CharacterSOExtension = ".asset";
         public static readonly string CharacterSOPath = $"{BundlesPath}/ScriptableObjects/Character";
+
+        public static readonly string ShaderBundleExtension = "_shader";
+        public static readonly string ShaderPath = $"{BundlesPath}/Shaders";
 
         /// <summary> UIList清单文件名称 </summary>
         public static readonly string UIListName = "uiinfolist.asset";
@@ -112,7 +116,7 @@ namespace SFramework.Utilities
 #if UNITY_EDITOR || UNITY_STANDALONE_WIN
                 var t = Application.streamingAssetsPath;
 #elif UNITY_ANDROID
-                var t = $"{Application.dataPath}!assets";
+                var t = $"jar:file://{Application.dataPath}!assets";
 #elif UNITY_IOS
                 var t = $"{Application.dataPath}/Raw";
 #endif

@@ -37,31 +37,47 @@ namespace SFramework.Utilities.Editor
             UpdateAssetBundleTagsHandler(StaticVariables.FontPath, StaticVariables.FontExtension, StaticVariables.FontBundleExtension);
 
             UpdateAssetBundleTagsHandler(StaticVariables.CharacterSOPath, StaticVariables.CharacterSOExtension, StaticVariables.CharacterSOBundleExtension);
+
+            UpdateAssetBundleTagsHandler(StaticVariables.ShaderPath, null, StaticVariables.ShaderBundleExtension, true);
             
             UpdateSpritesAssetBundleTagsHandler();
         }
 
-        private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension)
+        private static void UpdateAssetBundleTagsHandler(string path, string assetExtension, string bundleExtension, bool folder = false)
         {
             if (AssetDatabase.IsValidFolder(path))
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(path.GetFullPath());
                 Debug.Log($"dir path {directoryInfo.FullName}");
-                FileSystemInfo[] fileSystemInfos = directoryInfo.GetFileSystemInfos();
-                int index = 1;
-                foreach (var file in fileSystemInfos)
+                if (folder)
                 {
-                    EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{file.Name}", index++ / fileSystemInfos.Length);
-                    if (Path.GetExtension(file.Name).ToLower() != assetExtension.ToLower())
-                        continue;
-                    var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
+                    EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{directoryInfo.Name}", 0f);
+                    var importer = AssetImporter.GetAtPath(directoryInfo.FullName.GetRelativePath());
                     if (importer != null)
                     {
-                        importer.assetBundleName = Path.GetFileNameWithoutExtension(file.Name).ToLower() + bundleExtension;
+                        importer.assetBundleName = Path.GetFileNameWithoutExtension(directoryInfo.Name).ToLower() + bundleExtension;
                         importer.assetBundleVariant = StaticVariables.AssetBundlesFileExtensionWithoutDot;
                     }
+                    EditorUtility.ClearProgressBar();
                 }
-                EditorUtility.ClearProgressBar();
+                else
+                {
+                    FileSystemInfo[] fileSystemInfos = directoryInfo.GetFileSystemInfos();
+                    int index = 1;
+                    foreach (var file in fileSystemInfos)
+                    {
+                        EditorUtility.DisplayProgressBar("Update AssetBundle Tags", $"{file.Name}", index++ / fileSystemInfos.Length);
+                        if (Path.GetExtension(file.Name).ToLower() != assetExtension.ToLower())
+                            continue;
+                        var importer = AssetImporter.GetAtPath(file.FullName.GetRelativePath());
+                        if (importer != null)
+                        {
+                            importer.assetBundleName = Path.GetFileNameWithoutExtension(file.Name).ToLower() + bundleExtension;
+                            importer.assetBundleVariant = StaticVariables.AssetBundlesFileExtensionWithoutDot;
+                        }
+                    }
+                    EditorUtility.ClearProgressBar();
+                }
             }
         }
 
