@@ -66,6 +66,9 @@ namespace SFramework.Utilities
 
         public static readonly string ShaderBundleExtension = "_shader";
         public static readonly string ShaderPath = $"{BundlesPath}/Shaders";
+        public static readonly string ShaderExtension = ".shader";
+
+        public static readonly string TMPShaderPath = $"{ShaderPath}/TextMeshPro";
 
         /// <summary> UIList清单文件名称 </summary>
         public static readonly string UIListName = "uiinfolist.asset";

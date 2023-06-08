@@ -11,7 +11,7 @@ namespace SFramework.Core.UI.External.Editor
     public class TextMeshProUGUIExEditor : TMP_BaseEditorPanel
     {
         [MenuItem("GameObject/UI/Ex/TextMeshPro UGUI Ex")]
-        public static void CreateTMPEX()//todo 迁移到editor程序集下
+        public static void CreateTMPEX()
         {
             GameObject selection = Selection.activeGameObject;
             if (selection == null)
