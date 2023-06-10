@@ -8,7 +8,7 @@ namespace SFramework.Core.UI.External.Editor
 {
     [CustomEditor(typeof(TextMeshProUGUIEx), true)]
     [CanEditMultipleObjects]
-    public class TextMeshProUGUIExEditor : TMP_BaseEditorPanel
+    public class TextMeshProUGUIExEditor : TMP_EditorPanelUI
     {
         [MenuItem("GameObject/UI/Ex/TextMeshPro UGUI Ex")]
         public static void CreateTMPEX()
@@ -31,20 +31,6 @@ namespace SFramework.Core.UI.External.Editor
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
-        }
-
-        protected override void DrawExtraSettings()
-        {
-            
-        }
-        protected override bool IsMixSelectionTypes()
-        {
-            return false;
-        }
-        
-        protected override void OnUndoRedo()
-        {
-            
         }
     }
 }
