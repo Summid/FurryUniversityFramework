@@ -23,6 +23,11 @@ MonoBehaviour:
     ViewType: 1
     ViewClassName: SFramework.Core.UI.ButtonsFloatTipView
     IsDisableNavigatePage: 0
+  - ViewAssetBundleName: chapterview_uiview
+    ViewAssetName: ChapterView
+    ViewType: 1
+    ViewClassName: SFramework.Core.UI.ChapterView
+    IsDisableNavigatePage: 0
   - ViewAssetBundleName: dialogueview_uiview
     ViewAssetName: DialogueView
     ViewType: 0
@@ -55,9 +60,9 @@ MonoBehaviour:
   - UIItemAssetBundleName: buttonsfloattipitem_uiitem
     UIItemAssetName: ButtonsFloatTipItem
     UIItemClassName: SFramework.Core.UI.ButtonsFloatTipItem
-  - UIItemAssetBundleName: mainviewchapterbutton_uiitem
-    UIItemAssetName: MainViewChapterButton
-    UIItemClassName: SFramework.Core.UI.MainViewChapterButton
+  - UIItemAssetBundleName: chapteritem_uiitem
+    UIItemAssetName: ChapterItem
+    UIItemClassName: SFramework.Core.UI.ChapterItem
   - UIItemAssetBundleName: viewmask_uiitem
     UIItemAssetName: ViewMask
     UIItemClassName: SFramework.Core.UI.ViewMask

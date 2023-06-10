@@ -11,8 +11,8 @@ namespace SFramework.Core.UI
                 public static string ArchiveItem = "ArchiveItem";
                 /// <summary> ab:[buttonsfloattipitem_uiitem]<para>class:[SFramework.Core.UI.ButtonsFloatTipItem]</para> </summary>
                 public static string ButtonsFloatTipItem = "ButtonsFloatTipItem";
-                /// <summary> ab:[mainviewchapterbutton_uiitem]<para>class:[SFramework.Core.UI.MainViewChapterButton]</para> </summary>
-                public static string MainViewChapterButton = "MainViewChapterButton";
+                /// <summary> ab:[chapteritem_uiitem]<para>class:[SFramework.Core.UI.ChapterItem]</para> </summary>
+                public static string ChapterItem = "ChapterItem";
                 /// <summary> ab:[viewmask_uiitem]<para>class:[SFramework.Core.UI.ViewMask]</para> </summary>
                 public static string ViewMask = "ViewMask";
 

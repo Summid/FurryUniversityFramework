@@ -14,9 +14,9 @@ namespace SFramework.Core.UI
         [UIFieldInit("ExpandButton")]
         public UnityEngine.UI.Button ExpandButton_Button;
         [UIFieldInit("DialogueSpeakerText")]
-        public TMPro.TextMeshProUGUI DialogueSpeakerText;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx DialogueSpeakerText;
         [UIFieldInit("DialogueContentText")]
-        public TMPro.TextMeshProUGUI DialogueContentText;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx DialogueContentText;
         [UIFieldInit("BackgroundButton")]
         public UnityEngine.UI.Button BackgroundButton_Button;
         [UIFieldInit("BackgroundButton")]

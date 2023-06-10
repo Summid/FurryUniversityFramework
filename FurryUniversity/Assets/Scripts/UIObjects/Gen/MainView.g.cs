@@ -16,31 +16,23 @@ namespace SFramework.Core.UI
         [UIFieldInit("SelectChapterButton")]
         public UnityEngine.UI.Button SelectChapterButton_Button;
         [UIFieldInit("SelectChapterButton")]
-        public TMPro.TextMeshProUGUI SelectChapterButton_TextMeshProUGUI;
-        [UIFieldInit("ChapterButtonsPool")]
-        public SFramework.Core.UI.UIItemPool ChapterButtonsPool_UIItemPool;
-        [UIFieldInit("ChapterButtonsPool")]
-        public UnityEngine.UI.VerticalLayoutGroup ChapterButtonsPool_VerticalLayoutGroup;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx SelectChapterButton_TextMeshProUGUIEx;
         [UIFieldInit("SettingsButton")]
         public UnityEngine.UI.Button SettingsButton_Button;
         [UIFieldInit("SettingsButton")]
-        public TMPro.TextMeshProUGUI SettingsButton_TextMeshProUGUI;
-        [UIFieldInit("ChaptersBackButton")]
-        public TMPro.TextMeshProUGUI ChaptersBackButton_TextMeshProUGUI;
-        [UIFieldInit("ChaptersBackButton")]
-        public UnityEngine.UI.Button ChaptersBackButton_Button;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx SettingsButton_TextMeshProUGUIEx;
         [UIFieldInit("SealButton")]
         public UnityEngine.UI.Button SealButton_Button;
         [UIFieldInit("SealButton")]
-        public TMPro.TextMeshProUGUI SealButton_TextMeshProUGUI;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx SealButton_TextMeshProUGUIEx;
         [UIFieldInit("IllustrationButton")]
         public UnityEngine.UI.Button IllustrationButton_Button;
         [UIFieldInit("IllustrationButton")]
-        public TMPro.TextMeshProUGUI IllustrationButton_TextMeshProUGUI;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx IllustrationButton_TextMeshProUGUIEx;
         [UIFieldInit("ExtraStoryButton")]
         public UnityEngine.UI.Button ExtraStoryButton_Button;
         [UIFieldInit("ExtraStoryButton")]
-        public TMPro.TextMeshProUGUI ExtraStoryButton_TextMeshProUGUI;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx ExtraStoryButton_TextMeshProUGUIEx;
 
     }
 }

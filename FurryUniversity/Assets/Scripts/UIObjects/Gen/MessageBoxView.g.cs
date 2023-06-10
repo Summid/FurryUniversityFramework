@@ -6,7 +6,7 @@ namespace SFramework.Core.UI
     public partial class MessageBoxView
     {
         [UIFieldInit("MessageText")]
-        public TMPro.TextMeshProUGUI MessageText;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx MessageText;
         [UIFieldInit("CloseButton")]
         public UnityEngine.UI.Image CloseButton_Image;
         [UIFieldInit("CloseButton")]

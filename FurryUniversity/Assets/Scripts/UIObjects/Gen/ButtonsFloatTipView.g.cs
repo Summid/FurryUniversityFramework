@@ -6,7 +6,7 @@ namespace SFramework.Core.UI
     public partial class ButtonsFloatTipView
     {
         [UIFieldInit("TitleText")]
-        public TMPro.TextMeshProUGUI TitleText;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx TitleText;
         [UIFieldInit("ButtonsNode")]
         public UnityEngine.UI.VerticalLayoutGroup ButtonsNode_VerticalLayoutGroup;
         [UIFieldInit("ButtonsNode")]

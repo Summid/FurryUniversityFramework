@@ -50,8 +50,12 @@ namespace SDS.Inspectors
             }
 
             this.serializedObject.Update();
-
+            
+            this.DrawIncludedContainersArea();
+            SDSInspectorUtility.DrawSpace();
             this.DrawDialogueContainerArea();
+            
+
 
             SDSDialogueContainerSO dialogueContainer = this.dialogueContainerProperty.objectReferenceValue as SDSDialogueContainerSO;
 
@@ -106,9 +110,7 @@ namespace SDS.Inspectors
             {
                 this.DrawDialogueArea(dialogueNames, dialogueFolderPath);
             }
-
-            SDSInspectorUtility.DrawSpace();
-            this.DrawIncludedContainersArea();
+            
             this.serializedObject.ApplyModifiedProperties();
         }
 

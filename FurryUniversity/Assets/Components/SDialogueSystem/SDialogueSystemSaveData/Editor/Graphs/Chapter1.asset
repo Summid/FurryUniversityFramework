@@ -1,0 +1,111 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2f7a74bd2bcbfe40aaa3fa0aa9045ee, type: 3}
+  m_Name: Chapter1
+  m_EditorClassIdentifier: 
+  <FileName>k__BackingField: Chapter1
+  <Groups>k__BackingField:
+  - <ID>k__BackingField: 83120202-076d-4fdb-a075-c8ea584ce79a
+    <Name>k__BackingField: Group1
+    <Position>k__BackingField: {x: 365, y: 16.999977}
+  <Nodes>k__BackingField:
+  - <ID>k__BackingField: 37839951-2606-44b3-8edc-8123dd1b3913
+    <Name>k__BackingField: Node1
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: "\u51B5\u543E\u4E0E\u5B50\u6E14\u6A35\u4E8E\u6C5F\u6E1A\u4E4B\u4E0A"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u4FA3\u9C7C\u867E\u800C\u53CB\u9E8B\u9E7F"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u9A7E\u4E00\u53F6\u4E4B\u6241\u821F"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u4E3E\u530F\u6A3D\u4EE5\u76F8\u5C5E"
+      <Spokesman>k__BackingField: "\u5BA2"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: e5166f7e-0820-461b-aecd-2b8136198792
+    <GroupID>k__BackingField: 83120202-076d-4fdb-a075-c8ea584ce79a
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 390, y: 76}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: e5166f7e-0820-461b-aecd-2b8136198792
+    <Name>k__BackingField: Node2
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: "\u5BC4\u8709\u8763\u4E8E\u5929\u5730"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u6E3A\u6CA7\u6D77\u4E4B\u4E00\u7C9F"
+      <Spokesman>k__BackingField: "\u5BA2"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: c84d399e-bbe1-4f4a-b25f-dfd5a17a4695
+    <GroupID>k__BackingField: 83120202-076d-4fdb-a075-c8ea584ce79a
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 720, y: 124}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: c84d399e-bbe1-4f4a-b25f-dfd5a17a4695
+    <Name>k__BackingField: Node3
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: "\u54C0\u543E\u751F\u4E4B\u987B\u81FE"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u7FA1\u957F\u6C5F\u4E4B\u65E0\u7A77"
+      <Spokesman>k__BackingField: "\u5BA2"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 66a263a3-915e-461a-85c9-40600801c703
+    <GroupID>k__BackingField: 83120202-076d-4fdb-a075-c8ea584ce79a
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1027, y: 208}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 66a263a3-915e-461a-85c9-40600801c703
+    <Name>k__BackingField: Node4
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: "\u631F\u98DE\u4ED9\u4EE5\u9068\u6E38"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u62B1\u660E\u6708\u800C\u957F\u7EC8"
+      <Spokesman>k__BackingField: "\u5BA2"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: f78a2aa0-d0cf-4c98-ab01-22352567f899
+    <GroupID>k__BackingField: 83120202-076d-4fdb-a075-c8ea584ce79a
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1351, y: 93}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: f78a2aa0-d0cf-4c98-ab01-22352567f899
+    <Name>k__BackingField: Node5
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: "\u77E5\u4E0D\u53EF\u4E4E\u9AA4\u5F97"
+      <Spokesman>k__BackingField: "\u5BA2"
+    - <Text>k__BackingField: "\u6258\u9057\u54CD\u4E8E\u60B2\u98CE"
+      <Spokesman>k__BackingField: "\u5BA2"
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 83120202-076d-4fdb-a075-c8ea584ce79a
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1657, y: 208}
+    <Events>k__BackingField: []
+  <OldGroupNames>k__BackingField:
+  - Group1
+  <OldUngroupedNodeNames>k__BackingField: []
+  <OldGroupedNodeNames>k__BackingField:
+    list:
+    - Key: Group1
+      Value:
+      - Node1
+      - Node2
+      - Node3
+      - Node4
+      - Node5

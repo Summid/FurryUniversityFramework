@@ -24,20 +24,15 @@ namespace SFramework.Core.UI
         private TweenerCore<float, float, FloatOptions> bgmVolumeTweener;
         private TweenerCore<Vector2, Vector2, VectorOptions> buttonPanelPositionTweener;
 
-        private SDSDialogue dialogueSystem;
         private Vector2 mainButtonsAwakeAnchoredPosition;
 
-        public bool Prepared;
 
         protected override void OnAwake()
         {
-
             this.SelectChapterButton_Button.onClick.AddListener(this.OnClickSelectChapter);
-            this.ChaptersBackButton_Button.onClick.AddListener(this.OnClickChapterBack);
             this.SettingsButton_Button.onClick.AddListener((() =>
                 GameManager.Instance.UIManager.ShowUIAsync<SettingsView>().Forget()));
 
-            this.dialogueSystem = GameManager.Instance.DialogueSystem;
             this.mainButtonsAwakeAnchoredPosition = this.MainButtons.GetComponent<RectTransform>().anchoredPosition;
         }
 
@@ -74,15 +69,7 @@ namespace SFramework.Core.UI
 
         private void OnClickSelectChapter()
         {
-            this.ChapterButtonsPool_UIItemPool.UpdateList<SDSDialogueContainerSO, MainViewChapterButton>(this.dialogueSystem.GetAllDialogues()).Forget();
-            this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(true);
-            this.MainButtons.gameObject.SetActive(false);
-        }
-
-        private void OnClickChapterBack()
-        {
-            this.ChapterButtonsPool_UIItemPool.gameObject.SetActive(false);
-            this.MainButtons.gameObject.SetActive(true);
+            GameManager.Instance.UIManager.ShowUIAsync<ChapterView>().Forget();
         }
 
         protected override void OnHide()
@@ -94,7 +81,6 @@ namespace SFramework.Core.UI
             this.buttonPanelPositionTweener?.Kill();
             GameManager.Instance.AudioManager.PauseBGM().Forget();
             this.MainButtons.GetComponent<RectTransform>().anchoredPosition = this.mainButtonsAwakeAnchoredPosition;
-            this.OnClickChapterBack();
         }
     }
 }

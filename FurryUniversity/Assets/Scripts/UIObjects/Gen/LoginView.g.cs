@@ -6,7 +6,7 @@ namespace SFramework.Core.UI
     public partial class LoginView
     {
         [UIFieldInit("TipsText")]
-        public TMPro.TextMeshProUGUI TipsText;
+        public SFramework.Core.UI.External.TextMeshProUGUIEx TipsText;
         [UIFieldInit("LoadImages")]
         public List<UnityEngine.UI.Image> LoadImages;
         [UIFieldInit("ProgressSlider")]
