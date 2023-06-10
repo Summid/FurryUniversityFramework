@@ -272,7 +272,7 @@ namespace SFramework.Core.GameManagers
 #if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
             return null;
 #else
-            AssetBundleVO vo = GetAssetBundleVO(bundleName);
+            AssetBundleVO vo = GetAssetBundleVO(bundleName.ToLower());
             await vo.LoadAsync();
 
             return vo;
@@ -311,7 +311,7 @@ namespace SFramework.Core.GameManagers
 #if LOAD_ASSET_IN_EDITOR && UNITY_EDITOR
             return;
 #else
-            AssetBundleVO vo = GetAssetBundleVO(bundleName);
+            AssetBundleVO vo = GetAssetBundleVO(bundleName.ToLower());
             await vo.UnLoadAsync();
 #endif
         }
