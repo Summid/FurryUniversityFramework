@@ -64,6 +64,9 @@ namespace SFramework.Core.UI
 
             this.Executing = true;
             
+            if(this.ViewData.DialogueViewState != DialogueViewState.AwaitChoice)
+                this.ChoicesNode.gameObject.SetActive(false);
+            
             switch (this.ViewData.DialogueViewState)
             {
                 case DialogueViewState.Null:
@@ -128,7 +131,6 @@ namespace SFramework.Core.UI
 
         private void SetChoice()
         {
-            var choices = this.ViewData.GetChoices();
             switch (this.ViewData.DialogueType)
             {
                 case SDSDialogueType.SingleChoice:
@@ -136,8 +138,15 @@ namespace SFramework.Core.UI
                     this.needContinue = true;
                     break;
                 case SDSDialogueType.MultipleChoice:
-                    //todo show select menu
-                    this.ViewData.TryChoose(0);
+                    this.ChoicesNode.gameObject.SetActive(true);
+                    this.ChoicePool_UIItemPool.UpdateList<SDSDialogueChoiceData, DialogueChoiceItem>(this.ViewData.Choices, (item, index) =>
+                    {
+                        item.SetClickCallback(() =>
+                        {
+                            this.ViewData.TryChoose(index);
+                            this.ExecuteNextStep();
+                        });
+                    });
                     break;
             }
         }
@@ -214,8 +223,6 @@ namespace SFramework.Core.UI
                 {
                     if (this.dialogueSO == null)
                         return DialogueViewState.Null;
-                    else if (this.IsLastDialogueNode)
-                        return DialogueViewState.End;
                     else if (this.StartEventIndex + 1 < this.StartEvents.Count)
                         return DialogueViewState.AwaitNextStartEvent;
                     else if (this.DialogueContentIndex + 1 < this.dialogueSO.Contents.Count)
@@ -224,6 +231,8 @@ namespace SFramework.Core.UI
                         return DialogueViewState.AwaitChoice;
                     else if (this.EndEventIndex + 1 < this.EndEvents.Count)
                         return DialogueViewState.AwaitNextEndEvent;
+                    else if (this.IsLastDialogueNode)
+                        return DialogueViewState.End;
                     return DialogueViewState.AwaitNextNode;
                 }
             }
@@ -281,8 +290,7 @@ namespace SFramework.Core.UI
             /// <returns></returns>
             public bool TryChoose(int index)
             {
-                this.dialogueSO.TryGetChoices(out var choices);
-                if (index < 0 || index >= choices.Count())
+                if (index < 0 || index >= this.Choices.Count)
                     return false;
                 this.ChoiceIndex = index;
                 return true;

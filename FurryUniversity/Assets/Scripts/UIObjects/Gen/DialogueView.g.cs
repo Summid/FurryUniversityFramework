@@ -37,6 +37,12 @@ namespace SFramework.Core.UI
         public UnityEngine.UI.Image BackButton_Image;
         [UIFieldInit("BackButton")]
         public UnityEngine.UI.Button BackButton_Button;
+        [UIFieldInit("ChoicePool")]
+        public UnityEngine.UI.VerticalLayoutGroup ChoicePool_VerticalLayoutGroup;
+        [UIFieldInit("ChoicePool")]
+        public SFramework.Core.UI.UIItemPool ChoicePool_UIItemPool;
+        [UIFieldInit("ChoicesNode")]
+        public UnityEngine.UI.Image ChoicesNode;
 
     }
 }

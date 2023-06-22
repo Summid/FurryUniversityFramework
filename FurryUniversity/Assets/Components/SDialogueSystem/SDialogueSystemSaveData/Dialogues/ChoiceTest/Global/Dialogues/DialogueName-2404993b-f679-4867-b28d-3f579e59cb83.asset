@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0de8b546c47dd440a8714a5515b0957, type: 3}
+  m_Name: DialogueName-2404993b-f679-4867-b28d-3f579e59cb83
+  m_EditorClassIdentifier: 
+  <DialogueName>k__BackingField: DialogueName-2404993b-f679-4867-b28d-3f579e59cb83
+  <Contents>k__BackingField:
+  - <Text>k__BackingField: Dialogue Text1
+    <Spokesman>k__BackingField: Spokesman
+  - <Text>k__BackingField: Dialogue Text2
+    <Spokesman>k__BackingField: Spokesman
+  <Choices>k__BackingField:
+  - <Text>k__BackingField: Choice1
+    <NextDialogue>k__BackingField: {fileID: 11400000, guid: fdcc591013d24964bbd811e0a929c45a, type: 2}
+  - <Text>k__BackingField: Choice2
+    <NextDialogue>k__BackingField: {fileID: 11400000, guid: de7af19eacb81f345b70be2471703ae8, type: 2}
+  - <Text>k__BackingField: Choice3
+    <NextDialogue>k__BackingField: {fileID: 11400000, guid: 6625a108f878186419274db55aeb13c0, type: 2}
+  <DialogueType>k__BackingField: 1
+  <IsStartDialogue>k__BackingField: 1
+  <Events>k__BackingField: []

@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d2f7a74bd2bcbfe40aaa3fa0aa9045ee, type: 3}
+  m_Name: ChoiceTest
+  m_EditorClassIdentifier: 
+  <FileName>k__BackingField: ChoiceTest
+  <Groups>k__BackingField: []
+  <Nodes>k__BackingField:
+  - <ID>k__BackingField: 2404993b-f679-4867-b28d-3f579e59cb83
+    <Name>k__BackingField: DialogueName-2404993b-f679-4867-b28d-3f579e59cb83
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text1
+      <Spokesman>k__BackingField: Spokesman
+    - <Text>k__BackingField: Dialogue Text2
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Choice1
+      <NodeID>k__BackingField: 14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+    - <Text>k__BackingField: Choice2
+      <NodeID>k__BackingField: 40179400-faa1-4e87-8217-b4fc6bcd8c1d
+    - <Text>k__BackingField: Choice3
+      <NodeID>k__BackingField: 7abc3065-d932-4504-b4a8-49a0c7da3683
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 1
+    <Position>k__BackingField: {x: 482, y: 291}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+    <Name>k__BackingField: DialogueName-14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text3
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1062, y: 172}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 40179400-faa1-4e87-8217-b4fc6bcd8c1d
+    <Name>k__BackingField: DialogueName-40179400-faa1-4e87-8217-b4fc6bcd8c1d
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text4
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1066, y: 529}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 7abc3065-d932-4504-b4a8-49a0c7da3683
+    <Name>k__BackingField: DialogueName-7abc3065-d932-4504-b4a8-49a0c7da3683
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text5
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Choice4
+      <NodeID>k__BackingField: fdae986e-2f6a-445e-bae5-deca15491dae
+    - <Text>k__BackingField: Choice5
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 1
+    <Position>k__BackingField: {x: 1066, y: 894}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: fdae986e-2f6a-445e-bae5-deca15491dae
+    <Name>k__BackingField: DialogueName-fdae986e-2f6a-445e-bae5-deca15491dae
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text6
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1586, y: 865}
+    <Events>k__BackingField: []
+  <OldGroupNames>k__BackingField: []
+  <OldUngroupedNodeNames>k__BackingField:
+  - DialogueName-2404993b-f679-4867-b28d-3f579e59cb83
+  - DialogueName-14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+  - DialogueName-40179400-faa1-4e87-8217-b4fc6bcd8c1d
+  - DialogueName-7abc3065-d932-4504-b4a8-49a0c7da3683
+  - DialogueName-fdae986e-2f6a-445e-bae5-deca15491dae
+  <OldGroupedNodeNames>k__BackingField:
+    list: []

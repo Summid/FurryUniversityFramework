@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0de8b546c47dd440a8714a5515b0957, type: 3}
+  m_Name: DialogueName-7abc3065-d932-4504-b4a8-49a0c7da3683
+  m_EditorClassIdentifier: 
+  <DialogueName>k__BackingField: DialogueName-7abc3065-d932-4504-b4a8-49a0c7da3683
+  <Contents>k__BackingField:
+  - <Text>k__BackingField: Dialogue Text5
+    <Spokesman>k__BackingField: Spokesman
+  <Choices>k__BackingField:
+  - <Text>k__BackingField: Choice4
+    <NextDialogue>k__BackingField: {fileID: 11400000, guid: 5d3bb6ce7866a5f4e847c8747337c248, type: 2}
+  - <Text>k__BackingField: Choice5
+    <NextDialogue>k__BackingField: {fileID: 0}
+  <DialogueType>k__BackingField: 1
+  <IsStartDialogue>k__BackingField: 0
+  <Events>k__BackingField: []

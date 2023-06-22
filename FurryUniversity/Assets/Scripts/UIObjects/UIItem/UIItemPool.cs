@@ -60,7 +60,7 @@ namespace SFramework.Core.UI
             this.activtyGOPool.Clear();
         }
 
-        public async STask UpdateList<TData, TItem>(IList<TData> list, Action<TItem> action = null) where TItem : UIItemBase, IUIPool<TData>, new()
+        public async STask UpdateList<TData, TItem>(IList<TData> list, Action<TItem, int> action = null) where TItem : UIItemBase, IUIPool<TData>, new()
         {
             this.Init();
             if (list == null)
@@ -73,7 +73,7 @@ namespace SFramework.Core.UI
                 item.gameObject.transform.SetSiblingIndex(siblingIndex);
                 item.PoolSetData(data);
                 this.activityUIItems.Add(item);
-                action?.Invoke(item);
+                action?.Invoke(item, i);
             }
         }
         #endregion
