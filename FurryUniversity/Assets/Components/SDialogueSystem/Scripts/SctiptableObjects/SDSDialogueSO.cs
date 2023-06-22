@@ -64,25 +64,55 @@ namespace SDS.ScriptableObjects
         /// <summary>
         /// 获取该节点中，给定句子的下一句；若没有下一句则返回false
         /// </summary>
-        /// <param name="current"></param>
+        /// <param name="currentContentData"></param>
         /// <param name="next"></param>
         /// <returns></returns>
-        public bool TryGetNextDialogueContent(SDSDialogueContentData current, out SDSDialogueContentData next)
+        public bool TryGetNextDialogueContent(SDSDialogueContentData currentContentData, out SDSDialogueContentData next)
         {
-            next = current;
-            if (current == null)
+            next = currentContentData;
+            if (currentContentData == null)
                 return false;
 
-            int currentIndex = this.Contents.IndexOf(current);
+            int currentIndex = this.Contents.IndexOf(currentContentData);
             if (currentIndex >= this.Contents.Count - 1)
                 return false;
 
             next = this.Contents[currentIndex + 1];
             return true;
         }
+        
+        /// <summary>
+        /// 给定当前句子索引，获取下一句句子数据
+        /// </summary>
+        /// <param name="currentContentIndex"></param>
+        /// <param name="next"></param>
+        /// <returns></returns>
+        public bool TryGetNextDialogueContent(int currentContentIndex, out SDSDialogueContentData next)
+        {
+            next = null;
+            if (currentContentIndex + 1 >= this.Contents.Count)
+                return false;
+
+            next = this.Contents[currentContentIndex + 1];
+            return true;
+        }
 
         /// <summary>
-        /// 获取该节点的选项数据；当没有后续节点时返回false；只会返回有后续节点的选项
+        /// 获取开始或结束事件
+        /// </summary>
+        /// <param name="getStartEvent"></param>
+        /// <returns></returns>
+        public IEnumerable<SDSDialogueEventData> GetEvents(bool getStartEvent)
+        {
+            if (this.Events != null)
+            {
+                return this.Events.Where(e => e.IsEventOnExit == !getStartEvent);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// 获取该节点的选项数据；当没有后续节点时返回false；只会返回有后续节点的选项；单选节点也会返回一个选项
         /// </summary>
         /// <param name="choices"></param>
         /// <returns></returns>
