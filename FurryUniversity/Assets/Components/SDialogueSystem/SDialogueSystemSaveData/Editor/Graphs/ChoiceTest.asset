@@ -15,8 +15,69 @@ MonoBehaviour:
   <FileName>k__BackingField: ChoiceTest
   <Groups>k__BackingField: []
   <Nodes>k__BackingField:
+  - <ID>k__BackingField: 7abc3065-d932-4504-b4a8-49a0c7da3683
+    <Name>k__BackingField: Dialogue4
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text5
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Choice4
+      <NodeID>k__BackingField: fdae986e-2f6a-445e-bae5-deca15491dae
+    - <Text>k__BackingField: Choice5
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 1
+    <Position>k__BackingField: {x: 1066, y: 894}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: fdae986e-2f6a-445e-bae5-deca15491dae
+    <Name>k__BackingField: Dialogue5
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text6
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1586, y: 865}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 40179400-faa1-4e87-8217-b4fc6bcd8c1d
+    <Name>k__BackingField: Dialogue3
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text4
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1427, y: 512}
+    <Events>k__BackingField: []
+  - <ID>k__BackingField: 14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+    <Name>k__BackingField: Dialogue2
+    <Text>k__BackingField: 
+    <Contents>k__BackingField:
+    - <Text>k__BackingField: Dialogue Text3
+      <Spokesman>k__BackingField: Spokesman
+    <Choices>k__BackingField:
+    - <Text>k__BackingField: Next Dialogue
+      <NodeID>k__BackingField: 
+    <GroupID>k__BackingField: 
+    <DialogueType>k__BackingField: 0
+    <Position>k__BackingField: {x: 1062, y: 172}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 2
+      <AssetObject>k__BackingField: {fileID: 21300000, guid: b12df616c3582fd4faba65f7fac51968, type: 3}
+      <Parameters>k__BackingField:
+      - 0
+      <Description>k__BackingField: Background Image Operation
+      <IsEventOnExit>k__BackingField: 0
+      <DelayTime>k__BackingField: 0
   - <ID>k__BackingField: 2404993b-f679-4867-b28d-3f579e59cb83
-    <Name>k__BackingField: DialogueName-2404993b-f679-4867-b28d-3f579e59cb83
+    <Name>k__BackingField: Dialogue1
     <Text>k__BackingField: 
     <Contents>k__BackingField:
     - <Text>k__BackingField: Dialogue Text1
@@ -32,68 +93,21 @@ MonoBehaviour:
       <NodeID>k__BackingField: 7abc3065-d932-4504-b4a8-49a0c7da3683
     <GroupID>k__BackingField: 
     <DialogueType>k__BackingField: 1
-    <Position>k__BackingField: {x: 482, y: 291}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: 14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
-    <Name>k__BackingField: DialogueName-14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
-    <Text>k__BackingField: 
-    <Contents>k__BackingField:
-    - <Text>k__BackingField: Dialogue Text3
-      <Spokesman>k__BackingField: Spokesman
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 1062, y: 172}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: 40179400-faa1-4e87-8217-b4fc6bcd8c1d
-    <Name>k__BackingField: DialogueName-40179400-faa1-4e87-8217-b4fc6bcd8c1d
-    <Text>k__BackingField: 
-    <Contents>k__BackingField:
-    - <Text>k__BackingField: Dialogue Text4
-      <Spokesman>k__BackingField: Spokesman
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 1066, y: 529}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: 7abc3065-d932-4504-b4a8-49a0c7da3683
-    <Name>k__BackingField: DialogueName-7abc3065-d932-4504-b4a8-49a0c7da3683
-    <Text>k__BackingField: 
-    <Contents>k__BackingField:
-    - <Text>k__BackingField: Dialogue Text5
-      <Spokesman>k__BackingField: Spokesman
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Choice4
-      <NodeID>k__BackingField: fdae986e-2f6a-445e-bae5-deca15491dae
-    - <Text>k__BackingField: Choice5
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 
-    <DialogueType>k__BackingField: 1
-    <Position>k__BackingField: {x: 1066, y: 894}
-    <Events>k__BackingField: []
-  - <ID>k__BackingField: fdae986e-2f6a-445e-bae5-deca15491dae
-    <Name>k__BackingField: DialogueName-fdae986e-2f6a-445e-bae5-deca15491dae
-    <Text>k__BackingField: 
-    <Contents>k__BackingField:
-    - <Text>k__BackingField: Dialogue Text6
-      <Spokesman>k__BackingField: Spokesman
-    <Choices>k__BackingField:
-    - <Text>k__BackingField: Next Dialogue
-      <NodeID>k__BackingField: 
-    <GroupID>k__BackingField: 
-    <DialogueType>k__BackingField: 0
-    <Position>k__BackingField: {x: 1586, y: 865}
-    <Events>k__BackingField: []
+    <Position>k__BackingField: {x: 484, y: 294}
+    <Events>k__BackingField:
+    - <EventType>k__BackingField: 2
+      <AssetObject>k__BackingField: {fileID: 21300000, guid: 2e43f0691f0d7404eae8d01381da65a0, type: 3}
+      <Parameters>k__BackingField:
+      - 0
+      <Description>k__BackingField: Background Image Operation
+      <IsEventOnExit>k__BackingField: 0
+      <DelayTime>k__BackingField: 0
   <OldGroupNames>k__BackingField: []
   <OldUngroupedNodeNames>k__BackingField:
-  - DialogueName-2404993b-f679-4867-b28d-3f579e59cb83
-  - DialogueName-14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
-  - DialogueName-40179400-faa1-4e87-8217-b4fc6bcd8c1d
-  - DialogueName-7abc3065-d932-4504-b4a8-49a0c7da3683
-  - DialogueName-fdae986e-2f6a-445e-bae5-deca15491dae
+  - Dialogue4
+  - Dialogue5
+  - Dialogue3
+  - Dialogue2
+  - Dialogue1
   <OldGroupedNodeNames>k__BackingField:
     list: []

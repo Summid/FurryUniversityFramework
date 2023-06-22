@@ -28,12 +28,15 @@ namespace SFramework.Core.GameManagers
                 if (originSprite != null)
                 {
                     //unload first
-                    if(atlasSprite.TryGetValue(originSprite.name.Replace("(Clone)",""), out var originAtlasName))
+                    if (originSprite.name.Contains("(Clone)") && atlasSprite.TryGetValue(originSprite.name.Replace("(Clone)", ""), out var originAtlasName))
                     {
-                        string originBundleName = originAtlasName.ToLower() + StaticVariables.SpriteAtlasBundleExtension;
-                        AssetBundleManager.UnloadAssetBundleAsync(originBundleName).Forget();
-                        UnityEngine.Object.Destroy(originSprite);
-                        image.sprite = null;
+                        if (!string.IsNullOrEmpty(originAtlasName))
+                        {
+                            string originBundleName = originAtlasName.ToLower() + StaticVariables.SpriteAtlasBundleExtension;
+                            AssetBundleManager.UnloadAssetBundleAsync(originBundleName).Forget();
+                            UnityEngine.Object.Destroy(originSprite);
+                            image.sprite = null;
+                        }
                     }
                 }
 

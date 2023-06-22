@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b0de8b546c47dd440a8714a5515b0957, type: 3}
-  m_Name: DialogueName-14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+  m_Name: Dialogue4
   m_EditorClassIdentifier: 
-  <DialogueName>k__BackingField: DialogueName-14c2d12b-c9a1-4e94-bb21-8ae2c00ca201
+  <DialogueName>k__BackingField: Dialogue4
   <Contents>k__BackingField:
-  - <Text>k__BackingField: Dialogue Text3
+  - <Text>k__BackingField: Dialogue Text5
     <Spokesman>k__BackingField: Spokesman
   <Choices>k__BackingField:
-  - <Text>k__BackingField: Next Dialogue
+  - <Text>k__BackingField: Choice4
+    <NextDialogue>k__BackingField: {fileID: 11400000, guid: c8757c88a91a13a4592fbec7bc9059a9, type: 2}
+  - <Text>k__BackingField: Choice5
     <NextDialogue>k__BackingField: {fileID: 0}
-  <DialogueType>k__BackingField: 0
+  <DialogueType>k__BackingField: 1
   <IsStartDialogue>k__BackingField: 0
   <Events>k__BackingField: []

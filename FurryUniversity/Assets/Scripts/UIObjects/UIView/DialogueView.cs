@@ -124,7 +124,26 @@ namespace SFramework.Core.UI
                 if (eventData == null)
                     return;
 
-                await STask.Delay(500);
+                switch (eventData.EventType)
+                {
+                    case SDSDialogueEventType.NullEvent:
+                        break;
+                    case SDSDialogueEventType.ImageOperations:
+                        break;
+                    case SDSDialogueEventType.BackgroundImageOperations:
+                        if (string.IsNullOrEmpty(eventData.AssetName)) break;
+                        await this.BG_Image.SetSpriteAsync(eventData.AssetName, false);
+                        break;
+                    case SDSDialogueEventType.BGMOperations:
+                        break;
+                    case SDSDialogueEventType.SFXOperations:
+                        break;
+                    case SDSDialogueEventType.CharacterOperations:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                // await STask.Delay(500);//test
                 Debug.LogWarning("test execute dialogue event");
             }
         }
